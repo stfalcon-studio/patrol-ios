@@ -9,7 +9,15 @@
 #import "HRPAppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <Lookback/Lookback.h>
 #import "UIColor+HexColor.h"
+
+
+#if TARGET_IPHONE_SIMULATOR
+NSString const *DeviceMode                                  =   @"Simulator";
+#else
+NSString const *DeviceMode                                  =   @"Device";
+#endif
 
 
 @interface HRPAppDelegate ()
@@ -26,6 +34,22 @@
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];
     
+    // SDK LookBack
+    [Lookback setupWithAppToken:@"dfY5hDKSnhoCqsczL"];
+    [Lookback sharedLookback].shakeToRecord                 =   YES;
+    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
+    
+    
+#if DEBUG || ADHOC
+    //    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
+    //    [Lookback sharedLookback].shakeToRecord                 =   NO;
+    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
+    [Lookback sharedLookback].shakeToRecord                 =   YES;
+#else // APPSTORE
+    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
+    [Lookback sharedLookback].shakeToRecord                 =   YES; // Or NO, if you have a feedback button in Settings, or a secret gesture.
+#endif
+
     // Navigation Bar
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"607C8B" alpha:1.f]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];

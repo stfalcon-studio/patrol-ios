@@ -12,6 +12,8 @@
     11. CODE    -   create new class HRPButton (5 min)
     12. IB      -   create VC's design (2 hours)
     13. TEST    -   git commit "create some elements IB start design"
-    14. TEST    -   distribute new buid 0.1.0 (1)
+    14. CODE    -   add LookBack SDK (10 min)
+    15. TEST    -   git commit "add LookBack SDK"
+    16. TEST    -   distribute new buid 0.1.0 (1)
 
 

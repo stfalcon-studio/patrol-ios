@@ -1,0 +1,10 @@
+Version 0.1.0 (2):
+- ;
+
+Version 0.1.0 (1):
+- create new project & add it to GitLab;
+- create localization file;
+- create new project & provision profile in Apple Dev;
+- add Crashlytics SDK;
+- add LookBack SDK;
+- create start design in IB for some control elements.
