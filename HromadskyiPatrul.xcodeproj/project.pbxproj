@@ -15,6 +15,8 @@
 		B1AC89931B879A07009D12D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89921B879A07009D12D6 /* Images.xcassets */; };
 		B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
 		B1AC89A21B879A07009D12D6 /* HromadskyiPatrulTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */; };
+		B1AC89AC1B879A20009D12D6 /* ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AB1B879A20009D12D6 /* ReadMe */; };
+		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +44,8 @@
 		B1AC899B1B879A07009D12D6 /* HromadskyiPatrulTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HromadskyiPatrulTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1AC89A01B879A07009D12D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HromadskyiPatrulTests.m; sourceTree = "<group>"; };
+		B1AC89AB1B879A20009D12D6 /* ReadMe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe; sourceTree = "<group>"; };
+		B1AC89AD1B879A29009D12D6 /* Builds */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Builds; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +69,8 @@
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
+				B1AC89AB1B879A20009D12D6 /* ReadMe */,
+				B1AC89AD1B879A29009D12D6 /* Builds */,
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
 				B1AC89801B879A06009D12D6 /* Products */,
@@ -202,6 +208,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
+				B1AC89AC1B879A20009D12D6 /* ReadMe in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
 				B1AC89931B879A07009D12D6 /* Images.xcassets in Resources */,
