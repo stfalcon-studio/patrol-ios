@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  HRPViewController.h
 //  HromadskyiPatrul
 //
 //  Created by msm72 on 21.08.15.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface HRPViewController : UIViewController
 
 
 @end

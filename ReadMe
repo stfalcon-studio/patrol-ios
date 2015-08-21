@@ -1,4 +1,7 @@
 21.08.2015:
     1.  TEST    -   create new project & add it to GitLab (10 min)
     2.  TEST    -   git commit "create ReadMe & Builds files"
-3.
+    3.  CODE    -   add class suffix "HRP" (5 min)
+    4.  TEST    -   create localization file (5 min)
+    5.  TEST    -   create new project & provision profile in Apple Dev (20 min)
+    6.  TEST    -   git commit "create Apple App IDs & 2 Provision profiles"

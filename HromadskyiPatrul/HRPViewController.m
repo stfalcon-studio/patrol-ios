@@ -1,18 +1,18 @@
 //
-//  ViewController.m
+//  HRPViewController.m
 //  HromadskyiPatrul
 //
 //  Created by msm72 on 21.08.15.
 //  Copyright (c) 2015 Monastyrskiy Sergey. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "HRPViewController.h"
 
-@interface ViewController ()
+@interface HRPViewController ()
 
 @end
 
-@implementation ViewController
+@implementation HRPViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];

@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  HRPAppDelegate.h
 //  HromadskyiPatrul
 //
 //  Created by msm72 on 21.08.15.
@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <CoreData/CoreData.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface HRPAppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
