@@ -9,6 +9,7 @@
 #import "HRPAppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import "UIColor+HexColor.h"
 
 
 @interface HRPAppDelegate ()
@@ -24,7 +25,12 @@
     
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];
-
+    
+    // Navigation Bar
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"607C8B" alpha:1.f]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    
     return YES;
 }
 

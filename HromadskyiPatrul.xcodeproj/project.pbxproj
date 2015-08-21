@@ -19,6 +19,10 @@
 		B1AC89AC1B879A20009D12D6 /* ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AB1B879A20009D12D6 /* ReadMe */; };
 		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
+		B1AC89BD1B87A27D009D12D6 /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */; };
+		B1AC89C01B87A2A0009D12D6 /* HRPSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */; };
+		B1AC89C41B87A7C5009D12D6 /* HRPButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89C31B87A7C5009D12D6 /* HRPButton.m */; };
+		B1AC89C81B87B03E009D12D6 /* UIColor+HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89C71B87B03E009D12D6 /* UIColor+HexColor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +59,14 @@
 		B1AC89B41B879C91009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B51B879CE3009D12D6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B61B879CEC009D12D6 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		B1AC89BB1B87A27D009D12D6 /* HRPCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewController.h; sourceTree = "<group>"; };
+		B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
+		B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPSettingsViewController.h; sourceTree = "<group>"; };
+		B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPSettingsViewController.m; sourceTree = "<group>"; };
+		B1AC89C21B87A7C5009D12D6 /* HRPButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPButton.h; sourceTree = "<group>"; };
+		B1AC89C31B87A7C5009D12D6 /* HRPButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPButton.m; sourceTree = "<group>"; };
+		B1AC89C61B87B03E009D12D6 /* UIColor+HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColor.h"; sourceTree = "<group>"; };
+		B1AC89C71B87B03E009D12D6 /* UIColor+HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColor.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,12 +130,13 @@
 		B1AC89811B879A06009D12D6 /* HromadskyiPatrul */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC89B81B87A019009D12D6 /* Resources */,
-				B1AC89B71B87A002009D12D6 /* Core Data */,
 				B1AC89861B879A06009D12D6 /* HRPAppDelegate.h */,
 				B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */,
-				B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */,
-				B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */,
+				B1AC89B81B87A019009D12D6 /* Resources */,
+				B1AC89B71B87A002009D12D6 /* Core Data */,
+				B1AC89BA1B87A256009D12D6 /* View Controllers */,
+				B1AC89C51B87AFDA009D12D6 /* Categories */,
+				B1AC89C11B87A79E009D12D6 /* Custom Classes */,
 				B1AC89821B879A06009D12D6 /* Supporting Files */,
 			);
 			path = HromadskyiPatrul;
@@ -172,6 +185,37 @@
 				B1AC89921B879A07009D12D6 /* Images.xcassets */,
 			);
 			name = Resources;
+			sourceTree = "<group>";
+		};
+		B1AC89BA1B87A256009D12D6 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */,
+				B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */,
+				B1AC89BB1B87A27D009D12D6 /* HRPCollectionViewController.h */,
+				B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */,
+				B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */,
+				B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		B1AC89C11B87A79E009D12D6 /* Custom Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC89C21B87A7C5009D12D6 /* HRPButton.h */,
+				B1AC89C31B87A7C5009D12D6 /* HRPButton.m */,
+			);
+			name = "Custom Classes";
+			sourceTree = "<group>";
+		};
+		B1AC89C51B87AFDA009D12D6 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC89C61B87B03E009D12D6 /* UIColor+HexColor.h */,
+				B1AC89C71B87B03E009D12D6 /* UIColor+HexColor.m */,
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -329,10 +373,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1AC89C01B87A2A0009D12D6 /* HRPSettingsViewController.m in Sources */,
+				B1AC89C81B87B03E009D12D6 /* UIColor+HexColor.m in Sources */,
 				B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */,
 				B1AC89851B879A06009D12D6 /* main.m in Sources */,
 				B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */,
 				B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */,
+				B1AC89C41B87A7C5009D12D6 /* HRPButton.m in Sources */,
+				B1AC89BD1B87A27D009D12D6 /* HRPCollectionViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

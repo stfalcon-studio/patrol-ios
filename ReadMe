@@ -7,3 +7,11 @@
     6.  TEST    -   git commit "create Apple App IDs & 2 Provision profiles"
     7.  TEST    -   HRPAppDelegate: add Crashlytics SDK (10 min)
     8.  TEST    -   git commit "add Crashlytics SDK"
+    9.  CODE    -   create 2 new VC's: HRPCollectionViewController & HRPSettingsViewController (5 min)
+    10. IB      -   create 2 VC's & transition between them (20 min)
+    11. CODE    -   create new class HRPButton (5 min)
+    12. IB      -   create VC's design (2 hours)
+    13. TEST    -   git commit "create some elements IB start design"
+    14. TEST    -   distribute new buid 0.1.0 (1)
+
+

@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Main View Controller-->
@@ -15,14 +16,197 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-no-image" translatesAutoresizingMaskIntoConstraints="NO" id="fKl-Qy-dED" userLabel="Logo Image View">
+                                <rect key="frame" x="135" y="98" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="50" id="84D-jk-yen"/>
+                                    <constraint firstAttribute="height" constant="50" id="Rih-tA-Ofo"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fio-45-fjL" userLabel="About Label">
+                                <rect key="frame" x="143" y="183" width="34" height="16"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="13"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="UtF-qY-cYQ" userLabel="Email Text Field">
+                                <rect key="frame" x="50" y="269" width="220" height="30"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="13"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                                <connections>
+                                    <outlet property="delegate" destination="vXZ-lx-hvc" id="fED-Of-u37"/>
+                                </connections>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vtA-en-wcx" userLabel="Log In Button" customClass="HRPButton">
+                                <rect key="frame" x="50" y="329" width="220" height="45"/>
+                                <color key="backgroundColor" red="0.83921568627450982" green="0.84313725490196079" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="L7g-MN-V4M"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="13"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="actionLoginButtonTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="edu-SI-Zll"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="VkU-Dc-vJw" userLabel="Version Label">
+                                <rect key="frame" x="141" y="545" width="37" height="13"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="vtA-en-wcx" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="50" id="10P-lS-ve8"/>
+                            <constraint firstItem="UtF-qY-cYQ" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="50" id="AcP-tr-OU1"/>
+                            <constraint firstAttribute="centerX" secondItem="VkU-Dc-vJw" secondAttribute="centerX" id="D9f-D3-mZH"/>
+                            <constraint firstItem="fio-45-fjL" firstAttribute="top" secondItem="fKl-Qy-dED" secondAttribute="bottom" constant="35" id="PhE-77-5f2"/>
+                            <constraint firstAttribute="trailing" secondItem="UtF-qY-cYQ" secondAttribute="trailing" constant="50" id="QKG-pf-F6t"/>
+                            <constraint firstAttribute="centerX" secondItem="UtF-qY-cYQ" secondAttribute="centerX" id="Uwa-H7-jXn"/>
+                            <constraint firstAttribute="trailing" secondItem="vtA-en-wcx" secondAttribute="trailing" constant="50" id="YBP-y6-JFa"/>
+                            <constraint firstAttribute="centerX" secondItem="vtA-en-wcx" secondAttribute="centerX" id="YvO-nV-kAy"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="VkU-Dc-vJw" secondAttribute="bottom" constant="10" id="hcF-V8-c9n"/>
+                            <constraint firstAttribute="centerX" secondItem="fio-45-fjL" secondAttribute="centerX" id="hpO-Ch-8ks"/>
+                            <constraint firstItem="vtA-en-wcx" firstAttribute="top" secondItem="UtF-qY-cYQ" secondAttribute="bottom" constant="30" id="tvW-7h-Zpb"/>
+                            <constraint firstAttribute="centerX" secondItem="fKl-Qy-dED" secondAttribute="centerX" id="wlr-dR-HO6"/>
+                            <constraint firstAttribute="centerY" secondItem="fKl-Qy-dED" secondAttribute="centerY" multiplier="2.3" id="xHP-2b-hzJ"/>
+                            <constraint firstAttribute="centerY" secondItem="UtF-qY-cYQ" secondAttribute="centerY" id="zA0-rJ-cj5"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="gvf-nx-oBi" appends="YES" id="hF0-qV-hnj"/>
+                        </connections>
                     </view>
+                    <navigationItem key="navigationItem" id="KUt-PH-FUo"/>
+                    <connections>
+                        <outlet property="aboutLabel" destination="fio-45-fjL" id="AmU-JN-q3B"/>
+                        <outlet property="emailTextField" destination="UtF-qY-cYQ" id="Afb-9y-iZX"/>
+                        <outlet property="loginButton" destination="vtA-en-wcx" id="yp7-AX-DoI"/>
+                        <outlet property="logoImageView" destination="fKl-Qy-dED" id="4M5-Wq-d6i"/>
+                        <outlet property="versionLabel" destination="VkU-Dc-vJw" id="8Wl-69-I1W"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="gvf-nx-oBi">
+                    <connections>
+                        <action selector="handleGestureRecognizerTap:" destination="vXZ-lx-hvc" id="ETe-Y9-ttD"/>
+                        <outlet property="delegate" destination="vXZ-lx-hvc" id="cuc-Yy-Q82"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="242.13333333333333" y="391.92000000000002"/>
+            <point key="canvasLocation" x="554" y="391"/>
+        </scene>
+        <!--Collection View Controller-->
+        <scene sceneID="44A-gp-KbC">
+            <objects>
+                <viewController storyboardIdentifier="CollectionVC" id="aAn-fy-MeC" customClass="HRPCollectionViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Eb7-dr-APT"/>
+                        <viewControllerLayoutGuide type="bottom" id="B4b-m9-uhb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3GM-sC-wFF">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oC-zk-fjR" userLabel="Camera Button" customClass="HRPButton">
+                                <rect key="frame" x="245" y="493" width="50" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="NL4-wm-DEC"/>
+                                    <constraint firstAttribute="width" constant="50" id="dgL-qq-6t4"/>
+                                </constraints>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
+                                        <color key="value" red="0.37647058823529411" green="0.48627450980392156" blue="0.54509803921568623" alpha="1" colorSpace="calibratedRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="25"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="actionCameraButtonTap:" destination="aAn-fy-MeC" eventType="touchUpInside" id="h3y-3S-H1x"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="5oC-zk-fjR" secondAttribute="trailing" constant="25" id="OZg-41-ywC"/>
+                            <constraint firstItem="B4b-m9-uhb" firstAttribute="top" secondItem="5oC-zk-fjR" secondAttribute="bottom" constant="25" id="TG1-kU-ryj"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="qjo-kf-QEx">
+                        <barButtonItem key="leftBarButtonItem" title="User name" id="GMb-0b-1A0" userLabel="User Name Bar Button"/>
+                        <barButtonItem key="rightBarButtonItem" image="icon-gear" id="xff-By-TBQ" userLabel="Settings Bar Button">
+                            <connections>
+                                <segue destination="vvj-7R-xfS" kind="push" identifier="SettingsVCSegue" id="ax2-0u-u5b"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
+                    <connections>
+                        <outlet property="userNameBarButton" destination="GMb-0b-1A0" id="tjh-vp-55r"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Fq6-3R-0JT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1537" y="391"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="ZKd-Vr-rAp">
+            <objects>
+                <viewController storyboardIdentifier="SettingsVC" id="vvj-7R-xfS" customClass="HRPSettingsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VP6-YX-1MV"/>
+                        <viewControllerLayoutGuide type="bottom" id="IMg-Fu-Boe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="sXk-yK-WY0">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="g5L-F8-W3X"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ptQ-5L-PU6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2040" y="391"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="JQh-ia-YMH">
+            <objects>
+                <navigationController storyboardIdentifier="CollectionNC" automaticallyAdjustsScrollViewInsets="NO" id="qmk-vi-32f" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="8rA-Aa-Z6w">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="aAn-fy-MeC" kind="relationship" relationship="rootViewController" id="hXX-8I-Jgj"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uPR-0k-itZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1041" y="391"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="icon-gear" width="25" height="25"/>
+        <image name="icon-no-image" width="100" height="100"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
