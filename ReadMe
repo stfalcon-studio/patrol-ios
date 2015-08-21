@@ -5,3 +5,5 @@
     4.  TEST    -   create localization file (5 min)
     5.  TEST    -   create new project & provision profile in Apple Dev (20 min)
     6.  TEST    -   git commit "create Apple App IDs & 2 Provision profiles"
+    7.  TEST    -   HRPAppDelegate: add Crashlytics SDK (10 min)
+    8.  TEST    -   git commit "add Crashlytics SDK"

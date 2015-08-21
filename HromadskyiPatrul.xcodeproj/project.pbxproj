@@ -7,10 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
 		B1AC89851B879A06009D12D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89841B879A06009D12D6 /* main.m */; };
 		B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */; };
 		B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */; };
-		B1AC898E1B879A07009D12D6 /* HRPViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC898D1B879A07009D12D6 /* HRPViewController.m */; };
+		B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */; };
 		B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
 		B1AC89931B879A07009D12D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89921B879A07009D12D6 /* Images.xcassets */; };
 		B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
@@ -31,14 +32,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
+		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
 		B1AC897F1B879A06009D12D6 /* HromadskyiPatrul.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HromadskyiPatrul.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1AC89831B879A06009D12D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AC89841B879A06009D12D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B1AC89861B879A06009D12D6 /* HRPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HRPAppDelegate.h; sourceTree = "<group>"; };
 		B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HRPAppDelegate.m; sourceTree = "<group>"; };
 		B1AC898A1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HromadskyiPatrul.xcdatamodel; sourceTree = "<group>"; };
-		B1AC898C1B879A07009D12D6 /* HRPViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HRPViewController.h; sourceTree = "<group>"; };
-		B1AC898D1B879A07009D12D6 /* HRPViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HRPViewController.m; sourceTree = "<group>"; };
+		B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HRPMainViewController.h; sourceTree = "<group>"; };
+		B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HRPMainViewController.m; sourceTree = "<group>"; };
 		B1AC89901B879A07009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B1AC89921B879A07009D12D6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		B1AC89951B879A07009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -58,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +76,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		866BE91730CC59D56766BD2F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		888F1DF95E2DFDDC51107D6B /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */,
+				789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
@@ -79,6 +101,8 @@
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
 				B1AC89801B879A06009D12D6 /* Products */,
+				888F1DF95E2DFDDC51107D6B /* Pods */,
+				866BE91730CC59D56766BD2F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,14 +118,12 @@
 		B1AC89811B879A06009D12D6 /* HromadskyiPatrul */ = {
 			isa = PBXGroup;
 			children = (
+				B1AC89B81B87A019009D12D6 /* Resources */,
+				B1AC89B71B87A002009D12D6 /* Core Data */,
 				B1AC89861B879A06009D12D6 /* HRPAppDelegate.h */,
 				B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */,
-				B1AC898C1B879A07009D12D6 /* HRPViewController.h */,
-				B1AC898D1B879A07009D12D6 /* HRPViewController.m */,
-				B1AC898F1B879A07009D12D6 /* Main.storyboard */,
-				B1AC89921B879A07009D12D6 /* Images.xcassets */,
-				B1AC89941B879A07009D12D6 /* LaunchScreen.xib */,
-				B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */,
+				B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */,
+				B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */,
 				B1AC89821B879A06009D12D6 /* Supporting Files */,
 			);
 			path = HromadskyiPatrul;
@@ -134,6 +156,24 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		B1AC89B71B87A002009D12D6 /* Core Data */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */,
+			);
+			name = "Core Data";
+			sourceTree = "<group>";
+		};
+		B1AC89B81B87A019009D12D6 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC898F1B879A07009D12D6 /* Main.storyboard */,
+				B1AC89941B879A07009D12D6 /* LaunchScreen.xib */,
+				B1AC89921B879A07009D12D6 /* Images.xcassets */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -141,9 +181,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1AC89A51B879A07009D12D6 /* Build configuration list for PBXNativeTarget "HromadskyiPatrul" */;
 			buildPhases = (
+				24F9545FDF23C14556E72BD9 /* Check Pods Manifest.lock */,
 				B1AC897B1B879A06009D12D6 /* Sources */,
 				B1AC897C1B879A06009D12D6 /* Frameworks */,
 				B1AC897D1B879A06009D12D6 /* Resources */,
+				35CBCA4EEABE08B1EF8D2842 /* Copy Pods Resources */,
+				B1AC89B91B87A146009D12D6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -235,6 +278,52 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		24F9545FDF23C14556E72BD9 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		35CBCA4EEABE08B1EF8D2842 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B1AC89B91B87A146009D12D6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/Fabric.framework/run\" b7ba58a3e64c5ff0d9fbc4faebb86c28b1bc40b9 0850a80e9c8d0f2bc357260b8b8c799b27dc7885123bce99ef22e59c196ea124";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B1AC897B1B879A06009D12D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -242,7 +331,7 @@
 			files = (
 				B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */,
 				B1AC89851B879A06009D12D6 /* main.m in Sources */,
-				B1AC898E1B879A07009D12D6 /* HRPViewController.m in Sources */,
+				B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */,
 				B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -378,6 +467,7 @@
 		};
 		B1AC89A61B879A07009D12D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -389,6 +479,7 @@
 		};
 		B1AC89A71B879A07009D12D6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -451,6 +542,7 @@
 				B1AC89A71B879A07009D12D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B1AC89A81B879A07009D12D6 /* Build configuration list for PBXNativeTarget "HromadskyiPatrulTests" */ = {
 			isa = XCConfigurationList;
@@ -459,6 +551,7 @@
 				B1AC89AA1B879A07009D12D6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 

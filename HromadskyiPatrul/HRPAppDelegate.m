@@ -7,16 +7,24 @@
 //
 
 #import "HRPAppDelegate.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
+
 
 @interface HRPAppDelegate ()
 
 @end
 
+
 @implementation HRPAppDelegate
 
-
+#pragma mark - Constructors -
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    // Crashlytics SDK
+    [Fabric with:@[CrashlyticsKit]];
+
     return YES;
 }
 

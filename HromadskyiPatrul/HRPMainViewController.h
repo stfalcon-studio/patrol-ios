@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface HRPViewController : UIViewController
+@interface HRPMainViewController : UIViewController
 
 
 @end

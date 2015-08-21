@@ -6,13 +6,13 @@
 //  Copyright (c) 2015 Monastyrskiy Sergey. All rights reserved.
 //
 
-#import "HRPViewController.h"
+#import "HRPMainViewController.h"
 
-@interface HRPViewController ()
+@interface HRPMainViewController ()
 
 @end
 
-@implementation HRPViewController
+@implementation HRPMainViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
