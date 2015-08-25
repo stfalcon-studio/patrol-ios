@@ -11,18 +11,18 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-no-image" translatesAutoresizingMaskIntoConstraints="NO" id="Jrn-RT-N00" userLabel="Logo Image View">
-                    <rect key="frame" x="215" y="79" width="50" height="50"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-logo" translatesAutoresizingMaskIntoConstraints="NO" id="haI-0J-sLg" userLabel="Logo Image View">
+                    <rect key="frame" x="155" y="4" width="170" height="170"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="50" id="ZLo-fu-Och"/>
-                        <constraint firstAttribute="width" constant="50" id="dlM-sY-7gm"/>
+                        <constraint firstAttribute="height" constant="170" id="PYh-XX-bsP"/>
+                        <constraint firstAttribute="width" constant="170" id="TOr-ZW-ina"/>
                     </constraints>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstAttribute="centerX" secondItem="Jrn-RT-N00" secondAttribute="centerX" id="LKH-lS-7eD"/>
-                <constraint firstAttribute="centerY" secondItem="Jrn-RT-N00" secondAttribute="centerY" multiplier="2.3" id="jX9-rz-dXR"/>
+                <constraint firstAttribute="centerX" secondItem="haI-0J-sLg" secondAttribute="centerX" id="0WF-XQ-P7t"/>
+                <constraint firstAttribute="centerY" secondItem="haI-0J-sLg" secondAttribute="centerY" multiplier="2.7" id="wVM-Yh-7uG"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
@@ -30,6 +30,6 @@
         </view>
     </objects>
     <resources>
-        <image name="icon-no-image" width="100" height="100"/>
+        <image name="icon-logo" width="212" height="212"/>
     </resources>
 </document>

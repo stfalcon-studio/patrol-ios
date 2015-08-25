@@ -1,3 +1,13 @@
+25.04.2015:
+    1.  IB      -   add icons (10 min)
+    2.  IB      -   add background color #05A9F4 (10 min)
+    3.  IB      -   add Appicons (20 min)
+    4.  CODE    -   add to Podfile Email verification framework (30 min)
+    5.  IB      -   create app design (30 min)
+    6.  CODE    -   create & test API "Login User" (19:31- min)
+    7.  TEST    -   git commit "add AFNetworking & NSUserDefaults"
+    8.  TEST    -   distribute new buid 0.1.0 (2)
+
 21.08.2015:
     1.  TEST    -   create new project & add it to GitLab (10 min)
     2.  TEST    -   git commit "create ReadMe & Builds files"
@@ -15,5 +25,3 @@
     14. CODE    -   add LookBack SDK (10 min)
     15. TEST    -   git commit "add LookBack SDK"
     16. TEST    -   distribute new buid 0.1.0 (1)
-
-

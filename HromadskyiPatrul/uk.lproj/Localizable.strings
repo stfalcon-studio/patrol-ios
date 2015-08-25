@@ -11,3 +11,12 @@
 "Settings"                                      =   "Налаштування";
 "Back"                                          =   "Назад";
 "Version"                                       =   "Версія";
+"Login"                                         =   "УВІЙТИ";
+"Public patrol"                                 =   "Громадський патруль";
+"About text 1"                                  =   "Побачив порушника правил дорожнього руху?";
+"About text 2"                                  =   "Сфотографуй його та надішли нам фото.";
+"Alert error email title"                       =   "Помилка";
+"Alert error email message"                     =   "Будь ласка, введіть коректну поштову адресу.";
+"Alert error API title"                         =   "Помилка";
+"Alert error API message"                       =   "Вказана поштова адреса не є дійсною.";
+"Alert error button Ok"                         =   "Ok";

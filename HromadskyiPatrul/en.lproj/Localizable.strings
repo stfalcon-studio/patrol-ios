@@ -11,3 +11,12 @@
 "Settings"                                      =   "Settings";
 "Back"                                          =   "Back";
 "Version"                                       =   "Version";
+"Login"                                         =   "LOGIN";
+"Public patrol"                                 =   "Public patrol";
+"About text 1"                                  =   "Saw the infringer of traffic regulations?";
+"About text 2"                                  =   "Take a photo of it and send us.";
+"Alert error email title"                       =   "Error";
+"Alert error email message"                     =   "Please, enter a valid email address.";
+"Alert error API title"                         =   "Error";
+"Alert error API message"                       =   "Entered email is invalid.";
+"Alert error button Ok"                         =   "Ok";

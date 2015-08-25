@@ -51,7 +51,7 @@ NSString const *DeviceMode                                  =   @"Device";
 #endif
 
     // Navigation Bar
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"607C8B" alpha:1.f]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"05A9F4" alpha:1.f]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     

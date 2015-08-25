@@ -1,5 +1,11 @@
 Version 0.1.0 (2):
-- ;
+- add App & design icons;
+- add custom background & tint color to Status bar;
+- add "NSString-Email" framework;
+- add "AFNetworking" framework;
+- add NSUserDefaults to local store user info;
+- add Login & Logout methods;
+- add transition between scenes.
 
 Version 0.1.0 (1):
 - create new project & add it to GitLab;

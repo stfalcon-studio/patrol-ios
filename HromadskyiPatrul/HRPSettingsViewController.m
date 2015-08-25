@@ -9,7 +9,7 @@
 #import "HRPSettingsViewController.h"
 
 
-@interface HRPSettingsViewController ()
+@interface HRPSettingsViewController () 
 
 @end
 
@@ -20,12 +20,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.title   =   NSLocalizedString(@"Settings", nil);
+    self.navigationItem.title                   =   NSLocalizedString(@"Settings", nil);
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark - Actions -
+- (IBAction)actionLogoutButtonTap:(UIButton *)sender {
+    NSUserDefaults *userApp                     =   [NSUserDefaults standardUserDefaults];
+    [userApp removeObjectForKey:@"userAppEmail"];
+
+    [self.navigationController popToRootViewControllerAnimated:YES];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
+                                                        object:nil
+                                                      userInfo:nil];
 }
 
 @end
