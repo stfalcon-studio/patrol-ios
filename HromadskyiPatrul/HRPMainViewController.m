@@ -126,6 +126,7 @@
                             
                             // Set NSUserDefaults item
                             [userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
+                            [userApp synchronize];
                         }
                         orFailure:^(AFHTTPRequestOperation *failureOperation) {
                             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error API title", nil)

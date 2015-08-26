@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 
 
-@interface HRPSettingsViewController : UIViewController
+@interface HRPSettingsViewController : UITableViewController
 
 @end

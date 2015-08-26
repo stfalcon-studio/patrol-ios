@@ -1,3 +1,10 @@
+26.05.2015:
+    1.  IB      -   create new Settings TVC (10 min)
+    2.  CODE    -   change type of HRPSettingsViewController (5 min)
+    3.  CODE    -   add 2 action & methods to Settings TVC (30 min)
+    4.  CODE    -   update Crashlytics SDK (30 min)
+    5.  IB      -   add UICollectionView (60 min)
+
 25.04.2015:
     1.  IB      -   add icons (10 min)
     2.  IB      -   add background color #05A9F4 (10 min)
