@@ -27,8 +27,12 @@
 		B1AFA95E1B8E083000FBE416 /* HRPPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA95D1B8E083000FBE416 /* HRPPhoto.m */; };
 		B1AFA9631B8E12CD00FBE416 /* HRPImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA9621B8E12CD00FBE416 /* HRPImage.m */; };
 		B1AFA9661B8E133700FBE416 /* UIImage+ChangeOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA9651B8E133700FBE416 /* UIImage+ChangeOriginalImage.m */; };
-		B1AFA9681B8E17A100FBE416 /* test-image.JPG in Resources */ = {isa = PBXBuildFile; fileRef = B1AFA9671B8E17A100FBE416 /* test-image.JPG */; };
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
+		B1EE06C21B8F436700CD3A03 /* HRPNetworkConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = B1EE06C11B8F436700CD3A03 /* HRPNetworkConnection.m */; };
+		B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
+		B1EE06C71B8F655B00CD3A03 /* HRPLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = B1EE06C61B8F655B00CD3A03 /* HRPLocations.m */; };
+		B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
+		B1EE06CD1B8F981C00CD3A03 /* test.JPG in Resources */ = {isa = PBXBuildFile; fileRef = B1EE06CC1B8F981C00CD3A03 /* test.JPG */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,8 +85,14 @@
 		B1AFA9621B8E12CD00FBE416 /* HRPImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPImage.m; sourceTree = "<group>"; };
 		B1AFA9641B8E133700FBE416 /* UIImage+ChangeOriginalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ChangeOriginalImage.h"; sourceTree = "<group>"; };
 		B1AFA9651B8E133700FBE416 /* UIImage+ChangeOriginalImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ChangeOriginalImage.m"; sourceTree = "<group>"; };
-		B1AFA9671B8E17A100FBE416 /* test-image.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "test-image.JPG"; sourceTree = "<group>"; };
 		B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		B1EE06C01B8F436700CD3A03 /* HRPNetworkConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPNetworkConnection.h; sourceTree = "<group>"; };
+		B1EE06C11B8F436700CD3A03 /* HRPNetworkConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPNetworkConnection.m; sourceTree = "<group>"; };
+		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		B1EE06C51B8F655B00CD3A03 /* HRPLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPLocations.h; sourceTree = "<group>"; };
+		B1EE06C61B8F655B00CD3A03 /* HRPLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPLocations.m; sourceTree = "<group>"; };
+		B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		B1EE06CC1B8F981C00CD3A03 /* test.JPG */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = test.JPG; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +100,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */,
+				B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */,
 				B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */,
 				A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */,
 			);
@@ -108,6 +120,8 @@
 		866BE91730CC59D56766BD2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */,
+				B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */,
 				B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */,
 				60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */,
 			);
@@ -201,7 +215,7 @@
 				B1AC898F1B879A07009D12D6 /* Main.storyboard */,
 				B1AC89941B879A07009D12D6 /* LaunchScreen.xib */,
 				B1AC89921B879A07009D12D6 /* Images.xcassets */,
-				B1AFA9671B8E17A100FBE416 /* test-image.JPG */,
+				B1EE06CC1B8F981C00CD3A03 /* test.JPG */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -230,6 +244,10 @@
 				B1AFA95D1B8E083000FBE416 /* HRPPhoto.m */,
 				B1AFA9611B8E12CD00FBE416 /* HRPImage.h */,
 				B1AFA9621B8E12CD00FBE416 /* HRPImage.m */,
+				B1EE06C01B8F436700CD3A03 /* HRPNetworkConnection.h */,
+				B1EE06C11B8F436700CD3A03 /* HRPNetworkConnection.m */,
+				B1EE06C51B8F655B00CD3A03 /* HRPLocations.h */,
+				B1EE06C61B8F655B00CD3A03 /* HRPLocations.m */,
 			);
 			name = "Custom Classes";
 			sourceTree = "<group>";
@@ -331,13 +349,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1AFA9681B8E17A100FBE416 /* test-image.JPG in Resources */,
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
 				B1AC89AC1B879A20009D12D6 /* ReadMe in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
 				B1AC89931B879A07009D12D6 /* Images.xcassets in Resources */,
+				B1EE06CD1B8F981C00CD3A03 /* test.JPG in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,6 +419,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1EE06C21B8F436700CD3A03 /* HRPNetworkConnection.m in Sources */,
 				B1AC89C01B87A2A0009D12D6 /* HRPSettingsViewController.m in Sources */,
 				B1AC89C81B87B03E009D12D6 /* UIColor+HexColor.m in Sources */,
 				B1AFA9661B8E133700FBE416 /* UIImage+ChangeOriginalImage.m in Sources */,
@@ -408,6 +427,7 @@
 				B1AFA95E1B8E083000FBE416 /* HRPPhoto.m in Sources */,
 				B1AC89851B879A06009D12D6 /* main.m in Sources */,
 				B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */,
+				B1EE06C71B8F655B00CD3A03 /* HRPLocations.m in Sources */,
 				B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */,
 				B1AC89C41B87A7C5009D12D6 /* HRPButton.m in Sources */,
 				B1AFA95B1B8E052900FBE416 /* HRPPhotoCell.m in Sources */,

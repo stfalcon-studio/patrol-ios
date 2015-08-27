@@ -14,8 +14,9 @@
 "Login"                                         =   "LOGIN";
 "Logout"                                        =   "LOGOUT";
 "Public patrol"                                 =   "Public patrol";
-"About text 1"                                  =   "Saw the infringer of traffic regulations?";
-"About text 2"                                  =   "Take a photo of it and send us.";
+"About text 1"                                  =   "See the infringer of traffic regulations -";
+"About text 2"                                  =   "take a photo and send to us.";
+"About text 3"                                  =   "The country must know its «heroes»!";
 "Alert error email title"                       =   "Error";
 "Alert info title"                              =   "Info";
 "Alert error email message"                     =   "Please, enter a valid email address.";
@@ -23,8 +24,14 @@
 "Alert error API message"                       =   "Entered email is invalid.";
 "Alert error button Ok"                         =   "Ok";
 "Alert error video message"                     =   "Please, take a photo mode";
+"Alert error internet message"                  =   "Please, check your Internet connection.";
 "Switch title"                                  =   "Upload only WiFi";
 "Camera is not available"                       =   "Camera is not available.";
 "Photo is missing"                              =   "photo is missing.";
 "Photos 2-4 are missing"                        =   "photos are missing.";
 "Photos >5 are missing"                         =   "photos are missing.";
+
+"Alert error location title"                    =   "Error";
+"Alert error location message off"              =   "Location services are off";
+"Alert error location title background"         =   "To use background...";
+"Alert error location message background"       =   "Background location is not enabled";

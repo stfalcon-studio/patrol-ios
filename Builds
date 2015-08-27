@@ -1,3 +1,12 @@
+Version 0.1.0 (4):
+- add WiFi detect method;
+- add scroll to Login scene;
+- change about text in Login scene;
+- add check Internet connection method;
+- add photo from camera to collection;
+- add location manager;
+- add API "Upload photo to server".
+
 Version 0.1.0 (3):
 - update Crashlytics SDK;
 - create Settings scene;

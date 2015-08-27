@@ -23,7 +23,9 @@ typedef NS_ENUM (NSInteger, HRPPhotoState) {
 @property (strong, nonatomic) NSString *assetsURL;
 @property (assign, nonatomic) CGFloat latitude;
 @property (assign, nonatomic) CGFloat longitude;
+@property (strong, nonatomic) NSData *imageData;
 
-@property (strong, nonatomic) UIImage *image;
+@property (strong, nonatomic) UIImage *imageAvatar;
+@property (strong, nonatomic) UIImage *imageOriginal;
 
 @end

@@ -9,7 +9,7 @@
 #import "HRPAppDelegate.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
-#import <Lookback/Lookback.h>
+//#import <Lookback/Lookback.h>
 #import "UIColor+HexColor.h"
 
 
@@ -34,21 +34,21 @@ NSString const *DeviceMode                                  =   @"Device";
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];
     
-    // SDK LookBack
-    [Lookback setupWithAppToken:@"dfY5hDKSnhoCqsczL"];
-    [Lookback sharedLookback].shakeToRecord                 =   YES;
-    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
-    
-    
-#if DEBUG || ADHOC
-    //    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
-    //    [Lookback sharedLookback].shakeToRecord                 =   NO;
-    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
-    [Lookback sharedLookback].shakeToRecord                 =   YES;
-#else // APPSTORE
-    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
-    [Lookback sharedLookback].shakeToRecord                 =   YES; // Or NO, if you have a feedback button in Settings, or a secret gesture.
-#endif
+//    // SDK LookBack
+//    [Lookback setupWithAppToken:@"dfY5hDKSnhoCqsczL"];
+//    [Lookback sharedLookback].shakeToRecord                 =   YES;
+//    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
+//    
+//    
+//#if DEBUG || ADHOC
+//    //    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
+//    //    [Lookback sharedLookback].shakeToRecord                 =   NO;
+//    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
+//    [Lookback sharedLookback].shakeToRecord                 =   YES;
+//#else // APPSTORE
+//    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
+//    [Lookback sharedLookback].shakeToRecord                 =   YES; // Or NO, if you have a feedback button in Settings, or a secret gesture.
+//#endif
 
     // Navigation Bar
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"05A9F4" alpha:1.f]];

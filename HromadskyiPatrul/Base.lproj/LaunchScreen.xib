@@ -18,11 +18,21 @@
                         <constraint firstAttribute="width" constant="170" id="TOr-ZW-ina"/>
                     </constraints>
                 </imageView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="huH-EM-mZn">
+                    <rect key="frame" x="0.0" y="0.0" width="480" height="20"/>
+                    <color key="backgroundColor" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="5tA-0z-9Zj"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="haI-0J-sLg" secondAttribute="centerX" id="0WF-XQ-P7t"/>
+                <constraint firstAttribute="trailing" secondItem="huH-EM-mZn" secondAttribute="trailing" id="ZpV-8Z-DBZ"/>
+                <constraint firstItem="huH-EM-mZn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="vKd-I5-4vU"/>
                 <constraint firstAttribute="centerY" secondItem="haI-0J-sLg" secondAttribute="centerY" multiplier="2.7" id="wVM-Yh-7uG"/>
+                <constraint firstItem="huH-EM-mZn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="x0O-Mu-JI3"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

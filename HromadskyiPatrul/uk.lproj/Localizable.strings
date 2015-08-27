@@ -14,8 +14,9 @@
 "Login"                                         =   "УВІЙТИ";
 "Logout"                                        =   "ВИЙТИ";
 "Public patrol"                                 =   "Громадський патруль";
-"About text 1"                                  =   "Побачив порушника правил дорожнього руху?";
-"About text 2"                                  =   "Сфотографуй його та надішли нам фото.";
+"About text 1"                                  =   "Бачиш порушника правил дорожнього руху -";
+"About text 2"                                  =   "сфотографуй та надішли нам.";
+"About text 3"                                  =   "Країна має знати своїх «героїв»!";
 "Alert error email title"                       =   "Помилка";
 "Alert info title"                              =   "Інфо";
 "Alert error email message"                     =   "Будь ласка, введіть коректну поштову адресу.";
@@ -28,3 +29,9 @@
 "Photo is missing"                              =   "Фотографія відсутня.";
 "Photos 2-4 are missing"                        =   "фотографії відсутні.";
 "Photos >5 are missing"                         =   "фотографій відсутні.";
+
+"Alert error location title"                    =   "Помилка";
+"Alert error location message off"              =   "Сервіс розташування вимкнений.";
+"Alert error location title background"         =   "Фоновий режим...";
+"Alert error location message background"       =   "Сервіс розташування не працює у фоновому режимі.";
+

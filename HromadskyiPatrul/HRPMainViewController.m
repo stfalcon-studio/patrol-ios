@@ -17,26 +17,39 @@
 
 @interface HRPMainViewController () <UITextFieldDelegate>
 
+
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (strong, nonatomic) IBOutlet UIView *contentView;
+
 @property (strong, nonatomic) IBOutlet UIImageView *logoImageView;
 @property (strong, nonatomic) IBOutlet UILabel *logoLabel;
 @property (strong, nonatomic) IBOutlet UILabel *aboutLabel1;
 @property (strong, nonatomic) IBOutlet UILabel *aboutLabel2;
+@property (strong, nonatomic) IBOutlet UILabel *aboutLabel3;
 @property (strong, nonatomic) IBOutlet UITextField *emailTextField;
 @property (strong, nonatomic) IBOutlet HRPButton *loginButton;
 @property (strong, nonatomic) IBOutlet UILabel *madeByLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *stfalconLogoImageView;
 @property (strong, nonatomic) IBOutlet UILabel *versionLabel;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewWidthConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
+
 @end
 
 @implementation HRPMainViewController {
     NSUserDefaults *userApp;
+    CGSize keyboardSize;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    // Set Scroll View constraints
+    self.contentViewWidthConstraint.constant            =   CGRectGetWidth(self.view.frame);
+    self.contentViewHeightConstraint.constant           =   CGRectGetHeight(self.view.frame);
+    
     // Set Status Bar
     UIView *statusBarView                               =  [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), 20.f)];
     statusBarView.backgroundColor                       =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
@@ -50,12 +63,24 @@
     self.logoLabel.text                                 =   NSLocalizedString(@"Public patrol", nil);
     self.aboutLabel1.text                               =   NSLocalizedString(@"About text 1", nil);
     self.aboutLabel2.text                               =   NSLocalizedString(@"About text 2", nil);
+    self.aboutLabel3.text                               =   NSLocalizedString(@"About text 3", nil);
     
     // Set button title
     [self.loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
     
     // Get NSUserDefaults item
     userApp                                             =   [NSUserDefaults standardUserDefaults];
+    
+    // Keyboard notifications
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidHide:)
+                                                 name:UIKeyboardDidHideNotification
+                                               object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -84,6 +109,10 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -126,6 +155,7 @@
                             
                             // Set NSUserDefaults item
                             [userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
+                            [userApp setObject:successResult[@"id"] forKey:@"userAppID"];
                             [userApp synchronize];
                         }
                         orFailure:^(AFHTTPRequestOperation *failureOperation) {
@@ -141,6 +171,23 @@
                                    delegate:nil
                           cancelButtonTitle:nil
                           otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+}
+
+
+#pragma mark - NSNotification -
+- (void)keyboardDidShow:(NSNotification *)notification {
+    NSDictionary *info                              =   [notification userInfo];
+    keyboardSize                                    =   [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+
+    CGFloat emailPositionY                          =   CGRectGetMaxY(self.emailTextField.frame);
+    CGFloat keyboardPositionTop                     =   self.contentViewHeightConstraint.constant - keyboardSize.height - 10.f;
+    
+    if (emailPositionY > keyboardPositionTop)
+        [self.scrollView setContentOffset:CGPointMake(0.f, emailPositionY - keyboardPositionTop) animated:YES];
+}
+
+- (void)keyboardDidHide:(NSNotification *)notification {
+    [self.scrollView setContentOffset:CGPointZero animated:YES];
 }
 
 

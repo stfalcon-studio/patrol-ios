@@ -14,8 +14,9 @@
 "Login"                                         =   "ВОЙТИ";
 "Logout"                                        =   "ВЫЙТИ";
 "Public patrol"                                 =   "Общественный патруль";
-"About text 1"                                  =   "Увидел нарушителя правил дорожного движения?";
-"About text 2"                                  =   "Сфотографируй его и пришли нам фото.";
+"About text 1"                                  =   "Видиш нарушителя правил дорожного движения -";
+"About text 2"                                  =   "сфотографируй и пришли нам.";
+"About text 3"                                  =   "Страна должна знать своих «героев»!";
 "Alert error email title"                       =   "Ошибка";
 "Alert info title"                              =   "Инфо";
 "Alert error email message"                     =   "Пожалуйста, введите корректный почтовый адрес.";
@@ -28,3 +29,8 @@
 "Photo is missing"                              =   "фотография отсутствует.";
 "Photos 2-4 are missing"                        =   "фотографии отсутствуют.";
 "Photos >5 are missing"                         =   "фотографий отсутствуют.";
+
+"Alert error location title"                    =   "Ошибка";
+"Alert error location message off"              =   "Сервис определения местоположения выключен.";
+"Alert error location title background"         =   "Фоновый режим...";
+"Alert error location message background"       =   "Сервис определения местоположения не работает в фоновом режиме.";
