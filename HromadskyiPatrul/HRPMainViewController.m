@@ -143,28 +143,34 @@
 
 #pragma mark - Actions -
 - (IBAction)actionLoginButtonTap:(HRPButton *)sender {
-    if ([self.emailTextField.text isEmail])
+    // Email validation
+    if ([self.emailTextField.text isEmail]) {
         // API
-        [self userLoginParameters:self.emailTextField.text
-                        onSuccess:^(NSDictionary *successResult) {
-                            UINavigationController *collectionNC            =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionNC"];
-                            HRPCollectionViewController *collectionVC       =   collectionNC.viewControllers[0];
-                            [collectionVC.userNameBarButton setTitle:self.emailTextField.text];
-                            
-                            [self presentViewController:collectionNC animated:YES completion:nil];
-                            
-                            // Set NSUserDefaults item
-                            [userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
-                            [userApp setObject:successResult[@"id"] forKey:@"userAppID"];
-                            [userApp synchronize];
-                        }
-                        orFailure:^(AFHTTPRequestOperation *failureOperation) {
-                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error API title", nil)
-                                                        message:NSLocalizedString(@"Alert error API message", nil)
-                                                       delegate:nil
-                                              cancelButtonTitle:nil
-                                              otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-                        }];
+        if ([self isInternetConnectionAvailable]) {
+            [self userLoginParameters:self.emailTextField.text
+                            onSuccess:^(NSDictionary *successResult) {
+                                UINavigationController *collectionNC            =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionNC"];
+                                HRPCollectionViewController *collectionVC       =   collectionNC.viewControllers[0];
+                                [collectionVC.userNameBarButton setTitle:self.emailTextField.text];
+                                
+                                [self presentViewController:collectionNC animated:YES completion:nil];
+                                
+                                // Set NSUserDefaults item
+                                [userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
+                                [userApp setObject:successResult[@"id"] forKey:@"userAppID"];
+                                [userApp synchronize];
+                            }
+                            orFailure:^(AFHTTPRequestOperation *failureOperation) {
+                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error API title", nil)
+                                                            message:NSLocalizedString(@"Alert error API message", nil)
+                                                           delegate:nil
+                                                  cancelButtonTitle:nil
+                                                  otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+                            }];
+        }
+    }
+    
+    // Email error
     else
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
                                     message:NSLocalizedString(@"Alert error email message", nil)
@@ -194,6 +200,24 @@
 #pragma mark - UIGestureRecognizer -
 - (IBAction)handleGestureRecognizerTap:(UITapGestureRecognizer *)sender {
     [self. emailTextField resignFirstResponder];
+}
+
+
+#pragma mark - Methods -
+- (BOOL)isInternetConnectionAvailable {
+    NSURL *scriptUrl                                =   [NSURL URLWithString:@"http://stfalcon.com/team"];
+    NSData *data                                    =   [NSData dataWithContentsOfURL:scriptUrl];
+    
+    if (data)
+        return YES;
+    else
+        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
+                                    message:NSLocalizedString(@"Alert error internet message", nil)
+                                   delegate:nil
+                          cancelButtonTitle:nil
+                          otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+    
+    return NO;
 }
 
 

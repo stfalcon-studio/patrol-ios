@@ -23,7 +23,9 @@
 "Alert error API title"                         =   "Ошибка";
 "Alert error API message"                       =   "Указанный почтовый адрес недействительный.";
 "Alert error video message"                     =   "Пожалуйста, выберите режим фотографирования.";
-"Alert error button Ok"                         =   "Ok";
+"Alert error button Ok"                         =   "Ок";
+"Alert error button Cancel"                     =   "Отмена";
+"Alert error internet message"                  =   "Пожалуйста, проверьте подключение к Интернету.";
 "Switch title"                                  =   "Загружать только по WiFi";
 "Camera is not available"                       =   "Камера недоступна.";
 "Photo is missing"                              =   "фотография отсутствует.";
@@ -34,3 +36,9 @@
 "Alert error location message off"              =   "Сервис определения местоположения выключен.";
 "Alert error location title background"         =   "Фоновый режим...";
 "Alert error location message background"       =   "Сервис определения местоположения не работает в фоновом режиме.";
+
+"Open a Photo"                                  =   "Открыть фото";
+"Remove a Photo"                                =   "Удалить фото";
+"Photo preview"                                 =   "Фото превью";
+"Upload a Photo"                                =   "Загрузить одно фото";
+"Upload Photos"                                 =   "Загрузить все фото";

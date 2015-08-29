@@ -13,9 +13,10 @@
 
 @interface HRPImage : NSObject
 
-@property (strong, nonatomic) UIImage *originalImage;
-@property (strong, nonatomic) UIImage *modifiedImage;
-@property (strong, nonatomic) NSString *originalImageURL;
+@property (strong, nonatomic) UIImage *imageAvatar;
+@property (strong, nonatomic) NSData *imageData;
+@property (strong, nonatomic) NSString *imageOriginalURL;
+
 @property (assign, nonatomic) CGSize newSize;
 
 - (UIImage *)downloadImageFromURL:(NSString *)stringURL;

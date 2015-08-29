@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
+		B137A0BD1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */; };
 		B1AC89851B879A06009D12D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89841B879A06009D12D6 /* main.m */; };
 		B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */; };
 		B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */; };
@@ -16,7 +17,6 @@
 		B1AC89931B879A07009D12D6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89921B879A07009D12D6 /* Images.xcassets */; };
 		B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
 		B1AC89A21B879A07009D12D6 /* HromadskyiPatrulTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */; };
-		B1AC89AC1B879A20009D12D6 /* ReadMe in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AB1B879A20009D12D6 /* ReadMe */; };
 		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B1AC89BD1B87A27D009D12D6 /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */; };
@@ -49,6 +49,8 @@
 		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
+		B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhotoPreviewViewController.h; sourceTree = "<group>"; };
+		B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoPreviewViewController.m; sourceTree = "<group>"; };
 		B1AC897F1B879A06009D12D6 /* HromadskyiPatrul.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HromadskyiPatrul.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1AC89831B879A06009D12D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AC89841B879A06009D12D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -63,7 +65,6 @@
 		B1AC899B1B879A07009D12D6 /* HromadskyiPatrulTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HromadskyiPatrulTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1AC89A01B879A07009D12D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HromadskyiPatrulTests.m; sourceTree = "<group>"; };
-		B1AC89AB1B879A20009D12D6 /* ReadMe */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe; sourceTree = "<group>"; };
 		B1AC89AD1B879A29009D12D6 /* Builds */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Builds; sourceTree = "<group>"; };
 		B1AC89B21B879C8B009D12D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B41B879C91009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -140,7 +141,6 @@
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
-				B1AC89AB1B879A20009D12D6 /* ReadMe */,
 				B1AC89AD1B879A29009D12D6 /* Builds */,
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
@@ -229,6 +229,8 @@
 				B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */,
 				B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */,
 				B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */,
+				B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */,
+				B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -351,7 +353,6 @@
 			files = (
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
-				B1AC89AC1B879A20009D12D6 /* ReadMe in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
 				B1AC89931B879A07009D12D6 /* Images.xcassets in Resources */,
@@ -425,6 +426,7 @@
 				B1AFA9661B8E133700FBE416 /* UIImage+ChangeOriginalImage.m in Sources */,
 				B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */,
 				B1AFA95E1B8E083000FBE416 /* HRPPhoto.m in Sources */,
+				B137A0BD1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m in Sources */,
 				B1AC89851B879A06009D12D6 /* main.m in Sources */,
 				B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */,
 				B1EE06C71B8F655B00CD3A03 /* HRPLocations.m in Sources */,

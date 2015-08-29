@@ -8,18 +8,37 @@
 
 #import "HRPPhoto.h"
 
-@implementation HRPPhoto
+@implementation HRPPhoto 
 
 #pragma mark - Constructors -
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
+    self    =   [super init];
+    
+    if (self) {
+        self.state          =   [[aDecoder decodeObjectForKey:@"stateKey"] integerValue];
+        self.assetsURL      =   [aDecoder decodeObjectForKey:@"assetsURLKey"];
+        self.latitude       =   [[aDecoder decodeObjectForKey:@"latitudeKey"] floatValue];
+        self.longitude      =   [[aDecoder decodeObjectForKey:@"longitudeKey"] floatValue];
+    }
+    
+    return self;
+}
+
 - (instancetype)init {
     self = [super init];
    
     if (self) {
-        self.state  =   HRPPhotoStateUpload;
-        //self.image  =   [UIImage imageNamed:@"test-image.JPG"];
+        self.state          =   HRPPhotoStateUpload;
     }
     
     return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeObject:@(self.state) forKey:@"stateKey"];
+    [aCoder encodeObject:self.assetsURL forKey:@"assetsURLKey"];
+    [aCoder encodeObject:@(self.latitude) forKey:@"latitudeKey"];
+    [aCoder encodeObject:@(self.longitude) forKey:@"longitudeKey"];
 }
 
 @end

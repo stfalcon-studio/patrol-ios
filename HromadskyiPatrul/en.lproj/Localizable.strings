@@ -24,6 +24,7 @@
 "Alert error API message"                       =   "Entered email is invalid.";
 "Alert error button Ok"                         =   "Ok";
 "Alert error video message"                     =   "Please, take a photo mode";
+"Alert error button Cancel"                     =   "Cancel";
 "Alert error internet message"                  =   "Please, check your Internet connection.";
 "Switch title"                                  =   "Upload only WiFi";
 "Camera is not available"                       =   "Camera is not available.";
@@ -35,3 +36,9 @@
 "Alert error location message off"              =   "Location services are off";
 "Alert error location title background"         =   "To use background...";
 "Alert error location message background"       =   "Background location is not enabled";
+
+"Open a Photo"                                  =   "Open a Photo";
+"Remove a Photo"                                =   "Remove a Photo";
+"Photo preview"                                 =   "Photo preview";
+"Upload a Photo"                                =   "Upload a Photo";
+"Upload Photos"                                 =   "Upload Photos";

@@ -1,3 +1,15 @@
+Version 0.1.0 (6):
+- add local save collection after show missing message;
+- add pagination to read local collection data;
+- ;
+
+Version 0.1.0 (5):
+- add local store data in file;
+- add insert new photo to collection view;
+- add tap in photo action;
+- add batch photos update;
+- add preview photo scene.
+
 Version 0.1.0 (4):
 - add WiFi detect method;
 - add scroll to Login scene;

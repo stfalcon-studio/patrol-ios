@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "HRPPhoto.h"
+#import "HRPImage.h"
 
 
 @interface HRPPhotoCell : UICollectionViewCell
 
 @property (strong, nonatomic) HRPPhoto *photo;
+@property (strong, nonatomic) HRPImage *image;
+
 @property (strong, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (strong, nonatomic) IBOutlet UIButton *photoStateButton;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;

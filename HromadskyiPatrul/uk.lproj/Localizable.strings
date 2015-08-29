@@ -19,11 +19,13 @@
 "About text 3"                                  =   "Країна має знати своїх «героїв»!";
 "Alert error email title"                       =   "Помилка";
 "Alert info title"                              =   "Інфо";
-"Alert error email message"                     =   "Будь ласка, введіть коректну поштову адресу.";
+"Alert error email message"                     =   "Будь ласка, \n введіть коректну поштову адресу.";
 "Alert error API title"                         =   "Помилка";
 "Alert error API message"                       =   "Вказана поштова адреса не є дійсною.";
-"Alert error video message"                     =   "Будь ласка, оберіть режим фотографування.";
-"Alert error button Ok"                         =   "Ok";
+"Alert error video message"                     =   "Будь ласка, \n оберіть режим фотографування.";
+"Alert error button Ok"                         =   "Ок";
+"Alert error button Cancel"                     =   "Скасувати";
+"Alert error internet message"                  =   "Будь ласка, \n перевірте підключення до Інтернету.";
 "Switch title"                                  =   "Завантажувати тільки по WiFi";
 "Camera is not available"                       =   "Камера недоступна.";
 "Photo is missing"                              =   "Фотографія відсутня.";
@@ -35,3 +37,8 @@
 "Alert error location title background"         =   "Фоновий режим...";
 "Alert error location message background"       =   "Сервіс розташування не працює у фоновому режимі.";
 
+"Open a Photo"                                  =   "Відкрити фото";
+"Remove a Photo"                                =   "Видалити фото";
+"Photo preview"                                 =   "Фото превью";
+"Upload a Photo"                                =   "Завантажити одне фото";
+"Upload Photos"                                 =   "Завантажити всі фото";
