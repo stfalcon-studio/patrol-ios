@@ -382,7 +382,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     NSInteger indexFinish                                       =   ((indexStart + paginationOffset) < photosDataSource.count) ?    (indexStart + paginationOffset) :
                                                                                                                                     photosDataSource.count;
     NSArray *photosDataSourceCopy                               =   [NSMutableArray arrayWithArray:photosDataSource];
-
+    
     for (NSInteger i = indexStart; i <= indexFinish - 1; i++) {
         HRPPhoto *photo                                         =   photosDataSourceCopy[i];
         HRPImage *image                                         =   [[HRPImage alloc] init];
@@ -396,11 +396,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                 toSize:photoSize
                                                                        andCropInCenter:YES];
                                        
-//                                       photo.state              =   HRPPhotoStateRepeat;
+//                                        photo.state              =   HRPPhotoStateRepeat;
                                        
                                        if (photo.state != HRPPhotoStateDone)
                                            photosNeedUploadCount++;
-                                           
+                                       
                                        [imagesDataSource addObject:image];
                                    } else {
                                        missingPhotosCount++;
@@ -412,7 +412,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                        if (missingPhotosCount == 1)
                                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert info title", nil)
                                                                        message:[NSString stringWithFormat:@"%li %@",    (long)missingPhotosCount,
-                                                                                NSLocalizedString(@"Photo is missing", nil)]
+                                                                                                                        NSLocalizedString(@"Photo is missing", nil)]
                                                                       delegate:nil
                                                              cancelButtonTitle:nil
                                                              otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
@@ -420,7 +420,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                        else if (missingPhotosCount > 0 && missingPhotosCount <= 4)
                                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert info title", nil)
                                                                        message:[NSString stringWithFormat:@"%li %@",    (long)missingPhotosCount,
-                                                                                NSLocalizedString(@"Photos 2-4 are missing", nil)]
+                                                                                                                        NSLocalizedString(@"Photos 2-4 are missing", nil)]
                                                                       delegate:nil
                                                              cancelButtonTitle:nil
                                                              otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
@@ -428,7 +428,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                        else if (missingPhotosCount > 4)
                                            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert info title", nil)
                                                                        message:[NSString stringWithFormat:@"%li %@",    (long)missingPhotosCount,
-                                                                                NSLocalizedString(@"Photos >5 are missing", nil)]
+                                                                                                                        NSLocalizedString(@"Photos >5 are missing", nil)]
                                                                       delegate:nil
                                                              cancelButtonTitle:nil
                                                              otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
@@ -438,7 +438,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                        
                                        missingPhotosCount                                       =   0;
                                        imagesIndexPath                                          =   [NSMutableArray array];
-
+                                       
                                        for (NSInteger i = indexStart; i <= imagesDataSource.count - 1; i++) {
                                            [imagesIndexPath addObject:[NSIndexPath indexPathForItem:i inSection:0]];
                                        }
@@ -452,7 +452,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                         completion:^(BOOL finished) {
                                                             [self.uploadActivityIndicator stopAnimating];
                                                         }];
-
+                                       
                                        // Upload photos
                                        if (photosNeedUploadCount > 0)
                                            [self startUploadPhotos];
@@ -514,8 +514,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             [self createImagesDataSource];
         } else
             NSLog(@"File does not exist");
-    } //else
-//        [self.uploadActivityIndicator stopAnimating];
+    } else {
+        imagesDataSource                            =   [NSMutableArray array];
+        [self.uploadActivityIndicator stopAnimating];
+    }
 }
 
 - (void)showAlertController {
@@ -668,11 +670,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIImagePickerControllerDelegate -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    [self.photosCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
-                                      atScrollPosition:UICollectionViewScrollPositionTop
-                                              animated:YES];
-    
-//    [self.uploadActivityIndicator startAnimating];
+    if (imagesDataSource.count > 0)
+        [self.photosCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+                                          atScrollPosition:UICollectionViewScrollPositionTop
+                                                  animated:YES];
     
     UIImage *chosenImage                            =   [info objectForKey:UIImagePickerControllerOriginalImage];
     ALAssetsLibrary *assetsLibrary                  =   [[ALAssetsLibrary alloc] init];

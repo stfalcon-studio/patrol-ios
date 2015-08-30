@@ -1,7 +1,7 @@
 Version 0.1.0 (6):
 - add local save collection after show missing message;
 - add pagination to read local collection data;
-- ;
+- fix error create first photo in empty collection.
 
 Version 0.1.0 (5):
 - add local store data in file;
