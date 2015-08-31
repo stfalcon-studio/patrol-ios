@@ -338,12 +338,16 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         if (isUploadInProcess && photosNeedUploadCount > 0)
             [self uploadPhotoFromLoop:inLoop];
         
-        else if (![self canPhotosSendToServer] && !isPaginationRun)
+        else if (![self canPhotosSendToServer] && !isPaginationRun) {
+            [currentCell.activityIndicator stopAnimating];
+            [self.photosCollectionView reloadData];
+            
             [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
                                         message:NSLocalizedString(@"Alert error internet message", nil)
                                        delegate:nil
                               cancelButtonTitle:nil
                               otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+        }
     }
 }
 
