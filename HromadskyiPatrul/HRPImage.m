@@ -47,4 +47,21 @@
     return newImage;
 }
 
+- (UIImage *)grabImageFromAsset:(PHAsset *)asset withSize:(CGSize)newSize {
+    __block UIImage *returnImage;
+    
+    PHImageRequestOptions *options  =   [[PHImageRequestOptions alloc] init];
+    options.synchronous             =   YES;
+   
+    [[PHImageManager defaultManager] requestImageForAsset:asset
+                                               targetSize:newSize
+                                              contentMode:PHImageContentModeAspectFill
+                                                  options:options
+                                            resultHandler: ^(UIImage *result, NSDictionary *info) {
+                                                returnImage = result;
+                                            }];
+    
+    return returnImage;
+}
+
 @end

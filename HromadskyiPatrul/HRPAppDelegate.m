@@ -11,6 +11,7 @@
 #import <Crashlytics/Crashlytics.h>
 //#import <Lookback/Lookback.h>
 #import "UIColor+HexColor.h"
+#import "AFNetworking.h"
 
 
 #if TARGET_IPHONE_SIMULATOR
@@ -30,6 +31,9 @@ NSString const *DeviceMode                                  =   @"Device";
 #pragma mark - Constructors -
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    // Start Monitoring Network
+    [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];

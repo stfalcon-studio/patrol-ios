@@ -1,3 +1,16 @@
+Version 0.1.0 (8):
+- add new tester;
+- fix bug with check network activity;
+- add AFNetworking reachability;
+- add auto start upload photos after each change network connection state.
+
+Version 0.1.0 (7):
+- fix bug with store userApp ID;
+- fix bug with use WiFi setting parameter;
+- disable video setting in camera view;
+- remove Delete & assets from UIAlertController;
+- change Ukrainian texts.
+
 Version 0.1.0 (6):
 - add local save collection after show missing message;
 - add pagination to read local collection data;

@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import <Photos/Photos.h>
 
 
 @interface HRPImage : NSObject
@@ -22,5 +23,6 @@
 - (UIImage *)downloadImageFromURL:(NSString *)stringURL;
 - (UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)newSize andCropInCenter:(BOOL)isCenterCrop;
 - (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
+- (UIImage *)grabImageFromAsset:(PHAsset *)asset withSize:(CGSize)newSize;
 
 @end

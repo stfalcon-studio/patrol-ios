@@ -17,7 +17,6 @@
 
 @interface HRPMainViewController () <UITextFieldDelegate>
 
-
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 
@@ -205,10 +204,8 @@
 
 #pragma mark - Methods -
 - (BOOL)isInternetConnectionAvailable {
-    NSURL *scriptUrl                                =   [NSURL URLWithString:@"http://stfalcon.com/team"];
-    NSData *data                                    =   [NSData dataWithContentsOfURL:scriptUrl];
-    
-    if (data)
+    // Network activity
+    if ([[AFNetworkReachabilityManager sharedManager] isReachable])
         return YES;
     else
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
@@ -216,7 +213,7 @@
                                    delegate:nil
                           cancelButtonTitle:nil
                           otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-    
+
     return NO;
 }
 

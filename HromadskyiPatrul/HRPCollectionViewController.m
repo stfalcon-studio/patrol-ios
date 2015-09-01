@@ -15,10 +15,11 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <CoreLocation/CoreLocation.h>
-#import "HRPNetworkConnection.h"
 #import "HRPLocations.h"
 #import "AFNetworking.h"
+//#import "Reachability.h"
 #import <AFHTTPRequestOperation.h>
+//#import <UIImageView+AFNetworking.h>
 #import "HRPPhotoPreviewViewController.h"
 
 
@@ -36,7 +37,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 @implementation HRPCollectionViewController {
-    HRPNetworkConnection *networkManager;
     HRPLocations *locationsService;
     HRPPhoto *currentPhoto;
     HRPImage *currentImage;
@@ -80,7 +80,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     photosNeedUploadCount                       =   0;
     
     // Set network manager
-    networkManager                              =   [[HRPNetworkConnection alloc] init];
     imagesIndexPath                             =   [NSMutableArray array];
 
     // Set Status Bar
@@ -111,6 +110,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                              selector:@selector(handleRepeatButtonTap:)
                                                  name:@"HRPPhotoCellStateButtonTap"
                                                object:nil];
+    
+    // Set Reachability Observer
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityDidChange:)
+                                                 name:AFNetworkingReachabilityDidChangeNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -118,16 +123,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     isUploadPhotosUsingWiFiAllowed              =   [userApp boolForKey:@"networkStatus"];
     
-    if (isUploadPhotosUsingWiFiAllowed && [networkManager isWiFiConnected]) {
-        /*
-            NSLog(@"Wifi Enabled   : %@", [networkManager isWiFiEnabled  ] ? @"Yes" : @"No");
-            NSLog(@"Wifi Connected : %@", [networkManager isWiFiConnected] ? @"Yes" : @"No");
-            NSLog(@"Wifi BSSID     : %@", [networkManager BSSID]);
-            NSLog(@"Wifi SSID      : %@", [networkManager SSID ]);
-        */
-        
-        // API - upload photos to server
-    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -155,8 +150,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
                                                                          initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
     
-    NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/9/violation/create"
-                                                                                /*[userApp objectForKey:@"userAppID"]*/];
+    NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/%@/violation/create",
+                                                                                                    [userApp objectForKey:@"userAppID"]];
     
     AFHTTPRequestOperation *operationRequest    =   [requestOperationDomainManager POST:pathAPI
                                                                              parameters:parameters
@@ -193,7 +188,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
                 UIImagePickerController *cameraVC       =   [[UIImagePickerController alloc] init];
                 cameraVC.sourceType                     =   UIImagePickerControllerSourceTypeCamera;
-                cameraVC.mediaTypes                     =   [UIImagePickerController availableMediaTypesForSourceType:cameraVC.sourceType];
+                cameraVC.mediaTypes                     =   [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
+                cameraVC.cameraCaptureMode              =   UIImagePickerControllerCameraCaptureModePhoto;
                 cameraVC.allowsEditing                  =   NO;
                 cameraVC.delegate                       =   self;
                 
@@ -238,6 +234,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
 }
 
+- (void)reachabilityDidChange:(NSNotification *)notification {
+    if (notification.userInfo[@"AFNetworkingReachabilityNotificationStatusItem"] && photosNeedUploadCount > 0)
+        [self uploadPhotos];
+}
+
 
 #pragma mark - Methods -
 - (void)getPhotoFromAlbumAtURL:(NSURL *)assetsURL
@@ -255,31 +256,37 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (BOOL)canPhotosSendToServer {
-    NSURL *scriptUrl                                =   [NSURL URLWithString:@"http://stfalcon.com/team"];
-    NSData *data                                    =   [NSData dataWithContentsOfURL:scriptUrl];
-    
-    if (data && !isUploadPhotosUsingWiFiAllowed && !isUploadInProcess)
-        return YES;
-    
-    return NO;
-}
-
-- (void)startUploadPhotos {
-    if ((!isUploadInProcess && photosNeedUploadCount > 0 && isUploadPhotosUsingWiFiAllowed && [networkManager isWiFiConnected]) || [self canPhotosSendToServer]) {
-        [self uploadPhotos];
+    // Network is activity
+    if ([[AFNetworkReachabilityManager sharedManager] isReachable]) {
+        // Check WiFi network connection status
+        if (isUploadPhotosUsingWiFiAllowed && [[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi] && !isUploadInProcess)
+            return YES;
+        
+        // Check WWAN network connection status
+        else if (!isUploadPhotosUsingWiFiAllowed && [[AFNetworkReachabilityManager sharedManager] isReachableViaWWAN] && !isUploadInProcess)
+            return YES;
     }
     
-    else if (![self canPhotosSendToServer] && !isPaginationRun)
+    // Network disconnect
+    else
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
                                     message:NSLocalizedString(@"Alert error internet message", nil)
                                    delegate:nil
                           cancelButtonTitle:nil
                           otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+    
+    return NO;
+}
+
+- (void)startUploadPhotos {
+    if (photosNeedUploadCount > 0 && [self canPhotosSendToServer]) {
+        [self uploadPhotos];
+    }
 }
 
 - (void)uploadPhotoFromLoop:(BOOL)inLoop {
     // Check network connection state
-    if ((isUploadPhotosUsingWiFiAllowed && [networkManager isWiFiConnected]) || [self canPhotosSendToServer]) {
+    if ([self canPhotosSendToServer]) {
         // Async queue
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             // Save to device
@@ -332,25 +339,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         });
     } else {
         [currentCell.activityIndicator stopAnimating];
-//        [self.uploadActivityIndicator stopAnimating];
         
         // Wait for next item upload
         if (isUploadInProcess && photosNeedUploadCount > 0)
             [self uploadPhotoFromLoop:inLoop];
-        
-        else if (![self canPhotosSendToServer] && !isPaginationRun) {
-            [currentCell.activityIndicator stopAnimating];
-            [self.photosCollectionView reloadData];
-            
-            [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
-                                        message:NSLocalizedString(@"Alert error internet message", nil)
-                                       delegate:nil
-                              cancelButtonTitle:nil
-                              otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-        }
     }
 }
-
 
 - (void)uploadPhotos {
     for (HRPPhoto *photo in photosDataSource) {
@@ -525,7 +519,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (void)showAlertController {
-    UIAlertController *alertController              =   [UIAlertController alertControllerWithTitle:currentPhoto.assetsURL
+    UIAlertController *alertController              =   [UIAlertController alertControllerWithTitle:nil
                                                                                             message:nil
                                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     
@@ -544,10 +538,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                    [self presentViewController:photoPreviewVC animated:YES completion:nil];
                                                                                }];
     
+    /*
     UIAlertAction *actionRemovePhoto                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Remove a Photo", nil)
                                                                                  style:UIAlertActionStyleDestructive
                                                                                handler:^(UIAlertAction *action) {
                                                                                }];
+     */
     
     UIAlertAction *actionUploadPhoto                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload a Photo", nil)
                                                                                  style:UIAlertActionStyleDefault
@@ -565,7 +561,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                    [self startUploadPhotos];
                                                                                }];
     
-    [alertController addAction:actionRemovePhoto];
+//    [alertController addAction:actionRemovePhoto];
     [alertController addAction:actionOpenPhoto];
     
     if (currentPhoto.state != HRPPhotoStateDone)
@@ -622,6 +618,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         }
             break;
     }
+    
+    PHImageRequestOptions *imageRequestOptions      =   [[PHImageRequestOptions alloc] init];
+    imageRequestOptions.resizeMode                  =   PHImageRequestOptionsResizeModeFast;
+    imageRequestOptions.normalizedCropRect          =   CGRectMake(0.f, 0.f, photoSize.width, photoSize.height);
     
     [UIView transitionWithView:cell
                       duration:0.7f
