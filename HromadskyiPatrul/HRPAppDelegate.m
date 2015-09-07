@@ -7,11 +7,10 @@
 //
 
 #import "HRPAppDelegate.h"
-#import <Fabric/Fabric.h>
-#import <Crashlytics/Crashlytics.h>
-//#import <Lookback/Lookback.h>
 #import "UIColor+HexColor.h"
 #import "AFNetworking.h"
+#import <Fabric/Fabric.h>
+#import <Crashlytics/Crashlytics.h>
 
 
 #if TARGET_IPHONE_SIMULATOR
@@ -30,29 +29,14 @@ NSString const *DeviceMode                                  =   @"Device";
 
 #pragma mark - Constructors -
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
-    
     // Start Monitoring Network
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     
+    // Sleep mode
+    [UIApplication sharedApplication].idleTimerDisabled     =   YES;
+
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];
-    
-//    // SDK LookBack
-//    [Lookback setupWithAppToken:@"dfY5hDKSnhoCqsczL"];
-//    [Lookback sharedLookback].shakeToRecord                 =   YES;
-//    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
-//    
-//    
-//#if DEBUG || ADHOC
-//    //    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
-//    //    [Lookback sharedLookback].shakeToRecord                 =   NO;
-//    [Lookback sharedLookback].feedbackBubbleVisible         =   YES;
-//    [Lookback sharedLookback].shakeToRecord                 =   YES;
-//#else // APPSTORE
-//    [Lookback sharedLookback].feedbackBubbleVisible         =   NO;
-//    [Lookback sharedLookback].shakeToRecord                 =   YES; // Or NO, if you have a feedback button in Settings, or a secret gesture.
-//#endif
 
     // Navigation Bar
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"05A9F4" alpha:1.f]];

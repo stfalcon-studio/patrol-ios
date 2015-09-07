@@ -15,8 +15,16 @@
     self.layer.backgroundColor  =   fillColor.CGColor;
 }
 
+- (void)setBorderColor:(UIColor *)borderColor {
+    self.layer.borderColor      =   borderColor.CGColor;
+}
+
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     self.layer.cornerRadius     =   cornerRadius;
+}
+
+- (void)setBorderWidth:(CGFloat)borderWidth {
+    self.layer.borderWidth      =   borderWidth;
 }
 
 @end

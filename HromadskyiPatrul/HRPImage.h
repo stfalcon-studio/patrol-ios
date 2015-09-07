@@ -24,5 +24,6 @@
 - (UIImage *)resizeImage:(UIImage *)image toSize:(CGSize)newSize andCropInCenter:(BOOL)isCenterCrop;
 - (UIImage *)imageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
 - (UIImage *)grabImageFromAsset:(PHAsset *)asset withSize:(CGSize)newSize;
+- (UIImage *)squareImageFromImage:(UIImage *)image scaledToSize:(CGFloat)newSize;
 
 @end

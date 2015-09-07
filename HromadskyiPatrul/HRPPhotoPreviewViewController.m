@@ -9,6 +9,7 @@
 #import "HRPPhotoPreviewViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UIColor+HexColor.h"
+#import "HRPImage.h"
 
 
 @interface HRPPhotoPreviewViewController ()
@@ -26,7 +27,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self.cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil) forState:UIControlStateNormal];
+    [self.cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
+                       forState:UIControlStateNormal];
+    
+//    HRPImage *image1     =   [[HRPImage alloc] init];
     
     [self getPhotoFromAlbumAtURL:[NSURL URLWithString:self.photo.assetsURL]
                        onSuccess:^(UIImage *image) {
@@ -35,6 +39,11 @@
                                               options:UIViewAnimationOptionTransitionCrossDissolve
                                            animations:^{
                                                self.photoImageView.image    =   image;
+                                               [self.view bringSubviewToFront:self.cancelButton];
+
+
+                                               //                                               self.photoImageView.image    =   [image1 squareImageFromImage:self.photoImageView.image
+//                                                                                                scaledToSize:CGRectGetHeight(self.view.frame)];
                                            }
                                            completion:^(BOOL finished) {
                                                [self.activityIndicator stopAnimating];

@@ -14,6 +14,8 @@ IB_DESIGNABLE
 @interface HRPButton : UIButton
 
 @property (strong, nonatomic) IBInspectable UIColor *fillColor;
+@property (strong, nonatomic) IBInspectable UIColor *borderColor;
 @property (assign, nonatomic) IBInspectable CGFloat cornerRadius;
+@property (assign, nonatomic) IBInspectable CGFloat borderWidth;
 
 @end

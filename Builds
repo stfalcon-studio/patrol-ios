@@ -1,8 +1,16 @@
+Version 1.0.0 (3):
+- change Camera button actions;
+- create new custom Video Camera view scene;
+- add timer & timer label;
+- add record 3 video snippets;
+- ;
+
 Version 0.1.0 (8):
 - add new tester;
 - fix bug with check network activity;
 - add AFNetworking reachability;
-- add auto start upload photos after each change network connection state.
+- add auto start upload photos after each change network connection state;
+- add auto start upload photos after change WiFi setting.
 
 Version 0.1.0 (7):
 - fix bug with store userApp ID;

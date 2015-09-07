@@ -17,10 +17,9 @@
 #import <CoreLocation/CoreLocation.h>
 #import "HRPLocations.h"
 #import "AFNetworking.h"
-//#import "Reachability.h"
 #import <AFHTTPRequestOperation.h>
-//#import <UIImageView+AFNetworking.h>
 #import "HRPPhotoPreviewViewController.h"
+#import "HRPVideoRecordViewController.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -74,7 +73,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
 //    self.uploadActivityIndicator.color          =   [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
     
-    CGFloat cellSide                            =   (CGRectGetWidth(self.photosCollectionView.frame) - 4.f) / 2;
+    CGFloat cellSide                            =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
     photoSize                                   =   CGSizeMake(cellSide, cellSide);
     missingPhotosCount                          =   0;
     photosNeedUploadCount                       =   0;
@@ -94,6 +93,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     isUploadInProcess                           =   NO;
     
     isPaginationRun                             =   NO;
+    
+    
+//    [self createTestDataSource];
+    
     
     [self createStoreDataPath];
 //    [self savePhotosCollectionToFile];
@@ -123,6 +126,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     isUploadPhotosUsingWiFiAllowed              =   [userApp boolForKey:@"networkStatus"];
     
+    if (photosNeedUploadCount > 0 && !isUploadInProcess)
+        [self startUploadPhotos];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -182,37 +187,64 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                          sender.fillColor               =   [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
                      }];
     
-    if (isLocationServiceEnabled) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // Use device camera
-            if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                UIImagePickerController *cameraVC       =   [[UIImagePickerController alloc] init];
-                cameraVC.sourceType                     =   UIImagePickerControllerSourceTypeCamera;
-                cameraVC.mediaTypes                     =   [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
-                cameraVC.cameraCaptureMode              =   UIImagePickerControllerCameraCaptureModePhoto;
-                cameraVC.allowsEditing                  =   NO;
-                cameraVC.delegate                       =   self;
-                
-                cameraVC.modalPresentationStyle         =   UIModalPresentationCurrentContext;
-                self.imagePickerController              =   cameraVC;
-                
-                if (![self.imagePickerController isBeingPresented])
-                    [self.navigationController presentViewController:self.imagePickerController animated:YES completion:nil];
-            } else
-                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
-                                            message:NSLocalizedString(@"Camera is not available", nil)
-                                           delegate:nil
-                                  cancelButtonTitle:nil
-                                  otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-        });
-    }
+    UIAlertController *alertController              =   [UIAlertController alertControllerWithTitle:nil
+                                                                                            message:nil
+                                                                                     preferredStyle:UIAlertControllerStyleActionSheet];
     
-    else if ([locationsService isEnabled]) {
-        locationsService.manager.delegate           =   self;
-        isLocationServiceEnabled                    =   YES;
-            
-        [self actionCameraButtonTap:self.cameraButton];
-    }
+    UIAlertAction *actionCancel                     =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
+                                                                                 style:UIAlertActionStyleCancel
+                                                                               handler:^(UIAlertAction *action) {
+                                                                               }];
+    
+    UIAlertAction *actionTakePhoto                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Photo", nil)
+                                                                                 style:UIAlertActionStyleDefault
+                                                                               handler:^(UIAlertAction *action) {
+                                                                                   if (isLocationServiceEnabled) {
+                                                                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                                                                           // Use device camera
+                                                                                           if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+                                                                                               UIImagePickerController *cameraVC       =   [[UIImagePickerController alloc] init];
+                                                                                               cameraVC.sourceType                     =   UIImagePickerControllerSourceTypeCamera;
+                                                                                               cameraVC.mediaTypes                     =   [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
+                                                                                               cameraVC.cameraCaptureMode              =   UIImagePickerControllerCameraCaptureModePhoto;
+                                                                                               cameraVC.allowsEditing                  =   NO;
+                                                                                               cameraVC.delegate                       =   self;
+                                                                                               
+                                                                                               cameraVC.modalPresentationStyle         =   UIModalPresentationCurrentContext;
+                                                                                               self.imagePickerController              =   cameraVC;
+                                                                                               
+                                                                                               if (![self.imagePickerController isBeingPresented])
+                                                                                                   [self.navigationController presentViewController:self.imagePickerController animated:YES completion:nil];
+                                                                                           } else
+                                                                                               [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
+                                                                                                                           message:NSLocalizedString(@"Camera is not available", nil)
+                                                                                                                          delegate:nil
+                                                                                                                 cancelButtonTitle:nil
+                                                                                                                 otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+                                                                                       });
+                                                                                   }
+                                                                                   
+                                                                                   else if ([locationsService isEnabled]) {
+                                                                                       locationsService.manager.delegate           =   self;
+                                                                                       isLocationServiceEnabled                    =   YES;
+                                                                                       
+                                                                                       [self actionCameraButtonTap:self.cameraButton];
+                                                                                   }
+                                                                               }];
+    
+    UIAlertAction *actionTakeVideo                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
+                                                                                 style:UIAlertActionStyleDefault
+                                                                               handler:^(UIAlertAction *action) {
+                                                                                   HRPVideoRecordViewController *videoRecordVC      =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+                                                                                   
+                                                                                   [self presentViewController:videoRecordVC animated:YES completion:nil];                                                                                   
+                                                                               }];
+    
+    [alertController addAction:actionTakeVideo];
+    [alertController addAction:actionTakePhoto];
+    [alertController addAction:actionCancel];
+    
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 
@@ -369,6 +401,31 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
 }
 
+- (void)createTestDataSource {
+    NSArray *imageName                                          =   @[@"0.png", @"1.png", @"2.png", @"3.png", @"4.png", @"5.png", @"6.png", @"7.png"];
+    
+    for (int i = 0; i < 8; i++) {
+        HRPPhoto *photo                                         =   [[HRPPhoto alloc] init];
+        HRPImage *image                                         =   [[HRPImage alloc] init];
+        
+        image.imageAvatar                                       =   [image squareImageFromImage:[UIImage imageNamed:imageName[i]]
+                                                                                   scaledToSize:photoSize.height];
+        
+        photo.state                                             =   arc4random_uniform(3);
+        
+        [imagesDataSource addObject:image];
+        [photosDataSource addObject:photo];
+    }
+    
+    [UIView animateWithDuration:0.7f
+                     animations:^{
+                         self.photosCollectionView.alpha     =   1.f;
+                     }
+                     completion:^(BOOL finished) {
+                         [self.uploadActivityIndicator stopAnimating];
+                     }];
+}
+
 - (void)createImagesDataSource {
     [UIView animateWithDuration:0.7f
                      animations:^{
@@ -390,9 +447,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                onSuccess:^(UIImage *photoFromAlbum) {
                                    if (photoFromAlbum) {
                                        image.imageOriginalURL   =   photo.assetsURL;
-                                       image.imageAvatar        =   [image resizeImage:photoFromAlbum
-                                                                                toSize:photoSize
-                                                                       andCropInCenter:YES];
+                                       
+                                       image.imageAvatar        =   [image squareImageFromImage:photoFromAlbum scaledToSize:photoSize.width];
+                                                                     
+                                                                     
+//                                       image.imageAvatar        =   [image resizeImage:photoFromAlbum
+//                                                                                toSize:photoSize
+//                                                                       andCropInCenter:YES];
                                        
 //                                        photo.state              =   HRPPhotoStateRepeat;
                                        
@@ -465,7 +526,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)createStoreDataPath {
     NSError *error;
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Patrul"];
+    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
 
     if (![[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
         if (![[NSFileManager defaultManager] createDirectoryAtPath:arrayPath
@@ -479,7 +540,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)savePhotosCollectionToFile {
     NSData *arrayData                               =   [NSKeyedArchiver archivedDataWithRootObject:photosDataSource];
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Patrul"];
+    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     [[NSFileManager defaultManager] createFileAtPath:arrayPath
@@ -489,7 +550,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)removePhotosCollectionFromFile {
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Patrul"];
+    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     [[NSFileManager defaultManager] removeItemAtPath:arrayPath
@@ -498,7 +559,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)readPhotosCollectionFromFile {
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Patrul"];
+    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
@@ -619,9 +680,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             break;
     }
     
-    PHImageRequestOptions *imageRequestOptions      =   [[PHImageRequestOptions alloc] init];
-    imageRequestOptions.resizeMode                  =   PHImageRequestOptionsResizeModeFast;
-    imageRequestOptions.normalizedCropRect          =   CGRectMake(0.f, 0.f, photoSize.width, photoSize.height);
+//    PHImageRequestOptions *imageRequestOptions      =   [[PHImageRequestOptions alloc] init];
+//    imageRequestOptions.resizeMode                  =   PHImageRequestOptionsResizeModeFast;
+//    imageRequestOptions.normalizedCropRect          =   CGRectMake(0.f, 0.f, photoSize.width, photoSize.height);
     
     [UIView transitionWithView:cell
                       duration:0.7f
@@ -719,7 +780,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                        image.imageAvatar                                    =   [image resizeImage:chosenImage
                                                                                                                             toSize:photoSize
                                                                                                                    andCropInCenter:YES];
-
+                                                       
                                                        [UIView transitionWithView:currentCell.photoImageView
                                                                          duration:0.5f
                                                                           options:UIViewAnimationOptionTransitionCrossDissolve
@@ -729,14 +790,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                        completion:^(BOOL finished) {
                                                                            photo.latitude                   =   locationNew.coordinate.latitude;
                                                                            photo.longitude                  =   locationNew.coordinate.longitude;
-
+                                                                           
                                                                            // API
                                                                            currentPhoto                     =   photo;
                                                                            currentImage                     =   image;
                                                                            
                                                                            [photosDataSource replaceObjectAtIndex:0 withObject:photo];
                                                                            [imagesDataSource replaceObjectAtIndex:0 withObject:image];
-                                                                          
+                                                                           
                                                                            [self savePhotosCollectionToFile];
                                                                            photosNeedUploadCount++;
                                                                            
