@@ -8,6 +8,7 @@
 
 
 // Russian
+"Cancel"                                        =   "Отменить";
 "Settings"                                      =   "Настройки";
 "Back"                                          =   "Назад";
 "Version"                                       =   "Версия";
@@ -33,17 +34,21 @@
 "Photos >5 are missing"                         =   "фотографий отсутствуют.";
 
 "Alert error location title"                    =   "Ошибка";
-"Alert error location message off"              =   "Сервис определения местоположения выключен.";
+"Alert error location message off"              =   "Сервис определения местоположения выключен";
 "Alert error location title background"         =   "Фоновый режим...";
-"Alert error location message background"       =   "Сервис определения местоположения не работает в фоновом режиме.";
+"Alert error location message background"       =   "Сервис определения местоположения не работает в фоновом режиме";
+"Alert error saving video message"              =   "Не вдалося зберегти відео";
 
 "Open a Photo"                                  =   "Открыть фото";
+"Open a Video"                                  =   "Открыть видео";
 "Remove a Photo"                                =   "Удалить фото";
 "Photo preview"                                 =   "Фото превью";
 "Upload a Photo"                                =   "Загрузить одно фото";
+"Upload a Video"                                =   "Загрузить одно видео";
 "Upload Photos"                                 =   "Загрузить все фото";
 "Take a Photo"                                  =   "Сделать фото";
 "Take a Video"                                  =   "Снять видео";
+"Merge & Save video"                            =   "Сохранение";
 
 "Start"                                         =   "СТАРТ";
 "Attention"                                     =   "НАРУШЕНИЕ";

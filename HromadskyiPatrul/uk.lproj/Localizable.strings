@@ -8,6 +8,7 @@
 
 
 // Ukrainian
+"Cancel"                                        =   "Скасувати";
 "Settings"                                      =   "Налаштування";
 "Back"                                          =   "Назад";
 "Version"                                       =   "Версія";
@@ -36,14 +37,18 @@
 "Alert error location message off"              =   "Сервіс визначення місцяположення вимкнено";
 "Alert error location title background"         =   "Фоновий режим...";
 "Alert error location message background"       =   "Сервіс визначення місця розташування не працює у фоновому режимі";
+"Alert error saving video message"              =   "Video Saving Failed";
 
 "Open a Photo"                                  =   "Відкрити фото";
+"Open a Video"                                  =   "Відкрити відео";
 "Remove a Photo"                                =   "Видалити фото";
 "Photo preview"                                 =   "Фото превью";
 "Upload a Photo"                                =   "Завантажити одне фото";
+"Upload a Video"                                =   "Завантажити одне відео";
 "Upload Photos"                                 =   "Завантажити всі фото";
 "Take a Photo"                                  =   "Зробити фото";
 "Take a Video"                                  =   "Зняти відео";
+"Merge & Save video"                            =   "Збереження";
 
 "Start"                                         =   "СТАРТ";
 "Attention"                                     =   "ПОРУШЕННЯ";

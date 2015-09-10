@@ -32,7 +32,7 @@
     
 //    HRPImage *image1     =   [[HRPImage alloc] init];
     
-    [self getPhotoFromAlbumAtURL:[NSURL URLWithString:self.photo.assetsURL]
+    [self getPhotoFromAlbumAtURL:[NSURL URLWithString:self.photo.assetsPhotoURL]
                        onSuccess:^(UIImage *image) {
                            [UIView transitionWithView:self.photoImageView
                                              duration:0.5f

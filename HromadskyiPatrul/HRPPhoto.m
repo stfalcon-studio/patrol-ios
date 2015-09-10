@@ -12,13 +12,15 @@
 
 #pragma mark - Constructors -
 - (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    self    =   [super init];
+    self                        =   [super init];
     
     if (self) {
-        self.state          =   [[aDecoder decodeObjectForKey:@"stateKey"] integerValue];
-        self.assetsURL      =   [aDecoder decodeObjectForKey:@"assetsURLKey"];
-        self.latitude       =   [[aDecoder decodeObjectForKey:@"latitudeKey"] floatValue];
-        self.longitude      =   [[aDecoder decodeObjectForKey:@"longitudeKey"] floatValue];
+        self.state              =   [[aDecoder decodeObjectForKey:@"stateKey"] integerValue];
+        self.assetsPhotoURL     =   [aDecoder decodeObjectForKey:@"assetsPhotoURLKey"];
+        self.assetsVideoURL     =   [aDecoder decodeObjectForKey:@"assetsVideoURLKey"];
+        self.latitude           =   [[aDecoder decodeObjectForKey:@"latitudeKey"] floatValue];
+        self.longitude          =   [[aDecoder decodeObjectForKey:@"longitudeKey"] floatValue];
+        self.isVideo            =   [[aDecoder decodeObjectForKey:@"isVideoKey"] floatValue];
     }
     
     return self;
@@ -28,7 +30,7 @@
     self = [super init];
    
     if (self) {
-        self.state          =   HRPPhotoStateUpload;
+        self.state              =   HRPPhotoStateUpload;
     }
     
     return self;
@@ -36,9 +38,11 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(self.state) forKey:@"stateKey"];
-    [aCoder encodeObject:self.assetsURL forKey:@"assetsURLKey"];
+    [aCoder encodeObject:self.assetsPhotoURL forKey:@"assetsPhotoURLKey"];
+    [aCoder encodeObject:self.assetsVideoURL forKey:@"assetsVideoURLKey"];
     [aCoder encodeObject:@(self.latitude) forKey:@"latitudeKey"];
     [aCoder encodeObject:@(self.longitude) forKey:@"longitudeKey"];
+    [aCoder encodeObject:@(self.isVideo) forKey:@"isVideoKey"];
 }
 
 @end

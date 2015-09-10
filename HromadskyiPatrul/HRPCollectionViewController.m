@@ -50,6 +50,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     NSString *arrayPath;
     NSTimer *timer;
     NSInteger photosNeedUploadCount;
+    NSInteger videosNeedUploadCount;
     NSInteger paginationOffset;
     NSMutableArray *imagesIndexPath;
     
@@ -77,6 +78,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     photoSize                                   =   CGSizeMake(cellSide, cellSide);
     missingPhotosCount                          =   0;
     photosNeedUploadCount                       =   0;
+    videosNeedUploadCount                       =   0;
     
     // Set network manager
     imagesIndexPath                             =   [NSMutableArray array];
@@ -112,6 +114,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleRepeatButtonTap:)
                                                  name:@"HRPPhotoCellStateButtonTap"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleVideoRecord:)
+                                                 name:@"HRPVideoRecordViewControllerDismiss"
                                                object:nil];
     
     // Set Reachability Observer
@@ -266,6 +273,80 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
 }
 
+- (void)handleVideoRecord:(NSNotification *)notification {
+    [self.uploadActivityIndicator startAnimating];
+
+    // Get userInfo data
+    NSURL *videoAssetURL                                    =   notification.userInfo[@"videoURL"];
+    UIImage *videoImageOriginal                             =   notification.userInfo[@"videoImage"];
+    
+    HRPPhoto *photo                                         =   [[HRPPhoto alloc] init];
+    HRPImage *image                                         =   [[HRPImage alloc] init];
+    image.imageAvatar                                       =   [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
+    
+    [self.photosCollectionView performBatchUpdates:^{
+        NSMutableArray *arrayWithIndexPaths                 =   [NSMutableArray array];
+        
+        for (int i = 0; i <= imagesDataSource.count; i++) {
+            [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+        
+        (photosDataSource.count == 0) ? [photosDataSource addObject:photo] : [photosDataSource insertObject:photo atIndex:0];
+        (imagesDataSource.count == 0) ? [imagesDataSource addObject:image] : [imagesDataSource insertObject:image atIndex:0];
+        
+        [self.photosCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
+    }
+                                        completion:nil];
+    
+    currentCell                                             =   [[HRPPhotoCell alloc] initWithFrame:CGRectMake(0.f, 0.f, photoSize.width, photoSize.height)];
+    currentCell                                             =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    
+    [currentCell.activityIndicator startAnimating];
+    
+    ALAssetsLibrary *assetsLibrary                          =   [[ALAssetsLibrary alloc] init];
+    
+    [assetsLibrary writeImageToSavedPhotosAlbum:videoImageOriginal.CGImage
+                                    orientation:(ALAssetOrientation)videoImageOriginal.imageOrientation
+                                completionBlock:^(NSURL *assetURL, NSError *error) {
+                                    photo.assetsVideoURL                                    =   [videoAssetURL absoluteString];
+                                    photo.assetsPhotoURL                                    =   [assetURL absoluteString];
+                                    image.imageOriginalURL                                  =   [assetURL absoluteString];
+                                    image.imageAvatar                                       =   [image resizeImage:videoImageOriginal
+                                                                                                            toSize:photoSize
+                                                                                                   andCropInCenter:YES];
+                                    
+                                    [UIView transitionWithView:currentCell.photoImageView
+                                                      duration:0.5f
+                                                       options:UIViewAnimationOptionTransitionCrossDissolve
+                                                    animations:^{
+                                                        currentCell.photoImageView.image    =   image.imageAvatar;
+                                                        currentCell.playVideoImageView.alpha=   1.f;
+                                                    }
+                                                    completion:^(BOOL finished) {
+                                                        photo.latitude                      =   locationNew.coordinate.latitude;
+                                                        photo.longitude                     =   locationNew.coordinate.longitude;
+                                                        photo.isVideo                       =   YES;
+                                                        
+                                                        // API
+                                                        currentPhoto                        =   photo;
+                                                        currentImage                        =   image;
+                                                        
+                                                        [photosDataSource replaceObjectAtIndex:0 withObject:photo];
+                                                        [imagesDataSource replaceObjectAtIndex:0 withObject:image];
+                                                        
+                                                        [self savePhotosCollectionToFile];
+                                                        videosNeedUploadCount++;
+                                                        
+                                                        // API send video on server
+                                                        
+                                                        // temp debug
+                                                        [currentCell.activityIndicator stopAnimating];
+                                                        [self.uploadActivityIndicator stopAnimating];
+//                                                        [self uploadPhotoFromLoop:NO];
+                                                    }];
+                                }];
+}
+
 - (void)reachabilityDidChange:(NSNotification *)notification {
     if (notification.userInfo[@"AFNetworkingReachabilityNotificationStatusItem"] && photosNeedUploadCount > 0)
         [self uploadPhotos];
@@ -326,11 +407,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             isUploadInProcess                                                       =   YES;
             __block UIImage *imageOriginal;
             
-            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsURL]
+            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
                                onSuccess:^(UIImage *image) {
                                    imageOriginal                                    =   image;
                                
-                                   if ([currentPhoto.assetsURL hasSuffix:@"JPG"])
+                                   if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
                                        currentImage.imageData                       =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
                                    else
                                        currentImage.imageData                       =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
@@ -363,7 +444,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                              
                                                              [self savePhotosCollectionToFile];
                                                              [currentCell.activityIndicator stopAnimating];
-//                                                             [self.uploadActivityIndicator stopAnimating];
+                                                             [self.uploadActivityIndicator stopAnimating];
                                                              
                                                              isUploadInProcess      =   NO;
                                                          }];
@@ -384,7 +465,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             currentPhoto                =   photo;
             
             // Find HRPImage custom object
-            NSPredicate *predicate      =   [NSPredicate predicateWithFormat:@"SELF.imageOriginalURL == [cd] %@",currentPhoto.assetsURL];
+            NSPredicate *predicate      =   [NSPredicate predicateWithFormat:@"SELF.imageOriginalURL == [cd] %@", currentPhoto.assetsPhotoURL];
             
             currentImage                =   [imagesDataSource filteredArrayUsingPredicate:predicate][0];
             
@@ -442,23 +523,19 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         HRPPhoto *photo                                         =   photosDataSourceCopy[i];
         HRPImage *image                                         =   [[HRPImage alloc] init];
         
-        if (photo.assetsURL)
-            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:photo.assetsURL]
+        if (photo.assetsPhotoURL)
+            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:photo.assetsPhotoURL]
                                onSuccess:^(UIImage *photoFromAlbum) {
                                    if (photoFromAlbum) {
-                                       image.imageOriginalURL   =   photo.assetsURL;
-                                       
+                                       image.imageOriginalURL   =   photo.assetsPhotoURL;
                                        image.imageAvatar        =   [image squareImageFromImage:photoFromAlbum scaledToSize:photoSize.width];
-                                                                     
-                                                                     
-//                                       image.imageAvatar        =   [image resizeImage:photoFromAlbum
-//                                                                                toSize:photoSize
-//                                                                       andCropInCenter:YES];
                                        
-//                                        photo.state              =   HRPPhotoStateRepeat;
-                                       
-                                       if (photo.state != HRPPhotoStateDone)
-                                           photosNeedUploadCount++;
+                                       if (photo.state != HRPPhotoStateDone) {
+                                           if (photo.isVideo)
+                                               videosNeedUploadCount++;
+                                           else
+                                               photosNeedUploadCount++;
+                                       }
                                        
                                        [imagesDataSource addObject:image];
                                    } else {
@@ -526,7 +603,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)createStoreDataPath {
     NSError *error;
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
 
     if (![[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
         if (![[NSFileManager defaultManager] createDirectoryAtPath:arrayPath
@@ -540,7 +617,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)savePhotosCollectionToFile {
     NSData *arrayData                               =   [NSKeyedArchiver archivedDataWithRootObject:photosDataSource];
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     [[NSFileManager defaultManager] createFileAtPath:arrayPath
@@ -550,7 +627,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)removePhotosCollectionFromFile {
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     [[NSFileManager defaultManager] removeItemAtPath:arrayPath
@@ -559,7 +636,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)readPhotosCollectionFromFile {
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0];   //[[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
@@ -599,6 +676,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                    [self presentViewController:photoPreviewVC animated:YES completion:nil];
                                                                                }];
     
+    UIAlertAction *actionOpenVideo                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
+                                                                                 style:UIAlertActionStyleDefault
+                                                                               handler:^(UIAlertAction *action) {
+
+                                                                               }];
+    
     /*
     UIAlertAction *actionRemovePhoto                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Remove a Photo", nil)
                                                                                  style:UIAlertActionStyleDestructive
@@ -622,11 +705,28 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                    [self startUploadPhotos];
                                                                                }];
     
-//    [alertController addAction:actionRemovePhoto];
-    [alertController addAction:actionOpenPhoto];
+    UIAlertAction *actionUploadVideo                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload a Video", nil)
+                                                                                 style:UIAlertActionStyleDefault
+                                                                               handler:^(UIAlertAction *action) {
+                                                                                   if (currentPhoto.state != HRPPhotoStateDone) {
+                                                                                       [currentCell.activityIndicator startAnimating];
+                                                                                       
+//                                                                                       [self uploadPhotoFromLoop:NO];
+                                                                                   }
+                                                                               }];
     
-    if (currentPhoto.state != HRPPhotoStateDone)
-        [alertController addAction:actionUploadPhoto];
+//    [alertController addAction:actionRemovePhoto];
+    if (currentPhoto.isVideo)
+        [alertController addAction:actionOpenVideo];
+    else
+        [alertController addAction:actionOpenPhoto];
+    
+    if (currentPhoto.state != HRPPhotoStateDone) {
+        if (currentPhoto.isVideo)
+            [alertController addAction:actionUploadVideo];
+        else
+            [alertController addAction:actionUploadPhoto];
+    }
     
     if (photosNeedUploadCount > 0)
         [alertController addAction:actionUploadPhotos];
@@ -688,7 +788,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                       duration:0.7f
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
-                        cell.photoImageView.image   =   image.imageAvatar;
+                        cell.photoImageView.image       =   image.imageAvatar;
+                        cell.playVideoImageView.alpha   =   (photo.isVideo) ? 1.f : 0.f;
                     }
                     completion:^(BOOL finished) {
                         cell.photo                  =   photo;
@@ -775,7 +876,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                     ALAssetsLibrary *libraryAssets = [[ALAssetsLibrary alloc] init];
                                     [libraryAssets assetForURL:assetURL
                                                    resultBlock:^(ALAsset *asset) {
-                                                       photo.assetsURL                                      =   [assetURL absoluteString];
+                                                       photo.assetsPhotoURL                                 =   [assetURL absoluteString];
                                                        image.imageOriginalURL                               =   [assetURL absoluteString];
                                                        image.imageAvatar                                    =   [image resizeImage:chosenImage
                                                                                                                             toSize:photoSize
@@ -790,6 +891,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                        completion:^(BOOL finished) {
                                                                            photo.latitude                   =   locationNew.coordinate.latitude;
                                                                            photo.longitude                  =   locationNew.coordinate.longitude;
+                                                                           photo.isVideo                    =   NO;
                                                                            
                                                                            // API
                                                                            currentPhoto                     =   photo;

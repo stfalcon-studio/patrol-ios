@@ -1,9 +1,17 @@
+Version 1.0.1 (1):
+- add Reset button in Record Video scene;
+- add RemoveAllTempVideoSnippets method;
+- add MBProgressHUD framework;
+- add extractFirstFrameFromVideoFilePath method;
+- add support change camera orientation;
+- add video to collection with image avatar;
+- add video properties to Photo object.
+
 Version 1.0.0 (3):
 - change Camera button actions;
 - create new custom Video Camera view scene;
 - add timer & timer label;
-- add record 3 video snippets;
-- ;
+- add record 3 video snippets.
 
 Version 0.1.0 (8):
 - add new tester;
