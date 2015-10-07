@@ -7,7 +7,8 @@
 //
 
 #import "HRPMainViewController.h"
-#import "HRPCollectionViewController.h"
+//#import "HRPCollectionViewController.h"
+#import "HRPVideoRecordViewController.h"
 #import "HRPButton.h"
 #import "UIColor+HexColor.h"
 #import <NSString+Email.h>
@@ -39,12 +40,14 @@
 @implementation HRPMainViewController {
     NSUserDefaults *userApp;
     CGSize keyboardSize;
+    NSInteger countt;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    countt = 0;
     // Set Scroll View constraints
     self.contentViewWidthConstraint.constant            =   CGRectGetWidth(self.view.frame);
     self.contentViewHeightConstraint.constant           =   CGRectGetHeight(self.view.frame);
@@ -82,16 +85,28 @@
                                                object:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Set Portrait orientation
+    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationPortrait]
+                                forKey:@"orientation"];
+    
+    [UIViewController attemptRotationToDeviceOrientation];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     if ([userApp objectForKey:@"userAppEmail"]) {
-        UINavigationController *collectionNC            =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionNC"];
-        HRPCollectionViewController *collectionVC       =   collectionNC.viewControllers[0];
-        [collectionVC.userNameBarButton setTitle:[userApp objectForKey:@"userAppEmail"]];
         self.emailTextField.text                        =   [userApp objectForKey:@"userAppEmail"];
+       
+        if (countt == 0) {
+            countt++;
+            [self startSceneTransition];
+        }
         
-        [self presentViewController:collectionNC animated:YES completion:nil];
+        // [self startSceneTransition];
     } else {
         [UIView animateWithDuration:1.3f
                          animations:^{
@@ -112,6 +127,13 @@
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
 }
 
 
@@ -148,11 +170,8 @@
         if ([self isInternetConnectionAvailable]) {
             [self userLoginParameters:self.emailTextField.text
                             onSuccess:^(NSDictionary *successResult) {
-                                UINavigationController *collectionNC            =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionNC"];
-                                HRPCollectionViewController *collectionVC       =   collectionNC.viewControllers[0];
-                                [collectionVC.userNameBarButton setTitle:self.emailTextField.text];
-                                
-                                [self presentViewController:collectionNC animated:YES completion:nil];
+                                // Transition to VideoRecord scene
+                                [self startSceneTransition];
                                 
                                 // Set NSUserDefaults item
                                 [userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
@@ -203,6 +222,23 @@
 
 
 #pragma mark - Methods -
+- (void)startSceneTransition {
+    // Transition to Collection scene
+    /*
+    UINavigationController *collectionNC            =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionNC"];
+    HRPCollectionViewController *collectionVC       =   collectionNC.viewControllers[0];
+    [collectionVC.userNameBarButton setTitle:self.emailTextField.text];
+    
+    [self presentViewController:collectionNC animated:YES completion:nil];
+     */
+    
+    // Transition to VideoRecord scene
+    HRPVideoRecordViewController *videoRecordVC     =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+//    [UIViewController attemptRotationToDeviceOrientation];
+    
+    [self presentViewController:videoRecordVC animated:YES completion:nil];
+}
+
 - (BOOL)isInternetConnectionAvailable {
     // Network activity
     if ([[AFNetworkReachabilityManager sharedManager] isReachable])
@@ -224,6 +260,5 @@
     
     return  YES;
 }
-
 
 @end
