@@ -1,3 +1,7 @@
+Version 1.0.2 (2):
+- add Politepix framework;
+- ;
+
 Version 1.0.2 (1):
 - change scenes main transition;
 - change removeAllFolderMediaTempFiles method;
@@ -7,7 +11,7 @@ Version 1.0.2 (1):
 - auto start recording;
 - start record attention video by button tap;
 - set Landscape video recorder orientation;
-- ;
+- hide test buttons.
 
 Version 1.0.1 (1):
 - add Reset button in Record Video scene;

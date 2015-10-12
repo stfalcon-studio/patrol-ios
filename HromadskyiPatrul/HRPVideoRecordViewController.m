@@ -13,16 +13,24 @@
 #import "UIColor+HexColor.h"
 #import "HRPButton.h"
 #import "MBProgressHUD.h"
+#import <OpenEars/OELanguageModelGenerator.h>
+#import <OpenEars/OEAcousticModel.h>
+#import <OpenEars/OEPocketsphinxController.h>
+#import <OpenEars/OEAcousticModel.h>
+#import <OpenEars/OEEventsObserver.h>
 
-typedef enum : NSUInteger {
+
+typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     HRPVideoRecordViewControllerModeStreamVideo,
     HRPVideoRecordViewControllerModeAttentionVideo
-} HRPVideoRecordViewControllerMode;
+};
 
 
-@interface HRPVideoRecordViewController () <AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
+@interface HRPVideoRecordViewController () <AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, OEEventsObserverDelegate>
 
 @property (assign, nonatomic) HRPVideoRecordViewControllerMode recordingMode;
+
+@property (strong, nonatomic) OEEventsObserver *openEarsEventsObserver;
 
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UIView *videoView;
@@ -63,6 +71,10 @@ typedef enum : NSUInteger {
     NSArray *videoFilesNames;
     NSArray *audioFilesNames;
     NSDictionary *audioRecordSettings;
+    NSString *voiceLanguageModelPath;
+    NSString *voiceDictionaryPath;
+
+    BOOL isVideoSaving;
 }
 
 #pragma mark - Constructors -
@@ -71,17 +83,22 @@ typedef enum : NSUInteger {
 
     // NSLog(@"self.statusView.bounds 0 = %@", NSStringFromCGRect(self.statusView.frame));
     
+    // Set Voice command
+    [self setVoiceRecognizeSpeech];
+    [self startVoiceRecognizeSpeech];
+    
     // Set Session Duration
-    sessionDuration                                     =   7;
+    sessionDuration                                     =   10;
     
     // Test Top View
-    self.testTopView.alpha                              =   1.f;
+    self.testTopView.alpha                              =   0.f;
     
     // App Folder
     mediaFolderPath                                     =   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 
     // Set Media session parameters
     snippetNumber                                       =   0;
+    isVideoSaving                                       =   NO;
     videoFilesNames                                     =   @[@"snippet_video_0.mp4", @"snippet_video_1.mp4", @"snippet_video_2.mp4"];
     audioFilesNames                                     =   @[@"snippet_audio_0.caf", @"snippet_audio_1.caf", @"snippet_audio_2.caf"];
     self.recordingMode                                  =   HRPVideoRecordViewControllerModeStreamVideo;
@@ -101,12 +118,13 @@ typedef enum : NSUInteger {
     
     // Set items
 //    self.controlButton.tag                              =   0;
-//    self.controlLabel.text                              =   NSLocalizedString(@"Start", nil);
+    self.controlLabel.text                              =   NSLocalizedString(@"Attention", nil);
     self.timerLabel.text                                =   @"00:00:00";
     
     [self.resetButton setTitle:NSLocalizedString(@"Cancel", nil) forState:UIControlStateNormal];
     
     // Start new camera video & audio session
+    [self removeMediaSnippets];
     [self startCameraSession];
 }
 
@@ -114,8 +132,12 @@ typedef enum : NSUInteger {
     [super viewDidAppear:animated];
     
     // Set Landscape orientation
-    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationLandscapeLeft]
-                                forKey:@"orientation"];
+    if (UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]))
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationLandscapeLeft]
+                                    forKey:@"orientation"];
+    else
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationPortrait]
+                                    forKey:@"orientation"];
     
     [self startStreamVideoRecording];
 }
@@ -145,33 +167,46 @@ typedef enum : NSUInteger {
 
 #pragma mark - UIViewControllerRotation -
 - (BOOL)shouldAutorotate {
-    AVCaptureVideoOrientation newOrientation;
+    BOOL isRotationPossible                             =   !isVideoSaving;
     
-    self.videoPreviewLayer.frame                        =   self.videoView.bounds;
-    
-    self.statusViewVerticalSpaceConstraint.constant     =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
-                                                            0.f : -20.f;
-    
-    switch ([[UIDevice currentDevice] orientation]) {
-        case UIDeviceOrientationPortrait:
-            newOrientation = AVCaptureVideoOrientationPortrait;
-            break;
-        case UIDeviceOrientationPortraitUpsideDown:
-            newOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
-            break;
-        case UIDeviceOrientationLandscapeLeft:
-            newOrientation = AVCaptureVideoOrientationLandscapeRight;
-            break;
-        case UIDeviceOrientationLandscapeRight:
-            [self.videoView.layer setAffineTransform:CGAffineTransformIdentity];
-            break;
-        default:
-            newOrientation = AVCaptureVideoOrientationPortrait;
+    if (isRotationPossible) {
+        AVCaptureVideoOrientation newOrientation;
+        
+        self.videoPreviewLayer.frame                        =   self.videoView.bounds;
+        
+        self.statusViewVerticalSpaceConstraint.constant     =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
+                                                                    0.f : -20.f;
+        
+        switch ([[UIDevice currentDevice] orientation]) {
+            case UIDeviceOrientationPortrait:
+                newOrientation                              =   AVCaptureVideoOrientationPortrait;
+                break;
+            case UIDeviceOrientationPortraitUpsideDown:
+                newOrientation                              =   AVCaptureVideoOrientationPortraitUpsideDown;
+                break;
+            case UIDeviceOrientationLandscapeLeft:
+                newOrientation                              =   AVCaptureVideoOrientationLandscapeRight;
+                break;
+            case UIDeviceOrientationLandscapeRight:
+                [self.videoView.layer setAffineTransform:CGAffineTransformIdentity];
+                break;
+            default:
+                newOrientation                              =   AVCaptureVideoOrientationPortrait;
+        }
+        
+        self.videoPreviewLayer.connection.videoOrientation  =   newOrientation;
+        
+        [timerVideo invalidate];
+        timerSeconds                                        =   0;
+        timerVideo                                          =   [self createTimer];
+        
+        [self.videoFileOutput stopRecording];
+
+        return YES;
     }
     
-    self.videoPreviewLayer.connection.videoOrientation  =   newOrientation;
-
-    return YES;
+    else
+        return NO;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
@@ -279,6 +314,9 @@ typedef enum : NSUInteger {
     AVCaptureDevice *videoDevice                        =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput *videoInput                    =   [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
     self.videoConnection                                =   [self.videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    self.videoConnection.videoOrientation               =   (UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation])) ?
+                                                                AVCaptureVideoOrientationLandscapeRight : AVCaptureVideoOrientationLandscapeLeft;
+    
     AVCaptureVideoStabilizationMode stabilizationMode   =   AVCaptureVideoStabilizationModeCinematic;
     
     if ([videoDevice.activeFormat isVideoStabilizationModeSupported:stabilizationMode])
@@ -297,6 +335,7 @@ typedef enum : NSUInteger {
     self.videoPreviewLayer                              =   [[AVCaptureVideoPreviewLayer alloc] initWithSession:self.captureSession];
     [self.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [self.videoPreviewLayer setFrame:self.videoView.layer.bounds];
+//    self.videoPreviewLayer.connection.videoOrientation  =   AVCaptureVideoOrientationPortrait;
    
     [self.videoView.layer insertSublayer:self.videoPreviewLayer below:self.controlButton.layer];
     [self.captureSession startRunning];
@@ -318,7 +357,7 @@ typedef enum : NSUInteger {
 - (void)startAttentionVideoRecording {
     // Stop video capture and make the capture session object nil
     timerSeconds                                        =   0;
-    self.controlButton.userInteractionEnabled           =   NO;
+    self.controlButton.enabled                          =   NO;
     self.recordingMode                                  =   HRPVideoRecordViewControllerModeAttentionVideo;
     
     [self.videoFileOutput stopRecording];
@@ -362,6 +401,55 @@ typedef enum : NSUInteger {
     
     else
         [_audioRecorder prepareToRecord];
+}
+
+- (void)setVoiceRecognizeSpeech {
+    NSString *voiceFileName                             =   @"voiceWords";
+    self.openEarsEventsObserver                         =   [[OEEventsObserver alloc] init];
+    OELanguageModelGenerator *lmGenerator               =   [[OELanguageModelGenerator alloc] init];
+    [self.openEarsEventsObserver setDelegate:self];
+    [[OEPocketsphinxController sharedInstance] setActive:TRUE error:nil];
+    
+    NSArray *voiceWords                                 =   [NSArray arrayWithObjects:
+                                                                @"START",
+                                                                @"ATTENTION",
+                                                                @"VIDEO",
+                                                                @"LET GO",
+                                                                @"LET'S GO",
+                                                                @"GO", nil];
+    
+
+    // Change "AcousticModelEnglish" to "AcousticModelSpanish" to create a Spanish language model instead of an English one.
+    NSError *err                                        =   [lmGenerator generateLanguageModelFromArray:voiceWords
+                                                                                         withFilesNamed:voiceFileName
+                                                                                 forAcousticModelAtPath:[OEAcousticModel pathToModel:@"AcousticModelEnglish"]];
+    
+    if (err == nil) {
+        voiceLanguageModelPath                          =   [lmGenerator pathToSuccessfullyGeneratedLanguageModelWithRequestedName:voiceFileName];
+        voiceDictionaryPath                             =   [lmGenerator pathToSuccessfullyGeneratedDictionaryWithRequestedName:voiceFileName];
+    } else
+        NSLog(@"Error: %@",[err localizedDescription]);
+}
+
+- (void)startVoiceRecognizeSpeech {
+    // Change "AcousticModelEnglish" to "AcousticModelSpanish" to perform Spanish recognition instead of English
+    if (![OEPocketsphinxController sharedInstance].isListening) {
+        [[OEPocketsphinxController sharedInstance] startListeningWithLanguageModelAtPath:voiceLanguageModelPath
+                                                                        dictionaryAtPath:voiceDictionaryPath
+                                                                     acousticModelAtPath:[OEAcousticModel pathToModel:@"AcousticModelEnglish"]
+                                                                     languageModelIsJSGF:FALSE];
+    }
+}
+
+- (void)stopVoiceRecognizeSpeech {
+    NSError *error                                      =   nil;
+    
+    if ([OEPocketsphinxController sharedInstance].isListening) {
+        error                                           =   [[OEPocketsphinxController sharedInstance] stopListening];
+        
+        if (error)
+            NSLog(@"Error stopping listening in stopButtonAction: %@", error);
+    }
 }
 
 - (NSTimer *)createTimer {
@@ -423,6 +511,8 @@ typedef enum : NSUInteger {
     }
     
     // Start new video & audio session
+    isVideoSaving                                       =   NO;
+    self.controlButton.enabled                          =   YES;
     [MBProgressHUD hideHUDForView:self.view animated:YES];
     [self startCameraSession];
 }
@@ -449,6 +539,7 @@ typedef enum : NSUInteger {
         progressHUD.labelText                           =   NSLocalizedString(@"Merge & Save video", nil);
         progressHUD.color                               =   [UIColor colorWithHexString:@"05A9F4" alpha:0.8f];
         progressHUD.yOffset                             =   0.f;
+        isVideoSaving                                   =   YES;
     }
 
     // Create the AVMutable composition to add tracks
@@ -620,7 +711,10 @@ typedef enum : NSUInteger {
             snippetNumber                               =   0;
             [self stopAudioRecording];
             
-            [self extractFirstFrameFromVideoFilePath:outputFileURL];
+            NSString *videoFilePath                     =   [mediaFolderPath stringByAppendingPathComponent:videoFilesNames[2]];
+            NSURL *videoFileURL                         =   [NSURL fileURLWithPath:videoFilePath];
+
+            [self extractFirstFrameFromVideoFilePath:videoFileURL];
         }
         
         else {
@@ -651,6 +745,52 @@ typedef enum : NSUInteger {
     [textField resignFirstResponder];
     
     return YES;
+}
+
+
+#pragma mark - OEEventsObserverDelegate -
+- (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
+    NSLog(@"The received hypothesis is %@ with a score of %@ and an ID of %@", hypothesis, recognitionScore, utteranceID);
+}
+
+- (void) pocketsphinxDidStartListening {
+    NSLog(@"Pocketsphinx is now listening.");
+}
+
+- (void) pocketsphinxDidDetectSpeech {
+    NSLog(@"Pocketsphinx has detected speech.");
+}
+
+- (void) pocketsphinxDidDetectFinishedSpeech {
+    NSLog(@"Pocketsphinx has detected a period of silence, concluding an utterance.");
+}
+
+- (void) pocketsphinxDidStopListening {
+    NSLog(@"Pocketsphinx has stopped listening.");
+}
+
+- (void) pocketsphinxDidSuspendRecognition {
+    NSLog(@"Pocketsphinx has suspended recognition.");
+}
+
+- (void) pocketsphinxDidResumeRecognition {
+    NSLog(@"Pocketsphinx has resumed recognition.");
+}
+
+- (void) pocketsphinxDidChangeLanguageModelToFile:(NSString *)newLanguageModelPathAsString andDictionary:(NSString *)newDictionaryPathAsString {
+    NSLog(@"Pocketsphinx is now using the following language model: \n%@ and the following dictionary: %@",newLanguageModelPathAsString,newDictionaryPathAsString);
+}
+
+- (void) pocketSphinxContinuousSetupDidFailWithReason:(NSString *)reasonForFailure {
+    NSLog(@"Listening setup wasn't successful and returned the failure reason: %@", reasonForFailure);
+}
+
+- (void) pocketSphinxContinuousTeardownDidFailWithReason:(NSString *)reasonForFailure {
+    NSLog(@"Listening teardown wasn't successful and returned the failure reason: %@", reasonForFailure);
+}
+
+- (void) testRecognitionCompleted {
+    NSLog(@"A test file that was submitted for recognition is now complete.");
 }
 
 @end

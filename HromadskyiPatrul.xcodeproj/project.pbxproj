@@ -20,6 +20,11 @@
 		B11B92871B9A115C00F03266 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B11B92861B9A115C00F03266 /* AVFoundation.framework */; };
 		B11B92891B9A118600F03266 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B11B92881B9A118600F03266 /* CoreGraphics.framework */; };
 		B11B928B1B9A118E00F03266 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B11B928A1B9A118E00F03266 /* Foundation.framework */; };
+		B127D9191BCBA35300AA9A8D /* AcousticModelEnglish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B127D9151BCBA35300AA9A8D /* AcousticModelEnglish.bundle */; settings = {ASSET_TAGS = (); }; };
+		B127D91A1BCBA35300AA9A8D /* AcousticModelSpanish.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B127D9161BCBA35300AA9A8D /* AcousticModelSpanish.bundle */; settings = {ASSET_TAGS = (); }; };
+		B127D91B1BCBA35300AA9A8D /* OpenEars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B127D9171BCBA35300AA9A8D /* OpenEars.framework */; settings = {ASSET_TAGS = (); }; };
+		B127D91C1BCBA35300AA9A8D /* Slt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B127D9181BCBA35300AA9A8D /* Slt.framework */; settings = {ASSET_TAGS = (); }; };
+		B127D91E1BCBA3B700AA9A8D /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B127D91D1BCBA3B700AA9A8D /* AudioToolbox.framework */; };
 		B137A0BD1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */; };
 		B13B0F151B94998100247CF1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B13B0F141B94998100247CF1 /* Images.xcassets */; };
 		B13B0F171B94B33700247CF1 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B13B0F161B94B33700247CF1 /* Photos.framework */; };
@@ -74,6 +79,11 @@
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B127D9151BCBA35300AA9A8D /* AcousticModelEnglish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelEnglish.bundle; sourceTree = "<group>"; };
+		B127D9161BCBA35300AA9A8D /* AcousticModelSpanish.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AcousticModelSpanish.bundle; sourceTree = "<group>"; };
+		B127D9171BCBA35300AA9A8D /* OpenEars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = OpenEars.framework; sourceTree = "<group>"; };
+		B127D9181BCBA35300AA9A8D /* Slt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Slt.framework; sourceTree = "<group>"; };
+		B127D91D1BCBA3B700AA9A8D /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhotoPreviewViewController.h; sourceTree = "<group>"; };
 		B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoPreviewViewController.m; sourceTree = "<group>"; };
 		B13B0F141B94998100247CF1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -125,13 +135,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B127D91E1BCBA3B700AA9A8D /* AudioToolbox.framework in Frameworks */,
 				B11B928B1B9A118E00F03266 /* Foundation.framework in Frameworks */,
 				B11B92891B9A118600F03266 /* CoreGraphics.framework in Frameworks */,
 				B11B92871B9A115C00F03266 /* AVFoundation.framework in Frameworks */,
 				B18F75B01B95A3B600143338 /* SystemConfiguration.framework in Frameworks */,
 				B13B0F171B94B33700247CF1 /* Photos.framework in Frameworks */,
+				B127D91C1BCBA35300AA9A8D /* Slt.framework in Frameworks */,
 				B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */,
 				B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */,
+				B127D91B1BCBA35300AA9A8D /* OpenEars.framework in Frameworks */,
 				B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */,
 				A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */,
 			);
@@ -150,6 +163,8 @@
 		866BE91730CC59D56766BD2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B127D9141BCBA35300AA9A8D /* Politepix */,
+				B127D91D1BCBA3B700AA9A8D /* AudioToolbox.framework */,
 				B11B928A1B9A118E00F03266 /* Foundation.framework */,
 				B11B92881B9A118600F03266 /* CoreGraphics.framework */,
 				B11B92861B9A115C00F03266 /* AVFoundation.framework */,
@@ -185,6 +200,18 @@
 				B10562621B9836AF0036DC30 /* 7.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		B127D9141BCBA35300AA9A8D /* Politepix */ = {
+			isa = PBXGroup;
+			children = (
+				B127D9151BCBA35300AA9A8D /* AcousticModelEnglish.bundle */,
+				B127D9161BCBA35300AA9A8D /* AcousticModelSpanish.bundle */,
+				B127D9171BCBA35300AA9A8D /* OpenEars.framework */,
+				B127D9181BCBA35300AA9A8D /* Slt.framework */,
+			);
+			name = Politepix;
+			path = Framework;
 			sourceTree = "<group>";
 		};
 		B1AC89761B879A06009D12D6 = {
@@ -401,6 +428,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B10562681B983BFC0036DC30 /* 2.png in Resources */,
+				B127D91A1BCBA35300AA9A8D /* AcousticModelSpanish.bundle in Resources */,
 				B10562601B9834490036DC30 /* 5.png in Resources */,
 				B10562641B9836AF0036DC30 /* 7.png in Resources */,
 				B105625B1B9834490036DC30 /* 0.png in Resources */,
@@ -413,6 +441,7 @@
 				B10562671B983BFC0036DC30 /* 1.png in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
 				B105625F1B9834490036DC30 /* 4.png in Resources */,
+				B127D9191BCBA35300AA9A8D /* AcousticModelEnglish.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -631,7 +660,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Framework",
+				);
 				INFOPLIST_FILE = HromadskyiPatrul/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
@@ -645,7 +679,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Framework",
+				);
 				INFOPLIST_FILE = HromadskyiPatrul/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
