@@ -477,7 +477,7 @@
                             <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjC-Ec-Nht" userLabel="Video View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
-                                    <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cb-ys-WhI" userLabel="Control Button" customClass="HRPButton">
+                                    <button alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cb-ys-WhI" userLabel="Control Button" customClass="HRPButton">
                                         <rect key="frame" x="117" y="480" width="86" height="86"/>
                                         <animations/>
                                         <constraints>
@@ -572,6 +572,16 @@
                                     <constraint firstAttribute="height" constant="20" id="HYm-yD-oVl"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SAY &quot;VIDEO&quot;                   " lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kfu-VX-Jwy" userLabel="Voice Commands Label">
+                                <rect key="frame" x="215" y="25" width="100" height="21"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="Xkh-jS-ezm"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vvu-lk-5di">
                                 <rect key="frame" x="0.0" y="20" width="320" height="50"/>
                                 <subviews>
@@ -642,8 +652,10 @@
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="CiH-yc-uz5"/>
                             <constraint firstItem="LmS-0N-oYH" firstAttribute="top" secondItem="UjC-Ec-Nht" secondAttribute="bottom" id="FXj-1C-eCt"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="Fb4-Qg-LDU"/>
+                            <constraint firstAttribute="trailing" secondItem="Kfu-VX-Jwy" secondAttribute="trailing" constant="5" id="HYj-xv-ffJ"/>
                             <constraint firstItem="dwh-G8-HfD" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="QKY-sB-fLc"/>
                             <constraint firstAttribute="trailing" secondItem="vvu-lk-5di" secondAttribute="trailing" id="WBl-aP-9vX"/>
+                            <constraint firstItem="Kfu-VX-Jwy" firstAttribute="top" secondItem="5Ip-33-TZr" secondAttribute="bottom" constant="5" id="akd-ZV-WAq"/>
                             <constraint firstAttribute="trailing" secondItem="5Ip-33-TZr" secondAttribute="trailing" id="cTt-E9-CJx"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="oOq-Iv-vAm"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="pas-w9-xjc"/>

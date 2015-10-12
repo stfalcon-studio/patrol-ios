@@ -1,6 +1,7 @@
 Version 1.0.2 (2):
 - add Politepix framework;
-- ;
+- create support voice command "VIDEO";
+- record video by voice command "VIDEO".
 
 Version 1.0.2 (1):
 - change scenes main transition;
