@@ -228,7 +228,12 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 #pragma mark - Actions -
 - (IBAction)actionControlButtonTap:(HRPButton *)sender {
-    [self startAttentionVideoRecording];
+    if (self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo) {
+        self.controlLabel.text                              =   NSLocalizedString(@"Attention", nil);
+        
+        [self startControlLabelFlashing];
+        [self startAttentionVideoRecording];
+    }
 }
 
 - (IBAction)actionResetButtonTap:(UIButton *)sender {
@@ -279,6 +284,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
     [self.textField resignFirstResponder];
+    
+    [self actionControlButtonTap:self.controlButton];
 }
 
     
@@ -398,12 +405,11 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [[OEPocketsphinxController sharedInstance] setActive:TRUE error:nil];
     
     voiceCommands                                       =   [NSArray arrayWithObjects:
-                                                             @"VIDEO", nil];/*
-                                                             @"PHOTO",
-                                                             @"ATTENTION",
-                                                             @"START",
-                                                             @"RECORD",
-                                                              nil];*/
+                                                                @"VIDEO",
+                                                                @"PHOTO",
+                                                                @"ATTENTION",
+                                                                @"START",
+                                                                @"RECORD", nil];
     
     
     // Change "AcousticModelEnglish" to "AcousticModelSpanish" to create a Spanish language model instead of an English one.
@@ -762,20 +768,19 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 #pragma mark - OEEventsObserverDelegate -
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
-    if ([hypothesis isEqualToString:@"VIDEO"] && self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo) {
-        self.controlLabel.text                          =   NSLocalizedString(@"Attention", nil);
-        
-        [self startControlLabelFlashing];
+    NSPredicate *predicate                              =   [NSPredicate predicateWithFormat:@"SELF == [cd] %@", hypothesis];
+    NSString *voiceCommand                              =   [voiceCommands filteredArrayUsingPredicate:predicate][0];
+
+    if (voiceCommand && self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo)
         [self actionControlButtonTap:self.controlButton];
-    }
 }
 
 - (void) pocketsphinxDidStartListening {
-//    NSLog(@"Pocketsphinx is now listening.");
+    NSLog(@"Pocketsphinx is now listening.");
 }
 
 - (void) pocketsphinxDidDetectSpeech {
-//    NSLog(@"Pocketsphinx has detected speech.");
+    NSLog(@"Pocketsphinx has detected speech.");
 }
 
 - (void) pocketsphinxDidDetectFinishedSpeech {

@@ -1,3 +1,7 @@
+Version 1.0.2 (4):
+- add some new voice commands;
+- add tap gesture on video view.
+
 Version 1.0.2 (2):
 - add Politepix framework;
 - create support voice command "VIDEO";
