@@ -1,6 +1,15 @@
+Version 1.0.2 (5):
+- add new Setting "Automatic sending";
+- add transition to Gallery scene;
+- add action "Preview video";
+- add action "Delete video";
+- add scene "Preview video";
+- add russiam & ukrainian voice commands.
+
 Version 1.0.2 (4):
 - add some new voice commands;
-- add tap gesture on video view.
+- add tap gesture on video view;
+- delete voice command PHOTO.
 
 Version 1.0.2 (2):
 - add Politepix framework;

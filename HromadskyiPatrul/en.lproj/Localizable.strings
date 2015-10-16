@@ -14,6 +14,7 @@
 "Version"                                       =   "Version";
 "Login"                                         =   "LOGIN";
 "Logout"                                        =   "LOGOUT";
+"COMMAND VIOLATION"                             =   "COMMAND: \"VIOLATION\"";
 "Public patrol"                                 =   "Public patrol";
 "About text 1"                                  =   "See the infringer of traffic regulations -";
 "About text 2"                                  =   "take a photo and send to us.";
@@ -27,7 +28,8 @@
 "Alert error video message"                     =   "Please, take a photo mode";
 "Alert error button Cancel"                     =   "Cancel";
 "Alert error internet message"                  =   "Please, check your Internet connection";
-"Switch title"                                  =   "Upload only WiFi";
+"Switch network title"                          =   "Upload only WiFi";
+"Switch sending title"                          =   "Upload automatically";
 "Camera is not available"                       =   "Camera is not available";
 "Photo is missing"                              =   "photo is missing";
 "Photos 2-4 are missing"                        =   "photos are missing";
@@ -37,15 +39,18 @@
 "Alert error location message off"              =   "Location services are off";
 "Alert error location title background"         =   "To use background...";
 "Alert error location message background"       =   "Background location is not enabled";
+"Alert error location retrieving message"       =   "There was an error retrieving your location";
 "Alert error saving video message"              =   "Video saving failed";
 
 "Open a Photo"                                  =   "Open a Photo";
 "Open a Video"                                  =   "Open a Video";
 "Remove a Photo"                                =   "Remove a Photo";
+"Remove a Video"                                =   "Remove a Video";
 "Photo preview"                                 =   "Photo preview";
 "Upload a Photo"                                =   "Upload a Photo";
 "Upload a Video"                                =   "Upload a Video";
 "Upload Photos"                                 =   "Upload Photos";
+"Upload Videos"                                 =   "Upload Videos";
 "Take a Photo"                                  =   "Take a Photo";
 "Take a Video"                                  =   "Take a Video";
 "Merge & Save video"                            =   "Saving";

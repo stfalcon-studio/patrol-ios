@@ -14,6 +14,7 @@
 "Version"                                       =   "Версия";
 "Login"                                         =   "ВОЙТИ";
 "Logout"                                        =   "ВЫЙТИ";
+"COMMAND VIOLATION"                             =   "КОМАНДА: \"НАРУШЕНИЕ\"";
 "Public patrol"                                 =   "Общественный патруль";
 "About text 1"                                  =   "Видиш нарушителя правил дорожного движения -";
 "About text 2"                                  =   "сфотографируй и пришли нам.";
@@ -27,7 +28,8 @@
 "Alert error button Ok"                         =   "Ок";
 "Alert error button Cancel"                     =   "Отмена";
 "Alert error internet message"                  =   "Пожалуйста, проверьте подключение к Интернету.";
-"Switch title"                                  =   "Загружать только по WiFi";
+"Switch network title"                          =   "Загружать только по WiFi";
+"Switch sending title"                          =   "Загружать автоматически";
 "Camera is not available"                       =   "Камера недоступна.";
 "Photo is missing"                              =   "фотография отсутствует.";
 "Photos 2-4 are missing"                        =   "фотографии отсутствуют.";
@@ -37,15 +39,18 @@
 "Alert error location message off"              =   "Сервис определения местоположения выключен";
 "Alert error location title background"         =   "Фоновый режим...";
 "Alert error location message background"       =   "Сервис определения местоположения не работает в фоновом режиме";
-"Alert error saving video message"              =   "Не вдалося зберегти відео";
+"Alert error location retrieving message"       =   "Произошла ошибка при определении вашего местоположения";
+"Alert error saving video message"              =   "Не удалось сохранить видео";
 
 "Open a Photo"                                  =   "Открыть фото";
 "Open a Video"                                  =   "Открыть видео";
 "Remove a Photo"                                =   "Удалить фото";
+"Remove a Video"                                =   "Удалить видео";
 "Photo preview"                                 =   "Фото превью";
 "Upload a Photo"                                =   "Загрузить одно фото";
 "Upload a Video"                                =   "Загрузить одно видео";
 "Upload Photos"                                 =   "Загрузить все фото";
+"Upload Videos"                                 =   "Загрузить все видео";
 "Take a Photo"                                  =   "Сделать фото";
 "Take a Video"                                  =   "Снять видео";
 "Merge & Save video"                            =   "Сохранение";

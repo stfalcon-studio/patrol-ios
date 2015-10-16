@@ -14,6 +14,7 @@
 "Version"                                       =   "Версія";
 "Login"                                         =   "УВІЙТИ";
 "Logout"                                        =   "ВИЙТИ";
+"COMMAND VIOLATION"                             =   "КОМАНДА: \"ПОРУШЕННЯ\"";
 "Public patrol"                                 =   "Громадський патруль";
 "About text 1"                                  =   "Бачиш порушника правил дорожнього руху -";
 "About text 2"                                  =   "сфотографуй та надішли нам.";
@@ -27,25 +28,29 @@
 "Alert error button Ok"                         =   "Ок";
 "Alert error button Cancel"                     =   "Скасувати";
 "Alert error internet message"                  =   "Будь ласка, \n перевірте підключення до Інтернету";
-"Switch title"                                  =   "Завантажувати тільки по WiFi";
+"Switch network title"                          =   "Завантажувати тільки по WiFi";
+"Switch sending title"                          =   "Завантажувати автоматично";
 "Camera is not available"                       =   "Камера недоступна";
 "Photo is missing"                              =   "Фотографія відсутня";
 "Photos 2-4 are missing"                        =   "фотографії відсутні";
 "Photos >5 are missing"                         =   "фотографій відсутні";
 
 "Alert error location title"                    =   "Помилка";
-"Alert error location message off"              =   "Сервіс визначення місцяположення вимкнено";
+"Alert error location message off"              =   "Сервіс визначення місця розташування вимкнено";
 "Alert error location title background"         =   "Фоновий режим...";
 "Alert error location message background"       =   "Сервіс визначення місця розташування не працює у фоновому режимі";
-"Alert error saving video message"              =   "Video Saving Failed";
+"Alert error location retrieving message"       =   "Сталася помилка при візначенні вашого місця розташування";
+"Alert error saving video message"              =   "Не вдалося зберегти відео";
 
 "Open a Photo"                                  =   "Відкрити фото";
 "Open a Video"                                  =   "Відкрити відео";
 "Remove a Photo"                                =   "Видалити фото";
+"Remove a Video"                                =   "Видалити відео";
 "Photo preview"                                 =   "Фото превью";
 "Upload a Photo"                                =   "Завантажити одне фото";
 "Upload a Video"                                =   "Завантажити одне відео";
 "Upload Photos"                                 =   "Завантажити всі фото";
+"Upload Videos"                                 =   "Завантажити всі відео";
 "Take a Photo"                                  =   "Зробити фото";
 "Take a Video"                                  =   "Зняти відео";
 "Merge & Save video"                            =   "Збереження";

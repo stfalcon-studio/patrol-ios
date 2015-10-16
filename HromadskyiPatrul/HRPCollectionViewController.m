@@ -20,6 +20,7 @@
 #import <AFHTTPRequestOperation.h>
 #import "HRPPhotoPreviewViewController.h"
 #import "HRPVideoRecordViewController.h"
+#import "HRPVideoPlayerViewController.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -40,8 +41,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     HRPPhoto *currentPhoto;
     HRPImage *currentImage;
     HRPPhotoCell *currentCell;
+    NSIndexPath *currentIndexPath;
     NSUserDefaults *userApp;
     CLLocation *locationNew;
+    ALAsset *myAsset;
     
     NSMutableArray *photosDataSource;
     NSMutableArray *imagesDataSource;
@@ -55,6 +58,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     NSMutableArray *imagesIndexPath;
     
     BOOL isUploadPhotosUsingWiFiAllowed;
+    BOOL isUploadAutomaticallyAllowed;
     BOOL isLocationServiceEnabled;
     BOOL isUploadInProcess;
     BOOL isPaginationRun;
@@ -64,6 +68,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    [self.uploadActivityIndicator startAnimating];
+
     // HSPLocations
     locationsService                            =   [[HRPLocations alloc] init];
     
@@ -72,14 +78,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         isLocationServiceEnabled                =   YES;
     }
     
-//    self.uploadActivityIndicator.color          =   [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
-    
     CGFloat cellSide                            =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
     photoSize                                   =   CGSizeMake(cellSide, cellSide);
     missingPhotosCount                          =   0;
     photosNeedUploadCount                       =   0;
     videosNeedUploadCount                       =   0;
-    
+    self.navigationItem.rightBarButtonItem.enabled      =   NO;
+    self.photosCollectionView.userInteractionEnabled    =   NO;
+
     // Set network manager
     imagesIndexPath                             =   [NSMutableArray array];
 
@@ -96,7 +102,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     isPaginationRun                             =   NO;
     
-    
+    self.userNameBarButton.title                =   [userApp objectForKey:@"userAppEmail"];
 //    [self createTestDataSource];
     
     
@@ -107,19 +113,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleUserLogout:)
-                                                 name:@"HRPSettingsViewControllerUserLogout"
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleRepeatButtonTap:)
                                                  name:@"HRPPhotoCellStateButtonTap"
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleVideoRecord:)
-                                                 name:@"HRPVideoRecordViewControllerDismiss"
-                                               object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(handleVideoRecord:)
+//                                                 name:@"HRPVideoRecordViewControllerDismiss"
+//                                               object:nil];
     
     // Set Reachability Observer
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -132,9 +133,16 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewWillAppear:animated];
     
     isUploadPhotosUsingWiFiAllowed              =   [userApp boolForKey:@"networkStatus"];
+    isUploadAutomaticallyAllowed                =   [userApp boolForKey:@"sendingTypeStatus"];
     
     if (photosNeedUploadCount > 0 && !isUploadInProcess)
         [self startUploadPhotos];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [locationsService.manager stopUpdatingLocation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -242,9 +250,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     UIAlertAction *actionTakeVideo                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
-                                                                                   HRPVideoRecordViewController *videoRecordVC      =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
-                                                                                   
-                                                                                   [self presentViewController:videoRecordVC animated:YES completion:nil];                                                                                   
+//                                                                                   HRPVideoRecordViewController *videoRecordVC      =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+//                                                                                   
+//                                                                                   [self presentViewController:videoRecordVC animated:YES completion:nil];
+                                                                                   [self.navigationController popToRootViewControllerAnimated:YES];
                                                                                }];
     
     [alertController addAction:actionTakeVideo];
@@ -256,12 +265,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 #pragma mark - NSNotification -
-- (void)handleUserLogout:(NSNotification *)notification {
-    [locationsService.manager stopUpdatingLocation];
-
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (void)handleRepeatButtonTap:(NSNotification *)notification {
     currentCell                                     =   notification.userInfo[@"cell"];
     currentPhoto                                    =   currentCell.photo;
@@ -269,10 +272,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     if (currentPhoto.state != HRPPhotoStateDone && !isUploadInProcess) {
         [currentCell.activityIndicator startAnimating];
-        [self uploadPhotoFromLoop:NO];
+        [self uploadDataFromLoop:NO];
     }
 }
 
+/*
 - (void)handleVideoRecord:(NSNotification *)notification {
     [self.uploadActivityIndicator startAnimating];
 
@@ -346,10 +350,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                     }];
                                 }];
 }
+*/
 
 - (void)reachabilityDidChange:(NSNotification *)notification {
     if (notification.userInfo[@"AFNetworkingReachabilityNotificationStatusItem"] && photosNeedUploadCount > 0)
-        [self uploadPhotos];
+        [self uploadDatas];
 }
 
 
@@ -359,6 +364,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     ALAssetsLibrary *library                        =   [[ALAssetsLibrary alloc] init];
     [library assetForURL:assetsURL
              resultBlock:^(ALAsset *asset) {
+                 myAsset                            =   asset;
+                 
                  UIImage  *copyOfOriginalImage      =   [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
                                                                             scale:0.5f
                                                                       orientation:UIImageOrientationUp];
@@ -392,74 +399,88 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (void)startUploadPhotos {
-    if (photosNeedUploadCount > 0 && [self canPhotosSendToServer]) {
-        [self uploadPhotos];
-    }
+    if (photosNeedUploadCount > 0 && [self canPhotosSendToServer])
+        [self uploadDatas];
 }
 
-- (void)uploadPhotoFromLoop:(BOOL)inLoop {
+- (void)uploadDataFromLoop:(BOOL)inLoop {
     // Check network connection state
-    if ([self canPhotosSendToServer]) {
-        // Async queue
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            // Save to device
-            [self savePhotosCollectionToFile];
-            isUploadInProcess                                                       =   YES;
-            __block UIImage *imageOriginal;
+    if ((inLoop && isUploadAutomaticallyAllowed) ||
+        (!inLoop && !isUploadAutomaticallyAllowed)) {
+        if ([self canPhotosSendToServer]) {
+            // Async queue
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                // Save to device
+                [self savePhotosCollectionToFile];
+                isUploadInProcess                                                       =   YES;
+                __block UIImage *imageOriginal;
+                
+                [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
+                                   onSuccess:^(UIImage *image) {
+                                       imageOriginal                                    =   image;
+                                       /*
+                                       if (currentPhoto.isVideo) {
+                                           ALAssetRepresentation *representation        =   myAsset.defaultRepresentation;
+                                           long long size                               =   representation.size;
+                                           NSMutableData *rawData                       =   [[NSMutableData alloc] initWithCapacity:(int)size];
+                                           void *buffer                                 =   [rawData mutableBytes];
+                                           [representation getBytes:buffer fromOffset:0 length:(int)size error:nil];
+                                           
+                                           currentImage.imageData                       =   [[NSData alloc] initWithBytes:buffer length:(int)size];
+                                       }
+                                       
+                                       else {*/
+                                           if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
+                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
+                                           else
+                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
+                                           //}
+                                       
+                                       // API
+                                       NSDictionary *parameters                         =   @{
+                                                                                                    @"photo"        :   currentImage.imageData,
+                                                                                                    @"latitude"     :   @(currentPhoto.latitude),
+                                                                                                    @"longitude"    :   @(currentPhoto.longitude)
+                                                                                              };
+                                       
+                                       [self uploadPhotoWithParameters:parameters
+                                                             onSuccess:^(NSDictionary *successResult) {
+                                                                 currentPhoto.state     =   HRPPhotoStateDone;
+                                                                 [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+                                                                 
+                                                                 [self savePhotosCollectionToFile];
+                                                                 [currentCell.activityIndicator stopAnimating];
+                                                                 // [self.uploadActivityIndicator stopAnimating];
+                                                                 
+                                                                 isUploadInProcess      =   NO;
+                                                                 photosNeedUploadCount--;
+                                                                 
+                                                                 if (photosNeedUploadCount && inLoop)
+                                                                     [self startUploadPhotos];
+                                                             }
+                                                             orFailure:^(AFHTTPRequestOperation *failureOperation) {
+                                                                 currentPhoto.state     =   HRPPhotoStateRepeat;
+                                                                 [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
+                                                                 
+                                                                 [self savePhotosCollectionToFile];
+                                                                 [currentCell.activityIndicator stopAnimating];
+                                                                 [self.uploadActivityIndicator stopAnimating];
+                                                                 
+                                                                 isUploadInProcess      =   NO;
+                                                             }];
+                                   }];
+            });
+        } else {
+            [currentCell.activityIndicator stopAnimating];
             
-            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
-                               onSuccess:^(UIImage *image) {
-                                   imageOriginal                                    =   image;
-                               
-                                   if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
-                                       currentImage.imageData                       =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
-                                   else
-                                       currentImage.imageData                       =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
-                                   
-                                   // API
-                                   NSDictionary *parameters                         =   @{
-                                                                                                @"photo"        :   currentImage.imageData,
-                                                                                                @"latitude"     :   @(currentPhoto.latitude),
-                                                                                                @"longitude"    :   @(currentPhoto.longitude)
-                                                                                        };
-                                   
-                                   [self uploadPhotoWithParameters:parameters
-                                                         onSuccess:^(NSDictionary *successResult) {
-                                                             currentPhoto.state     =   HRPPhotoStateDone;
-                                                             [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
-                                                             
-                                                             [self savePhotosCollectionToFile];
-                                                             [currentCell.activityIndicator stopAnimating];
-//                                                             [self.uploadActivityIndicator stopAnimating];
-                                                             
-                                                             isUploadInProcess      =   NO;
-                                                             photosNeedUploadCount--;
-                                                             
-                                                             if (photosNeedUploadCount && inLoop)
-                                                                 [self startUploadPhotos];
-                                                         }
-                                                         orFailure:^(AFHTTPRequestOperation *failureOperation) {
-                                                             currentPhoto.state     =   HRPPhotoStateRepeat;
-                                                             [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
-                                                             
-                                                             [self savePhotosCollectionToFile];
-                                                             [currentCell.activityIndicator stopAnimating];
-                                                             [self.uploadActivityIndicator stopAnimating];
-                                                             
-                                                             isUploadInProcess      =   NO;
-                                                         }];
-                               }];
-        });
-    } else {
-        [currentCell.activityIndicator stopAnimating];
-        
-        // Wait for next item upload
-        if (isUploadInProcess && photosNeedUploadCount > 0)
-            [self uploadPhotoFromLoop:inLoop];
+            // Wait for next item upload
+            if (isUploadInProcess && photosNeedUploadCount > 0)
+                [self uploadDataFromLoop:inLoop];
+        }
     }
 }
 
-- (void)uploadPhotos {
+- (void)uploadDatas {
     for (HRPPhoto *photo in photosDataSource) {
         if (photo.state != HRPPhotoStateDone) {
             currentPhoto                =   photo;
@@ -474,7 +495,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             
             if ([self.photosCollectionView.visibleCells containsObject:currentCell] && !isUploadInProcess) {
                 [currentCell.activityIndicator startAnimating];
-                [self uploadPhotoFromLoop:YES];
+                [self uploadDataFromLoop:YES];
 
                 break;
             }
@@ -587,6 +608,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                         }
                                                         completion:^(BOOL finished) {
                                                             [self.uploadActivityIndicator stopAnimating];
+                                                            self.navigationItem.rightBarButtonItem.enabled      =   YES;
+                                                            self.photosCollectionView.userInteractionEnabled    =   YES;
                                                         }];
                                        
                                        // Upload photos
@@ -634,6 +657,18 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                error:nil];
 }
 
+- (void)removeItemFromCollection {
+    [self.photosCollectionView performBatchUpdates:^{
+        [imagesDataSource removeObjectAtIndex:currentIndexPath.row];
+        [self.photosCollectionView deleteItemsAtIndexPaths:@[currentIndexPath]];
+    }
+                                        completion:^(BOOL finished) {
+                                            [photosDataSource removeObjectAtIndex:currentIndexPath.row];
+                                            
+                                            [self savePhotosCollectionToFile];
+                                        }];
+}
+
 - (void)readPhotosCollectionFromFile {
     NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
@@ -650,10 +685,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             [self createImagesDataSource];
         } else
             NSLog(@"File does not exist");
-    } else {
+    } else
         imagesDataSource                            =   [NSMutableArray array];
-        [self.uploadActivityIndicator stopAnimating];
-    }
 }
 
 - (void)showAlertController {
@@ -679,57 +712,49 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     UIAlertAction *actionOpenVideo                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
-
+                                                                                   HRPVideoPlayerViewController *videoPlayerVC      =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
+                                                                                   videoPlayerVC.videoURL                           =   [NSURL URLWithString:currentPhoto.assetsVideoURL];
+                                                                                   
+                                                                                   [self presentViewController:videoPlayerVC animated:YES completion:^{ }];
                                                                                }];
     
-    /*
-    UIAlertAction *actionRemovePhoto                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Remove a Photo", nil)
+    UIAlertAction *actionRemoveItem                 =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?   @"Remove a Video" :
+                                                                                                                                    @"Remove a Photo", nil)
                                                                                  style:UIAlertActionStyleDestructive
                                                                                handler:^(UIAlertAction *action) {
+                                                                                   [self removeItemFromCollection];
                                                                                }];
-     */
-    
-    UIAlertAction *actionUploadPhoto                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload a Photo", nil)
+
+    UIAlertAction *actionUploadData                =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?    @"Upload a Video" :
+                                                                                                                                    @"Upload a Photo", nil)
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
                                                                                    if (currentPhoto.state != HRPPhotoStateDone) {
                                                                                        [currentCell.activityIndicator startAnimating];
                                                                                        
-                                                                                       [self uploadPhotoFromLoop:NO];
+                                                                                       [self uploadDataFromLoop:NO];
                                                                                    }
                                                                                }];
     
-    UIAlertAction *actionUploadPhotos               =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload Photos", nil)
+    UIAlertAction *actionUploadDatas               =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?    @"Upload Videos" :
+                                                                                                                                    @"Upload Photos", nil)
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
                                                                                    [self startUploadPhotos];
                                                                                }];
     
-    UIAlertAction *actionUploadVideo                =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Upload a Video", nil)
-                                                                                 style:UIAlertActionStyleDefault
-                                                                               handler:^(UIAlertAction *action) {
-                                                                                   if (currentPhoto.state != HRPPhotoStateDone) {
-                                                                                       [currentCell.activityIndicator startAnimating];
-                                                                                       
-//                                                                                       [self uploadPhotoFromLoop:NO];
-                                                                                   }
-                                                                               }];
-    
-//    [alertController addAction:actionRemovePhoto];
     if (currentPhoto.isVideo)
         [alertController addAction:actionOpenVideo];
     else
         [alertController addAction:actionOpenPhoto];
     
-    if (currentPhoto.state != HRPPhotoStateDone) {
-        if (currentPhoto.isVideo)
-            [alertController addAction:actionUploadVideo];
-        else
-            [alertController addAction:actionUploadPhoto];
-    }
+    if (currentPhoto.state != HRPPhotoStateDone && !currentPhoto.isVideo)
+        [alertController addAction:actionUploadData];
     
-    if (photosNeedUploadCount > 0)
-        [alertController addAction:actionUploadPhotos];
+    if (photosNeedUploadCount > 0 && !currentPhoto.isVideo)
+        [alertController addAction:actionUploadDatas];
+    
+    [alertController addAction:actionRemoveItem];
     
     [alertController addAction:actionCancel];
     
@@ -815,6 +840,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     currentCell                                     =   (HRPPhotoCell *)[collectionView cellForItemAtIndexPath:indexPath];
     currentPhoto                                    =   currentCell.photo;
     currentImage                                    =   currentCell.image;
+    currentIndexPath                                =   indexPath;
     
     [self showAlertController];
 }
@@ -903,7 +929,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                            [self savePhotosCollectionToFile];
                                                                            photosNeedUploadCount++;
                                                                            
-                                                                           [self uploadPhotoFromLoop:NO];
+                                                                           [self uploadDataFromLoop:NO];
                                                                        }];
                                                    }
                                                   failureBlock:^(NSError *error) { }];

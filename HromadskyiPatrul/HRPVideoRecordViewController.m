@@ -18,6 +18,9 @@
 #import <OpenEars/OEPocketsphinxController.h>
 #import <OpenEars/OEAcousticModel.h>
 #import <OpenEars/OEEventsObserver.h>
+#import "HRPCollectionViewController.h"
+#import "HRPPhoto.h"
+#import <CoreLocation/CoreLocation.h>
 
 
 typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
@@ -26,7 +29,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 };
 
 
-@interface HRPVideoRecordViewController () <AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, OEEventsObserverDelegate>
+@interface HRPVideoRecordViewController () <CLLocationManagerDelegate, AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, OEEventsObserverDelegate>
 
 @property (assign, nonatomic) HRPVideoRecordViewControllerMode recordingMode;
 
@@ -34,11 +37,10 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UIView *videoView;
-@property (strong, nonatomic) IBOutlet UIView *testTopView;
+@property (strong, nonatomic) IBOutlet UILabel *voiceCommandLabel;
 
 @property (strong, nonatomic) IBOutlet HRPButton *controlButton;
 @property (strong, nonatomic) IBOutlet UILabel *controlLabel;
-@property (strong, nonatomic) IBOutlet UIButton *resetButton;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *statusViewVerticalSpaceConstraint;
 
@@ -61,6 +63,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 @implementation HRPVideoRecordViewController {
     MBProgressHUD *progressHUD;
+    NSUserDefaults *userApp;
+    CLLocationManager *locationManager;
 
     AVCaptureVideoOrientation previewNewOrientation;
     AVCaptureVideoOrientation videoNewOrientation;
@@ -70,13 +74,18 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     NSInteger timerSeconds;
     NSInteger snippetNumber;
     NSInteger sessionDuration;
-    UIImage *videoImageOriginal;
     NSArray *videoFilesNames;
     NSArray *audioFilesNames;
     NSDictionary *audioRecordSettings;
     NSString *voiceLanguageModelPath;
     NSString *voiceDictionaryPath;
     NSArray *voiceCommands;
+    NSString *arrayPath;
+    NSMutableArray *photosDataSource;
+    NSURL *videoAssetURL;
+    UIImage *videoImageOriginal;
+    CGFloat latitude;
+    CGFloat longitude;
 
     BOOL isVideoSaving;
     BOOL isControlLabelFlashing;
@@ -86,16 +95,21 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    // NSLog(@"self.statusView.bounds 0 = %@", NSStringFromCGRect(self.statusView.frame));
-    
     // Set Session Duration
     sessionDuration                                     =   10;
     
-    // Test Top View
-    self.testTopView.alpha                              =   0.f;
-    
+    // Start Geolocation
+    locationManager                                     =   [[CLLocationManager alloc]init];    // initializing locationManager
+    locationManager.delegate                            =   self;                               // we set the delegate of locationManager to self.
+    locationManager.desiredAccuracy                     =   kCLLocationAccuracyBest;            // setting the accuracy
+    [locationManager startUpdatingLocation];                                                    //requesting location updates
+
     // App Folder
     mediaFolderPath                                     =   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+
+    userApp                                             =   [NSUserDefaults standardUserDefaults];
+    [self createStoreDataPath];
+    [self readPhotosCollectionFromFile];
 
     // Set Media session parameters
     snippetNumber                                       =   0;
@@ -103,6 +117,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     isControlLabelFlashing                              =   NO;
     videoFilesNames                                     =   @[@"snippet_video_0.mp4", @"snippet_video_1.mp4", @"snippet_video_2.mp4"];
     audioFilesNames                                     =   @[@"snippet_audio_0.caf", @"snippet_audio_1.caf", @"snippet_audio_2.caf"];
+    self.voiceCommandLabel.text                         =   NSLocalizedString(@"COMMAND VIOLATION", nil);
     self.recordingMode                                  =   HRPVideoRecordViewControllerModeStreamVideo;
     
     audioRecordSettings                                 =   [NSDictionary dictionaryWithObjectsAndKeys:
@@ -120,9 +135,22 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     // Set items
 //    self.controlButton.tag                              =   0;
     self.controlLabel.text                              =   nil; //NSLocalizedString(@"Attention", nil);
-    self.timerLabel.text                                =   @"00:00:00";
+    // Set Notification Observers
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleUserLogout:)
+                                                 name:@"HRPSettingsViewControllerUserLogout"
+                                               object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
-    [self.resetButton setTitle:NSLocalizedString(@"Cancel", nil) forState:UIControlStateNormal];
+    // Set Status Bar
+    UIView *statusBarView                               =  [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
+    statusBarView.backgroundColor                       =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
+    [self.navigationController.navigationBar addSubview:statusBarView];
+
+    self.timerLabel.text                                =   @"00:00:00";
     
     // Start new camera video & audio session
     [self removeAllFolderMediaTempFiles];
@@ -133,24 +161,21 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     self.openEarsEventsObserver                         =   [[OEEventsObserver alloc] init];
     [self.openEarsEventsObserver setDelegate:self];
     [self setVoiceRecognizeSpeech];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
     
     [self startStreamVideoRecording];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     
     // Remove the video preview layer from the viewPreview view's layer.
     [self.captureSession stopRunning];
-    [self.videoPreviewLayer removeFromSuperlayer];
-
-    self.videoPreviewLayer                              =   nil;
     self.captureSession                                 =   nil;
     self.videoFileOutput                                =   nil;
+    [self.videoPreviewLayer removeFromSuperlayer];
+    self.videoPreviewLayer                              =   nil;
+    
+    [locationManager stopUpdatingLocation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -165,6 +190,53 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 
 #pragma mark - UIViewControllerRotation -
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    BOOL isRotationPossible                                 =   !isVideoSaving;
+    
+    if (isRotationPossible) {
+        self.videoPreviewLayer.frame                        =   CGRectMake(0.f, 0.f, size.width, size.height);
+        
+        self.statusViewVerticalSpaceConstraint.constant     =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
+        0.f : -20.f;
+        
+        switch ([[UIDevice currentDevice] orientation]) {
+            case UIDeviceOrientationPortrait: {
+                previewNewOrientation                       =   AVCaptureVideoOrientationPortrait;
+            }
+                break;
+            case UIDeviceOrientationPortraitUpsideDown:
+                previewNewOrientation                       =   AVCaptureVideoOrientationPortraitUpsideDown;
+                break;
+                
+            case UIDeviceOrientationLandscapeLeft: {
+                previewNewOrientation                       =   AVCaptureVideoOrientationLandscapeRight;
+                videoNewOrientation                         =   AVCaptureVideoOrientationLandscapeLeft;
+            }
+                break;
+                
+            case UIDeviceOrientationLandscapeRight: {
+                [self.videoView.layer setAffineTransform:CGAffineTransformIdentity];
+                
+                previewNewOrientation                       =   AVCaptureVideoOrientationLandscapeLeft;
+                videoNewOrientation                         =   AVCaptureVideoOrientationLandscapeRight;
+            }
+                break;
+                
+            default:
+                previewNewOrientation                       =   AVCaptureVideoOrientationPortrait;
+        }
+        
+        self.videoPreviewLayer.connection.videoOrientation  =   previewNewOrientation;
+        self.videoConnection.videoOrientation               =   videoNewOrientation;
+        
+        [timerVideo invalidate];
+        timerSeconds                                        =   0;
+        timerVideo                                          =   [self createTimer];
+        
+        [self.videoFileOutput stopRecording];
+    }
+}
+
 - (BOOL)shouldAutorotate {
     BOOL isRotationPossible                                 =   !isVideoSaving;
     
@@ -236,55 +308,15 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     }
 }
 
-- (IBAction)actionResetButtonTap:(UIButton *)sender {
-    [self.captureSession stopRunning];
-    [self.videoFileOutput stopRecording];
-    [self removeAllFolderMediaTempFiles];
-    
+
+#pragma mark - NSNotification -
+- (void)handleUserLogout:(NSNotification *)notification {
     [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-// TEST
-- (IBAction)actionTest:(UIButton *)sender {
-    [self readAllFolderFile];
-}
-
-- (IBAction)actionDELETE:(id)sender {
-    [self removeAllFolderMediaTempFiles];
-    [self readAllFolderFile];
-}
-
-- (IBAction)actiomMERGE:(id)sender {
-    [self mergeAndSaveVideoFile];
-}
-
-- (IBAction)actionPLAY:(id)sender {
-    if (!_audioRecorder.recording) {
-        NSError *error;
-        
-        if (self.textField.text.length > 0)
-            snippetNumber = [self.textField.text integerValue];
-        
-        _audioRecorder                  =   [[AVAudioRecorder alloc] initWithURL:[self setNewAudioFileURL:snippetNumber]
-                                                                        settings:audioRecordSettings
-                                                                           error:&error];
-        
-        _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:_audioRecorder.url error:&error];
-        _audioPlayer.delegate = self;
-        [_audioSession setCategory:AVAudioSessionCategoryPlayback error:nil];
-        
-        if (error)
-            NSLog(@"Error: %@", [error localizedDescription]);
-        
-        else [_audioPlayer play];
-    }
 }
 
 
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
-    [self.textField resignFirstResponder];
-    
     [self actionControlButtonTap:self.controlButton];
 }
 
@@ -405,11 +437,9 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [[OEPocketsphinxController sharedInstance] setActive:TRUE error:nil];
     
     voiceCommands                                       =   [NSArray arrayWithObjects:
-                                                                @"VIDEO",
-                                                                @"PHOTO",
-                                                                @"ATTENTION",
-                                                                @"START",
-                                                                @"RECORD", nil];
+                                                                @"PAYRUSHAYNNA",
+                                                                @"NARUSHENIE",
+                                                                @"VIOLATION", nil];
     
     
     // Change "AcousticModelEnglish" to "AcousticModelSpanish" to create a Spanish language model instead of an English one.
@@ -441,6 +471,20 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         
         if (error)
             NSLog(@"Error stopping listening in stopButtonAction: %@", error);
+    }
+}
+
+- (void)createStoreDataPath {
+    NSError *error;
+    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
+        if (![[NSFileManager defaultManager] createDirectoryAtPath:arrayPath
+                                       withIntermediateDirectories:NO
+                                                        attributes:nil
+                                                             error:&error])
+            NSLog(@"Create directory error: %@", error);
     }
 }
 
@@ -493,6 +537,28 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         NSLog(@"HRPVideoRecordViewController (354): NOT DELETE");
 }
 
+- (void)readPhotosCollectionFromFile {
+    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
+        NSData *arrayData                           =   [[NSData alloc] initWithContentsOfFile:arrayPath];
+        photosDataSource                            =   [NSMutableArray array];
+        
+        if (arrayData)
+            photosDataSource                        =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
+        else
+            NSLog(@"File does not exist");
+    }
+}
+
+- (void)readAllFolderFile {
+    NSArray *allFolderFiles                             =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mediaFolderPath error:nil];
+    
+    NSLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
+}
+
 - (void)removeAllFolderMediaTempFiles {
     NSArray *allFolderFiles                             =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mediaFolderPath error:nil];
     
@@ -505,7 +571,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     // Start new video & audio session
     isVideoSaving                                       =   NO;
     self.controlButton.enabled                          =   YES;
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 - (void)removeMediaSnippets {
@@ -518,12 +583,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     }
 }
 
-- (void)readAllFolderFile {
-    NSArray *allFolderFiles                             =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:mediaFolderPath error:nil];
-  
-    NSLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
-}
-
 - (void)mergeAndSaveVideoFile {
     if (!progressHUD.alpha) {
         progressHUD                                     =   [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -532,6 +591,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         progressHUD.yOffset                             =   0.f;
         isVideoSaving                                   =   YES;
         self.controlLabel.text                          =   nil;
+        self.navigationItem.rightBarButtonItem.enabled  =   NO;
     }
 
     // Create the AVMutable composition to add tracks
@@ -632,9 +692,12 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                                                     [self showAlertViewWithTitle:NSLocalizedString(@"Alert error email title", nil)
                                                                       andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
                                                 else {
+                                                    videoAssetURL   =   assetURL;
+                                                    [self saveVideoRecordToFile];
+                                                    
                                                     [self removeAllFolderMediaTempFiles];
                                                     [self startCameraSession];
-                                                    timerVideo  =   [self createTimer];
+                                                    timerVideo      =   [self createTimer];
 
                                                     [self startStreamVideoRecording];
                                                 }
@@ -693,6 +756,41 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                          self.controlLabel.alpha        =   0.f;
                      }
                      completion:^(BOOL finished) { }];
+}
+
+- (void)saveVideoRecordToFile {
+    HRPPhoto *photo                                     =   [[HRPPhoto alloc] init];
+    ALAssetsLibrary *assetsLibrary                      =   [[ALAssetsLibrary alloc] init];
+    
+    (photosDataSource.count == 0) ? [photosDataSource addObject:photo] : [photosDataSource insertObject:photo atIndex:0];
+
+    [assetsLibrary writeImageToSavedPhotosAlbum:videoImageOriginal.CGImage
+                                    orientation:(ALAssetOrientation)videoImageOriginal.imageOrientation
+                                completionBlock:^(NSURL *assetURL, NSError *error) {
+                                    photo.assetsVideoURL =   [videoAssetURL absoluteString];
+                                    photo.assetsPhotoURL =   [assetURL absoluteString];
+                                    
+                                    photo.latitude      =   latitude;
+                                    photo.longitude     =   longitude;
+                                    photo.isVideo       =   YES;
+                                    
+                                    [photosDataSource replaceObjectAtIndex:0 withObject:photo];                                    
+                                    [self savePhotosCollectionToFile];
+                                }];
+}
+
+- (void)savePhotosCollectionToFile {
+    NSData *arrayData                                   =   [NSKeyedArchiver archivedDataWithRootObject:photosDataSource];
+    NSArray *paths                                      =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath                                           =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                           =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
+    
+    [[NSFileManager defaultManager] createFileAtPath:arrayPath
+                                            contents:arrayData
+                                          attributes:nil];
+    
+    self.navigationItem.rightBarButtonItem.enabled      =   YES;
+    [MBProgressHUD hideHUDForView:self.view animated:YES];
 }
 
 
@@ -766,13 +864,30 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 
+#pragma mark - CLLocationManagerDelegate -
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
+                      andMessage:NSLocalizedString(@"Alert error location retrieving message", nil)];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    CLLocation *crnLoc                                  =   [locations lastObject];
+    latitude                                            =   crnLoc.coordinate.latitude;
+    longitude                                           =   crnLoc.coordinate.longitude;
+}
+
+
 #pragma mark - OEEventsObserverDelegate -
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
     NSPredicate *predicate                              =   [NSPredicate predicateWithFormat:@"SELF == [cd] %@", hypothesis];
     NSString *voiceCommand                              =   [voiceCommands filteredArrayUsingPredicate:predicate][0];
 
-    if (voiceCommand && self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo)
-        [self actionControlButtonTap:self.controlButton];
+    if (self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo) {
+        if (([NSLocalizedString(@"Settings", nil) isEqualToString:@"Settings"] && [voiceCommand isEqualToString:@"VIOLATION"])      ||
+            ([NSLocalizedString(@"Settings", nil) isEqualToString:@"Настройки"] && [voiceCommand isEqualToString:@"NARUSHENIE"])     ||
+            ([NSLocalizedString(@"Settings", nil) isEqualToString:@"Налаштування"] && [voiceCommand isEqualToString:@"PAYRUSHAYNNA"]))
+                [self actionControlButtonTap:self.controlButton];
+    }
 }
 
 - (void) pocketsphinxDidStartListening {

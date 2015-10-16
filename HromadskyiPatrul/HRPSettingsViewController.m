@@ -11,6 +11,8 @@
 
 @interface HRPSettingsViewController () 
 
+@property (strong, nonatomic) IBOutlet UISwitch *sendingSwitch;
+@property (strong, nonatomic) IBOutlet UILabel *sendingTypeLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *networkSwitch;
 @property (strong, nonatomic) IBOutlet UILabel *networkLabel;
 @property (strong, nonatomic) IBOutlet UIButton *logoutButton;
@@ -26,12 +28,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    userApp                                     =   [NSUserDefaults standardUserDefaults];
-    self.navigationItem.title                   =   NSLocalizedString(@"Settings", nil);
+    userApp                                         =   [NSUserDefaults standardUserDefaults];
+    self.navigationItem.title                       =   NSLocalizedString(@"Settings", nil);
     
     // Set titles
-    self.networkSwitch.on                       =   [userApp boolForKey:@"networkStatus"];
-    self.networkLabel.text                      =   NSLocalizedString(@"Switch title", nil);
+    self.sendingSwitch.on                           =   [userApp boolForKey:@"sendingTypeStatus"];
+    self.sendingTypeLabel.text                      =   NSLocalizedString(@"Switch sending title", nil);
+    self.networkSwitch.on                           =   [userApp boolForKey:@"networkStatus"];
+    self.networkLabel.text                          =   NSLocalizedString(@"Switch network title", nil);
     [self.logoutButton setTitle:NSLocalizedString(@"Logout", nil) forState:UIControlStateNormal];
 }
 
@@ -43,6 +47,7 @@
 #pragma mark - Actions -
 - (IBAction)actionLogoutButtonTap:(UIButton *)sender {
     [userApp removeObjectForKey:@"userAppEmail"];
+    [userApp removeObjectForKey:@"sendingTypeStatus"];
     [userApp removeObjectForKey:@"networkStatus"];
 
     [self.navigationController popToRootViewControllerAnimated:YES];
@@ -50,6 +55,10 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
                                                         object:nil
                                                       userInfo:nil];
+}
+
+- (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {
+    [userApp setBool:sender.on forKey:@"sendingTypeStatus"];
 }
 
 - (IBAction)actionNetworkSwitchChangeValue:(UISwitch *)sender {

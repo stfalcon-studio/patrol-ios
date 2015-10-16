@@ -89,10 +89,10 @@
     [super viewWillAppear:animated];
     
     // Set Portrait orientation
-    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationPortrait]
-                                forKey:@"orientation"];
-    
-    [UIViewController attemptRotationToDeviceOrientation];
+//    [[UIDevice currentDevice] setValue:[NSNumber numberWithInteger:UIInterfaceOrientationPortrait]
+//                                forKey:@"orientation"];
+//    
+//    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -105,8 +105,6 @@
             countt++;
             [self startSceneTransition];
         }
-        
-        // [self startSceneTransition];
     } else {
         [UIView animateWithDuration:1.3f
                          animations:^{
@@ -170,6 +168,8 @@
         if ([self isInternetConnectionAvailable]) {
             [self userLoginParameters:self.emailTextField.text
                             onSuccess:^(NSDictionary *successResult) {
+                                [self. emailTextField resignFirstResponder];
+
                                 // Transition to VideoRecord scene
                                 [self startSceneTransition];
                                 
@@ -223,20 +223,10 @@
 
 #pragma mark - Methods -
 - (void)startSceneTransition {
-    // Transition to Collection scene
-    /*
-    UINavigationController *collectionNC            =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionNC"];
-    HRPCollectionViewController *collectionVC       =   collectionNC.viewControllers[0];
-    [collectionVC.userNameBarButton setTitle:self.emailTextField.text];
-    
-    [self presentViewController:collectionNC animated:YES completion:nil];
-     */
-    
     // Transition to VideoRecord scene
-    HRPVideoRecordViewController *videoRecordVC     =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
-//    [UIViewController attemptRotationToDeviceOrientation];
+    UINavigationController *videoRecordNC           =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordNC"];
     
-    [self presentViewController:videoRecordVC animated:YES completion:nil];
+    [self presentViewController:videoRecordNC animated:YES completion:nil];
 }
 
 - (BOOL)isInternetConnectionAvailable {
