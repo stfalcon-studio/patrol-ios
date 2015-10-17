@@ -390,12 +390,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OtK-7h-2mt" userLabel="Status View">
+                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S7F-3N-rsg" userLabel="Status View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                 <animations/>
-                                <color key="backgroundColor" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="Ksn-FL-0i9"/>
+                                    <constraint firstAttribute="height" constant="20" id="Brj-QW-4bV"/>
                                 </constraints>
                             </view>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GEx-LE-PLc">
@@ -431,16 +431,16 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="OtK-7h-2mt" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="Frr-aY-dhv"/>
-                            <constraint firstAttribute="trailing" secondItem="OtK-7h-2mt" secondAttribute="trailing" id="Jw8-DW-O2P"/>
                             <constraint firstAttribute="bottom" secondItem="L27-gU-LYV" secondAttribute="bottom" id="S2b-4s-q7e"/>
                             <constraint firstAttribute="centerY" secondItem="GEx-LE-PLc" secondAttribute="centerY" id="S4K-X6-CND"/>
                             <constraint firstAttribute="trailing" secondItem="RHF-Dg-70s" secondAttribute="trailing" constant="15" id="Sc7-JR-n5n"/>
-                            <constraint firstItem="L27-gU-LYV" firstAttribute="top" secondItem="OtK-7h-2mt" secondAttribute="bottom" id="YZ9-5s-2Xt"/>
-                            <constraint firstItem="RHF-Dg-70s" firstAttribute="top" secondItem="OtK-7h-2mt" secondAttribute="bottom" id="eRD-2G-pwx"/>
+                            <constraint firstItem="RHF-Dg-70s" firstAttribute="top" secondItem="PSo-Qi-SSy" secondAttribute="bottom" id="Xah-LR-fQM"/>
+                            <constraint firstItem="S7F-3N-rsg" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="dZU-kd-sM1"/>
                             <constraint firstItem="L27-gU-LYV" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="gHk-tS-zp4"/>
                             <constraint firstAttribute="centerX" secondItem="GEx-LE-PLc" secondAttribute="centerX" id="iah-l8-7V6"/>
-                            <constraint firstItem="OtK-7h-2mt" firstAttribute="top" secondItem="o7y-bL-j3b" secondAttribute="top" id="q04-VR-MRH"/>
+                            <constraint firstItem="L27-gU-LYV" firstAttribute="top" secondItem="PSo-Qi-SSy" secondAttribute="bottom" id="pya-H2-uVI"/>
+                            <constraint firstItem="S7F-3N-rsg" firstAttribute="top" secondItem="o7y-bL-j3b" secondAttribute="top" id="qf8-dJ-w7S"/>
+                            <constraint firstAttribute="trailing" secondItem="S7F-3N-rsg" secondAttribute="trailing" id="xQ1-lp-Kud"/>
                             <constraint firstAttribute="trailing" secondItem="L27-gU-LYV" secondAttribute="trailing" id="zMb-Tk-77M"/>
                         </constraints>
                     </view>
@@ -504,14 +504,15 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="phX-da-Z3Q" secondAttribute="trailing" constant="15" id="D9W-aY-SPq"/>
-                            <constraint firstItem="68S-uR-YoM" firstAttribute="top" secondItem="2he-xr-SRl" secondAttribute="top" id="dqT-ZX-vYG"/>
-                            <constraint firstItem="68S-uR-YoM" firstAttribute="leading" secondItem="2he-xr-SRl" secondAttribute="leading" id="fPj-Bk-dhZ"/>
-                            <constraint firstAttribute="trailing" secondItem="68S-uR-YoM" secondAttribute="trailing" id="fSe-K1-RTA"/>
+                            <constraint firstItem="68S-uR-YoM" firstAttribute="top" secondItem="2he-xr-SRl" secondAttribute="top" id="Twi-WY-czd"/>
+                            <constraint firstItem="68S-uR-YoM" firstAttribute="leading" secondItem="2he-xr-SRl" secondAttribute="leading" id="ko7-uT-HaE"/>
+                            <constraint firstAttribute="trailing" secondItem="68S-uR-YoM" secondAttribute="trailing" id="mAf-1i-SCm"/>
                             <constraint firstItem="phX-da-Z3Q" firstAttribute="top" secondItem="JhO-jS-dV3" secondAttribute="bottom" id="uaf-ds-gOL"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cancelButton" destination="phX-da-Z3Q" id="7cv-kd-21b"/>
+                        <outlet property="statusViewTopConstraint" destination="Twi-WY-czd" id="es5-ku-4P2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7bK-QL-ckZ" userLabel="First Responder" sceneMemberID="firstResponder"/>

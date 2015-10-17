@@ -46,14 +46,16 @@
 "Open a Video"                                  =   "Open a Video";
 "Remove a Photo"                                =   "Remove a Photo";
 "Remove a Video"                                =   "Remove a Video";
-"Photo preview"                                 =   "Photo preview";
+"Preview a Photo"                               =   "Preview a Photo";
 "Upload a Photo"                                =   "Upload a Photo";
 "Upload a Video"                                =   "Upload a Video";
 "Upload Photos"                                 =   "Upload Photos";
 "Upload Videos"                                 =   "Upload Videos";
 "Take a Photo"                                  =   "Take a Photo";
 "Take a Video"                                  =   "Take a Video";
+"Record a Video"                                =   "Record a Video";
+"Preview a Video"                               =   "Preview a Video";
 "Merge & Save video"                            =   "Saving";
 
 "Start"                                         =   "START";
-"Attention"                                     =   "ATTENTION";
+"Violation"                                     =   "ATTENTION";

@@ -150,7 +150,9 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     statusBarView.backgroundColor                       =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
     [self.navigationController.navigationBar addSubview:statusBarView];
 
+    timerSeconds                                        =   0;
     self.timerLabel.text                                =   @"00:00:00";
+    self.navigationItem.title                           =   NSLocalizedString(@"Record a Video", nil);
     
     // Start new camera video & audio session
     [self removeAllFolderMediaTempFiles];
@@ -169,12 +171,23 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [super viewDidDisappear:animated];
     
     // Remove the video preview layer from the viewPreview view's layer.
+    [_audioPlayer stop];
+    [_audioPlayer prepareToPlay];
+    [_audioSession setActive:NO error:nil];
+    [self stopVoiceRecognizeSpeech];
+    
     [self.captureSession stopRunning];
     self.captureSession                                 =   nil;
     self.videoFileOutput                                =   nil;
-    [self.videoPreviewLayer removeFromSuperlayer];
-    self.videoPreviewLayer                              =   nil;
-    
+
+//    [self.videoPreviewLayer removeFromSuperlayer];
+//    self.videoPreviewLayer                              =   nil;
+
+    [timerVideo invalidate];
+    timerSeconds                                        =   0;
+    self.timerLabel.text                                =   [self formattedTime:timerSeconds];
+    timerVideo                                          =   nil;
+
     [locationManager stopUpdatingLocation];
 }
 
@@ -191,9 +204,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    BOOL isRotationPossible                                 =   !isVideoSaving;
-    
-    if (isRotationPossible) {
+    if (!isVideoSaving) {
         self.videoPreviewLayer.frame                        =   CGRectMake(0.f, 0.f, size.width, size.height);
         
         self.statusViewVerticalSpaceConstraint.constant     =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
@@ -237,71 +248,13 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     }
 }
 
-- (BOOL)shouldAutorotate {
-    BOOL isRotationPossible                                 =   !isVideoSaving;
-    
-    if (isRotationPossible) {
-        self.videoPreviewLayer.frame                        =   self.videoView.bounds;
-        
-        self.statusViewVerticalSpaceConstraint.constant     =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
-                                                                    0.f : -20.f;
-        
-        switch ([[UIDevice currentDevice] orientation]) {
-            case UIDeviceOrientationPortrait: {
-                previewNewOrientation                       =   AVCaptureVideoOrientationPortrait;
-            }
-                break;
-            case UIDeviceOrientationPortraitUpsideDown:
-                previewNewOrientation                       =   AVCaptureVideoOrientationPortraitUpsideDown;
-                break;
-            
-            case UIDeviceOrientationLandscapeLeft: {
-                previewNewOrientation                       =   AVCaptureVideoOrientationLandscapeRight;
-                videoNewOrientation                         =   AVCaptureVideoOrientationLandscapeLeft;
-            }
-                break;
-                
-            case UIDeviceOrientationLandscapeRight: {
-                [self.videoView.layer setAffineTransform:CGAffineTransformIdentity];
-                
-                previewNewOrientation                       =   AVCaptureVideoOrientationLandscapeLeft;
-                videoNewOrientation                         =   AVCaptureVideoOrientationLandscapeRight;
-            }
-                break;
-            
-            default:
-                previewNewOrientation                       =   AVCaptureVideoOrientationPortrait;
-        }
-        
-        self.videoPreviewLayer.connection.videoOrientation  =   previewNewOrientation;
-        self.videoConnection.videoOrientation               =   videoNewOrientation;
-        
-        [timerVideo invalidate];
-        timerSeconds                                        =   0;
-        timerVideo                                          =   [self createTimer];
-        
-        [self.videoFileOutput stopRecording];
-
-        return YES;
-    }
-    
-    else
-        return NO;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait | UIInterfaceOrientationMaskLandscape;
-}
-
-- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
-    return [[UIApplication sharedApplication] statusBarOrientation];
-}
-
 
 #pragma mark - Actions -
 - (IBAction)actionControlButtonTap:(HRPButton *)sender {
     if (self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo) {
-        self.controlLabel.text                              =   NSLocalizedString(@"Attention", nil);
+        self.controlLabel.text                              =   NSLocalizedString(@"Violation", nil);
+        isVideoSaving                                       =   YES;
+        self.navigationItem.rightBarButtonItem.enabled      =   NO;
         
         [self startControlLabelFlashing];
         [self startAttentionVideoRecording];
@@ -389,10 +342,40 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [self.videoFileOutput stopRecording];
 }
 
+- (void)startControlLabelFlashing {
+    if (isControlLabelFlashing)
+        return;
+    
+    isControlLabelFlashing                              =   YES;
+    self.controlLabel.alpha                             =   1.f;
+    
+    [UIView animateWithDuration:0.10f
+                          delay:0.f
+                        options:UIViewAnimationOptionCurveEaseInOut |
+     UIViewAnimationOptionRepeat         |
+     UIViewAnimationOptionAutoreverse    |
+     UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+                         self.controlLabel.alpha        =   0.f;
+                     }
+                     completion:^(BOOL finished) { }];
+}
+
 - (void)stopAudioRecording {
     if (_audioRecorder.recording) {
         [_audioRecorder stop];
         [self stopVoiceRecognizeSpeech];
+    }
+}
+
+- (void)stopVoiceRecognizeSpeech {
+    NSError *error                                      =   nil;
+    
+    if ([OEPocketsphinxController sharedInstance].isListening) {
+        error                                           =   [[OEPocketsphinxController sharedInstance] stopListening];
+        
+        if (error)
+            NSLog(@"Error stopping listening in stopButtonAction: %@", error);
     }
 }
 
@@ -415,11 +398,11 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     _audioSession                                       =   [AVAudioSession sharedInstance];
     [_audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
-    
+    [_audioSession setActive:YES withOptions:0 error:nil];
+
     _audioRecorder                                      =   [[AVAudioRecorder alloc] initWithURL:[self setNewAudioFileURL:snippetNumber]
                                                                                         settings:audioRecordSettings
                                                                                            error:&error];
-    
     if (error)
         [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error API title", nil)
                                     message:[error localizedDescription]
@@ -460,17 +443,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                                                                         dictionaryAtPath:voiceDictionaryPath
                                                                      acousticModelAtPath:[OEAcousticModel pathToModel:@"AcousticModelEnglish"]
                                                                      languageModelIsJSGF:FALSE];
-    }
-}
-
-- (void)stopVoiceRecognizeSpeech {
-    NSError *error                                  =   nil;
-
-    if ([OEPocketsphinxController sharedInstance].isListening) {
-        error                                       =   [[OEPocketsphinxController sharedInstance] stopListening];
-        
-        if (error)
-            NSLog(@"Error stopping listening in stopButtonAction: %@", error);
     }
 }
 
@@ -589,9 +561,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         progressHUD.labelText                           =   NSLocalizedString(@"Merge & Save video", nil);
         progressHUD.color                               =   [UIColor colorWithHexString:@"05A9F4" alpha:0.8f];
         progressHUD.yOffset                             =   0.f;
-        isVideoSaving                                   =   YES;
         self.controlLabel.text                          =   nil;
-        self.navigationItem.rightBarButtonItem.enabled  =   NO;
     }
 
     // Create the AVMutable composition to add tracks
@@ -739,25 +709,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                      otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
 }
                                                            
-- (void)startControlLabelFlashing {
-    if (isControlLabelFlashing)
-        return;
-    
-    isControlLabelFlashing                              =   YES;
-    self.controlLabel.alpha                             =   1.f;
-    
-    [UIView animateWithDuration:0.10f
-                          delay:0.f
-                        options:UIViewAnimationOptionCurveEaseInOut |
-                                UIViewAnimationOptionRepeat         |
-                                UIViewAnimationOptionAutoreverse    |
-                                UIViewAnimationOptionAllowUserInteraction
-                     animations:^{
-                         self.controlLabel.alpha        =   0.f;
-                     }
-                     completion:^(BOOL finished) { }];
-}
-
 - (void)saveVideoRecordToFile {
     HRPPhoto *photo                                     =   [[HRPPhoto alloc] init];
     ALAssetsLibrary *assetsLibrary                      =   [[ALAssetsLibrary alloc] init];

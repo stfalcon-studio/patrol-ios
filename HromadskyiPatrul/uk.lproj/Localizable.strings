@@ -42,18 +42,20 @@
 "Alert error location retrieving message"       =   "Сталася помилка при візначенні вашого місця розташування";
 "Alert error saving video message"              =   "Не вдалося зберегти відео";
 
-"Open a Photo"                                  =   "Відкрити фото";
-"Open a Video"                                  =   "Відкрити відео";
+"Open a Photo"                                  =   "Переглянути фото";
+"Open a Video"                                  =   "Переглянути відео";
 "Remove a Photo"                                =   "Видалити фото";
 "Remove a Video"                                =   "Видалити відео";
-"Photo preview"                                 =   "Фото превью";
+"Preview a Photo"                               =   "Перегляд фото";
 "Upload a Photo"                                =   "Завантажити одне фото";
 "Upload a Video"                                =   "Завантажити одне відео";
 "Upload Photos"                                 =   "Завантажити всі фото";
 "Upload Videos"                                 =   "Завантажити всі відео";
 "Take a Photo"                                  =   "Зробити фото";
 "Take a Video"                                  =   "Зняти відео";
+"Record a Video"                                =   "Запис відео";
+"Preview a Video"                               =   "Перегляд відео";
 "Merge & Save video"                            =   "Збереження";
 
 "Start"                                         =   "СТАРТ";
-"Attention"                                     =   "ПОРУШЕННЯ";
+"Violation"                                     =   "ПОРУШЕННЯ";

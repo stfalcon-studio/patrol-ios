@@ -49,6 +49,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     NSMutableArray *photosDataSource;
     NSMutableArray *imagesDataSource;
     CGSize photoSize;
+    CGFloat cellSide;
     NSInteger missingPhotosCount;
     NSString *arrayPath;
     NSTimer *timer;
@@ -78,7 +79,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         isLocationServiceEnabled                =   YES;
     }
     
-    CGFloat cellSide                            =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
+    if (CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame))
+        cellSide                                =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
+    else
+        cellSide                                =   (CGRectGetWidth(self.view.frame) - 8.f) / 3;
+
     photoSize                                   =   CGSizeMake(cellSide, cellSide);
     missingPhotosCount                          =   0;
     photosNeedUploadCount                       =   0;
@@ -857,6 +862,19 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                         layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
     // top, left, bottom, right
     return UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
+}
+
+
+#pragma mark - UIViewControllerRotation -
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    if (size.height > size.width)
+        cellSide                                    =   (size.width - 4.f) / 2;
+    else
+        cellSide                                    =   (size.width - 8.f) / 3;
+    
+    photoSize                                       =   CGSizeMake(cellSide, cellSide);
+    
+    [self.photosCollectionView reloadData];
 }
 
 

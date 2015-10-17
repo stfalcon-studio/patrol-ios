@@ -27,10 +27,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.navigationItem.title               =   NSLocalizedString(@"Preview a Photo", nil);
+
     [self.cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
                        forState:UIControlStateNormal];
-    
-//    HRPImage *image1     =   [[HRPImage alloc] init];
     
     [self getPhotoFromAlbumAtURL:[NSURL URLWithString:self.photo.assetsPhotoURL]
                        onSuccess:^(UIImage *image) {
@@ -40,15 +40,20 @@
                                            animations:^{
                                                self.photoImageView.image    =   image;
                                                [self.view bringSubviewToFront:self.cancelButton];
-
-
-                                               //                                               self.photoImageView.image    =   [image1 squareImageFromImage:self.photoImageView.image
-//                                                                                                scaledToSize:CGRectGetHeight(self.view.frame)];
                                            }
                                            completion:^(BOOL finished) {
                                                [self.activityIndicator stopAnimating];
                                            }];
                        }];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    // Set Status Bar
+    UIView *statusBarView                   =  [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), 20.f)];
+    statusBarView.backgroundColor           =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
+    [self.navigationController.navigationBar addSubview:statusBarView];
 }
 
 - (void)didReceiveMemoryWarning {
