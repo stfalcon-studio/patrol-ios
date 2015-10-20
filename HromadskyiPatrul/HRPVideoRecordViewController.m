@@ -13,19 +13,20 @@
 #import "UIColor+HexColor.h"
 #import "HRPButton.h"
 #import "MBProgressHUD.h"
+#import "HRPCollectionViewController.h"
+#import "HRPPhoto.h"
+#import <CoreLocation/CoreLocation.h>
 #import <OpenEars/OELanguageModelGenerator.h>
 #import <OpenEars/OEAcousticModel.h>
 #import <OpenEars/OEPocketsphinxController.h>
 #import <OpenEars/OEAcousticModel.h>
 #import <OpenEars/OEEventsObserver.h>
-#import "HRPCollectionViewController.h"
-#import "HRPPhoto.h"
-#import <CoreLocation/CoreLocation.h>
 
 
 typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     HRPVideoRecordViewControllerModeStreamVideo,
-    HRPVideoRecordViewControllerModeAttentionVideo
+    HRPVideoRecordViewControllerModeAttentionVideo,
+    HRPVideoRecordViewControllerModeDismissed
 };
 
 
@@ -37,7 +38,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UIView *videoView;
-@property (strong, nonatomic) IBOutlet UILabel *voiceCommandLabel;
 
 @property (strong, nonatomic) IBOutlet HRPButton *controlButton;
 @property (strong, nonatomic) IBOutlet UILabel *controlLabel;
@@ -117,8 +117,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     isControlLabelFlashing                              =   NO;
     videoFilesNames                                     =   @[@"snippet_video_0.mp4", @"snippet_video_1.mp4", @"snippet_video_2.mp4"];
     audioFilesNames                                     =   @[@"snippet_audio_0.caf", @"snippet_audio_1.caf", @"snippet_audio_2.caf"];
-    self.voiceCommandLabel.text                         =   NSLocalizedString(@"COMMAND VIOLATION", nil);
-    self.recordingMode                                  =   HRPVideoRecordViewControllerModeStreamVideo;
     
     audioRecordSettings                                 =   [NSDictionary dictionaryWithObjectsAndKeys:
                                                                 [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
@@ -133,8 +131,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 //    [self deleteFolder];
     
     // Set items
-//    self.controlButton.tag                              =   0;
     self.controlLabel.text                              =   nil; //NSLocalizedString(@"Attention", nil);
+
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleUserLogout:)
@@ -145,6 +143,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    self.recordingMode                                  =   HRPVideoRecordViewControllerModeStreamVideo;
+
     // Set Status Bar
     UIView *statusBarView                               =  [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
     statusBarView.backgroundColor                       =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
@@ -163,25 +163,26 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     self.openEarsEventsObserver                         =   [[OEEventsObserver alloc] init];
     [self.openEarsEventsObserver setDelegate:self];
     [self setVoiceRecognizeSpeech];
-    
+
     [self startStreamVideoRecording];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
+    self.recordingMode                                  =   HRPVideoRecordViewControllerModeDismissed;
     // Remove the video preview layer from the viewPreview view's layer.
-    [_audioPlayer stop];
-    [_audioPlayer prepareToPlay];
-    [_audioSession setActive:NO error:nil];
-    [self stopVoiceRecognizeSpeech];
+//    [_audioPlayer stop];
+//    [_audioPlayer prepareToPlay];
+//    [_audioSession setActive:NO error:nil];
+//    [self stopVoiceRecognizeSpeech];
     
     [self.captureSession stopRunning];
     self.captureSession                                 =   nil;
     self.videoFileOutput                                =   nil;
 
-//    [self.videoPreviewLayer removeFromSuperlayer];
-//    self.videoPreviewLayer                              =   nil;
+    [self.videoPreviewLayer removeFromSuperlayer];
+    self.videoPreviewLayer                              =   nil;
 
     [timerVideo invalidate];
     timerSeconds                                        =   0;
@@ -336,7 +337,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)startAttentionVideoRecording {
     // Stop video capture and make the capture session object nil
     timerSeconds                                        =   0;
-//    self.controlButton.enabled                          =   NO;
     self.recordingMode                                  =   HRPVideoRecordViewControllerModeAttentionVideo;
     
     [self.videoFileOutput stopRecording];
@@ -352,9 +352,9 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [UIView animateWithDuration:0.10f
                           delay:0.f
                         options:UIViewAnimationOptionCurveEaseInOut |
-     UIViewAnimationOptionRepeat         |
-     UIViewAnimationOptionAutoreverse    |
-     UIViewAnimationOptionAllowUserInteraction
+                                UIViewAnimationOptionRepeat         |
+                                UIViewAnimationOptionAutoreverse    |
+                                UIViewAnimationOptionAllowUserInteraction
                      animations:^{
                          self.controlLabel.alpha        =   0.f;
                      }
@@ -420,9 +420,9 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [[OEPocketsphinxController sharedInstance] setActive:TRUE error:nil];
     
     voiceCommands                                       =   [NSArray arrayWithObjects:
-                                                                @"PAYRUSHAYNNA",
-                                                                @"NARUSHENIE",
-                                                                @"VIOLATION", nil];
+                                                             @"PAYRUSHAYNNA",
+                                                             @"NARUSHENIE",
+                                                             @"VIOLATION", nil];
     
     
     // Change "AcousticModelEnglish" to "AcousticModelSpanish" to create a Spanish language model instead of an English one.
@@ -510,16 +510,16 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 - (void)readPhotosCollectionFromFile {
-    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
+    NSArray *paths                                      =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath                                           =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath                                           =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
-        NSData *arrayData                           =   [[NSData alloc] initWithContentsOfFile:arrayPath];
-        photosDataSource                            =   [NSMutableArray array];
+        NSData *arrayData                               =   [[NSData alloc] initWithContentsOfFile:arrayPath];
+        photosDataSource                                =   [NSMutableArray array];
         
         if (arrayData)
-            photosDataSource                        =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
+            photosDataSource                            =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         else
             NSLog(@"File does not exist");
     }
@@ -628,7 +628,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     allAudioTempSnippets                                =   [NSMutableArray arrayWithArray:
                                                              [allAudioTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
 
-    for (int i = 0; i < allVideoTempSnippets.count; i++) {
+    for (int i = 0; i < allAudioTempSnippets.count; i++) {
         NSString *videoSnippetFilePath                  =   [mediaFolderPath stringByAppendingPathComponent:allVideoTempSnippets[i]];
         AVURLAsset *videoSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoSnippetFilePath] options:nil];
         NSString *audioSnippetFilePath                  =   [mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
@@ -832,12 +832,12 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void) pocketsphinxDidReceiveHypothesis:(NSString *)hypothesis recognitionScore:(NSString *)recognitionScore utteranceID:(NSString *)utteranceID {
     NSPredicate *predicate                              =   [NSPredicate predicateWithFormat:@"SELF == [cd] %@", hypothesis];
     NSString *voiceCommand                              =   [voiceCommands filteredArrayUsingPredicate:predicate][0];
-
+    
     if (self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo) {
         if (([NSLocalizedString(@"Settings", nil) isEqualToString:@"Settings"] && [voiceCommand isEqualToString:@"VIOLATION"])      ||
             ([NSLocalizedString(@"Settings", nil) isEqualToString:@"Настройки"] && [voiceCommand isEqualToString:@"NARUSHENIE"])     ||
             ([NSLocalizedString(@"Settings", nil) isEqualToString:@"Налаштування"] && [voiceCommand isEqualToString:@"PAYRUSHAYNNA"]))
-                [self actionControlButtonTap:self.controlButton];
+            [self actionControlButtonTap:self.controlButton];
     }
 }
 
@@ -850,35 +850,35 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 - (void) pocketsphinxDidDetectFinishedSpeech {
-//    NSLog(@"Pocketsphinx has detected a period of silence, concluding an utterance.");
+    //    NSLog(@"Pocketsphinx has detected a period of silence, concluding an utterance.");
 }
 
 - (void) pocketsphinxDidStopListening {
-//    NSLog(@"Pocketsphinx has stopped listening.");
+    //    NSLog(@"Pocketsphinx has stopped listening.");
 }
 
 - (void) pocketsphinxDidSuspendRecognition {
-//    NSLog(@"Pocketsphinx has suspended recognition.");
+    //    NSLog(@"Pocketsphinx has suspended recognition.");
 }
 
 - (void) pocketsphinxDidResumeRecognition {
-//    NSLog(@"Pocketsphinx has resumed recognition.");
+    //    NSLog(@"Pocketsphinx has resumed recognition.");
 }
 
 - (void) pocketsphinxDidChangeLanguageModelToFile:(NSString *)newLanguageModelPathAsString andDictionary:(NSString *)newDictionaryPathAsString {
-//    NSLog(@"Pocketsphinx is now using the following language model: \n%@ and the following dictionary: %@",newLanguageModelPathAsString,newDictionaryPathAsString);
+    //    NSLog(@"Pocketsphinx is now using the following language model: \n%@ and the following dictionary: %@",newLanguageModelPathAsString,newDictionaryPathAsString);
 }
 
 - (void) pocketSphinxContinuousSetupDidFailWithReason:(NSString *)reasonForFailure {
-//    NSLog(@"Listening setup wasn't successful and returned the failure reason: %@", reasonForFailure);
+    //    NSLog(@"Listening setup wasn't successful and returned the failure reason: %@", reasonForFailure);
 }
 
 - (void) pocketSphinxContinuousTeardownDidFailWithReason:(NSString *)reasonForFailure {
-//    NSLog(@"Listening teardown wasn't successful and returned the failure reason: %@", reasonForFailure);
+    //    NSLog(@"Listening teardown wasn't successful and returned the failure reason: %@", reasonForFailure);
 }
 
 - (void) testRecognitionCompleted {
-//    NSLog(@"A test file that was submitted for recognition is now complete.");
+    //    NSLog(@"A test file that was submitted for recognition is now complete.");
 }
 
 @end

@@ -63,6 +63,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     BOOL isLocationServiceEnabled;
     BOOL isUploadInProcess;
     BOOL isPaginationRun;
+    BOOL isVideoPreviewStart;
 }
 
 #pragma mark - Constructors -
@@ -139,6 +140,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     isUploadPhotosUsingWiFiAllowed              =   [userApp boolForKey:@"networkStatus"];
     isUploadAutomaticallyAllowed                =   [userApp boolForKey:@"sendingTypeStatus"];
+    isVideoPreviewStart                         =   NO;
     
     if (photosNeedUploadCount > 0 && !isUploadInProcess)
         [self startUploadPhotos];
@@ -185,6 +187,34 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                               name:@"photo"
                                                                                           fileName:@"photo.jpg"
                                                                                           mimeType:@"image/jpeg"];
+                                                              }
+                                                                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                                                                    if (operation.response.statusCode != 200)
+                                                                                        success(responseObject);
+                                                                                }
+                                                                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                                                    failure(operation);
+                                                                                }];
+    
+    [operationRequest start];
+}
+
+- (void)uploadVideoWithParameters:(NSDictionary *)parameters
+                        onSuccess:(void(^)(NSDictionary *successResult))success
+                        orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
+    AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
+                                                                                initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
+    
+    NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/%@/violation-video/create",
+                                                                                [userApp objectForKey:@"userAppID"]];
+    
+    AFHTTPRequestOperation *operationRequest    =   [requestOperationDomainManager POST:pathAPI
+                                                                             parameters:parameters
+                                                              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                                                  [formData appendPartWithFileData:parameters[@"video"]
+                                                                                              name:@"video"
+                                                                                          fileName:@"video.mov"
+                                                                                          mimeType:@"video/quicktime"];
                                                               }
                                                                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
                                                                                     if (operation.response.statusCode != 200)
@@ -422,8 +452,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                 
                 [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
                                    onSuccess:^(UIImage *image) {
+                                       NSDictionary *parameters;
                                        imageOriginal                                    =   image;
-                                       /*
+                                       
                                        if (currentPhoto.isVideo) {
                                            ALAssetRepresentation *representation        =   myAsset.defaultRepresentation;
                                            long long size                               =   representation.size;
@@ -432,47 +463,79 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                            [representation getBytes:buffer fromOffset:0 length:(int)size error:nil];
                                            
                                            currentImage.imageData                       =   [[NSData alloc] initWithBytes:buffer length:(int)size];
-                                       }
-                                       
-                                       else {*/
-                                           if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
-                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
-                                           else
-                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
-                                           //}
-                                       
-                                       // API
-                                       NSDictionary *parameters                         =   @{
-                                                                                                    @"photo"        :   currentImage.imageData,
+
+                                           parameters                                   =   @{
+                                                                                                    @"video"        :   currentImage.imageData,
                                                                                                     @"latitude"     :   @(currentPhoto.latitude),
                                                                                                     @"longitude"    :   @(currentPhoto.longitude)
                                                                                               };
                                        
-                                       [self uploadPhotoWithParameters:parameters
-                                                             onSuccess:^(NSDictionary *successResult) {
-                                                                 currentPhoto.state     =   HRPPhotoStateDone;
-                                                                 [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
-                                                                 
-                                                                 [self savePhotosCollectionToFile];
-                                                                 [currentCell.activityIndicator stopAnimating];
-                                                                 // [self.uploadActivityIndicator stopAnimating];
-                                                                 
-                                                                 isUploadInProcess      =   NO;
-                                                                 photosNeedUploadCount--;
-                                                                 
-                                                                 if (photosNeedUploadCount && inLoop)
-                                                                     [self startUploadPhotos];
-                                                             }
-                                                             orFailure:^(AFHTTPRequestOperation *failureOperation) {
-                                                                 currentPhoto.state     =   HRPPhotoStateRepeat;
-                                                                 [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
-                                                                 
-                                                                 [self savePhotosCollectionToFile];
-                                                                 [currentCell.activityIndicator stopAnimating];
-                                                                 [self.uploadActivityIndicator stopAnimating];
-                                                                 
-                                                                 isUploadInProcess      =   NO;
-                                                             }];
+                                           // API
+                                           [self uploadVideoWithParameters:parameters
+                                                                 onSuccess:^(NSDictionary *successResult) {
+                                                                     currentPhoto.state     =   HRPPhotoStateDone;
+                                                                     [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+                                                                     
+                                                                     [self savePhotosCollectionToFile];
+                                                                     [currentCell.activityIndicator stopAnimating];
+                                                                     
+                                                                     isUploadInProcess      =   NO;
+                                                                     photosNeedUploadCount--;
+                                                                     
+                                                                     if (photosNeedUploadCount && inLoop)
+                                                                         [self startUploadPhotos];
+                                                                 }
+                                                                 orFailure:^(AFHTTPRequestOperation *failureOperation) {
+                                                                     currentPhoto.state     =   HRPPhotoStateRepeat;
+                                                                     [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
+                                                                     
+                                                                     [self savePhotosCollectionToFile];
+                                                                     [currentCell.activityIndicator stopAnimating];
+                                                                     [self.uploadActivityIndicator stopAnimating];
+                                                                     
+                                                                     isUploadInProcess      =   NO;
+                                                                 }];
+                                       }
+                                       
+                                       else {
+                                           if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
+                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
+                                           else
+                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
+
+                                           parameters                                   =   @{
+                                                                                                    @"photo"        :   currentImage.imageData,
+                                                                                                    @"latitude"     :   @(currentPhoto.latitude),
+                                                                                                    @"longitude"    :   @(currentPhoto.longitude)
+                                                                                            };
+                                       
+                                           // API
+                                           [self uploadPhotoWithParameters:parameters
+                                                                 onSuccess:^(NSDictionary *successResult) {
+                                                                     currentPhoto.state     =   HRPPhotoStateDone;
+                                                                     [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+                                                                     
+                                                                     [self savePhotosCollectionToFile];
+                                                                     [currentCell.activityIndicator stopAnimating];
+                                                                     // [self.uploadActivityIndicator stopAnimating];
+                                                                     
+                                                                     isUploadInProcess      =   NO;
+                                                                     photosNeedUploadCount--;
+                                                                     
+                                                                     if (photosNeedUploadCount && inLoop)
+                                                                         [self startUploadPhotos];
+                                                                 }
+                                                                 orFailure:^(AFHTTPRequestOperation *failureOperation) {
+                                                                     currentPhoto.state     =   HRPPhotoStateRepeat;
+                                                                     [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
+                                                                     
+                                                                     [self savePhotosCollectionToFile];
+                                                                     [currentCell.activityIndicator stopAnimating];
+                                                                     [self.uploadActivityIndicator stopAnimating];
+                                                                     
+                                                                     isUploadInProcess      =   NO;
+                                                                 }];
+                                       }
                                    }];
             });
         } else {
@@ -687,7 +750,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         if (arrayData) {
             photosDataSource                        =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         
-            [self createImagesDataSource];
+            if (photosDataSource.count == 0)
+                [self.uploadActivityIndicator stopAnimating];
+
+            else
+                [self createImagesDataSource];
         } else
             NSLog(@"File does not exist");
     } else
@@ -717,10 +784,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     UIAlertAction *actionOpenVideo                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
-                                                                                   HRPVideoPlayerViewController *videoPlayerVC      =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
-                                                                                   videoPlayerVC.videoURL                           =   [NSURL URLWithString:currentPhoto.assetsVideoURL];
-                                                                                   
-                                                                                   [self presentViewController:videoPlayerVC animated:YES completion:^{ }];
+                                                                                   if (!isVideoPreviewStart) {
+                                                                                       HRPVideoPlayerViewController *videoPlayerVC  =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
+                                                                                       videoPlayerVC.videoURL                       =   [NSURL URLWithString:currentPhoto.assetsVideoURL];
+                                                                                       
+                                                                                       [self presentViewController:videoPlayerVC animated:YES completion:^{
+                                                                                           isVideoPreviewStart                      =   YES;
+                                                                                       }];
+                                                                                   }
                                                                                }];
     
     UIAlertAction *actionRemoveItem                 =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?   @"Remove a Video" :
@@ -753,7 +824,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     else
         [alertController addAction:actionOpenPhoto];
     
-    if (currentPhoto.state != HRPPhotoStateDone && !currentPhoto.isVideo)
+    if (currentPhoto.state != HRPPhotoStateDone)
         [alertController addAction:actionUploadData];
     
     if (photosNeedUploadCount > 0 && !currentPhoto.isVideo)
@@ -909,6 +980,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
                                         completion:nil];
    
+    if  (imagesDataSource.count == 1)
+        [self.photosCollectionView reloadData];
+    
     currentCell                                     =   [[HRPPhotoCell alloc] initWithFrame:CGRectMake(0.f, 0.f, photoSize.width, photoSize.height)];
     currentCell                                     =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
