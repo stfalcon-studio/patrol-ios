@@ -7,13 +7,14 @@
 //
 
 #import "HRPMainViewController.h"
-//#import "HRPCollectionViewController.h"
+#import "HRPCollectionViewController.h"
 #import "HRPVideoRecordViewController.h"
 #import "HRPButton.h"
 #import "UIColor+HexColor.h"
 #import <NSString+Email.h>
 #import "AFNetworking.h"
 #import <AFHTTPRequestOperation.h>
+#import "MBProgressHUD.h"
 
 
 @interface HRPMainViewController () <UITextFieldDelegate>
@@ -38,6 +39,8 @@
 @end
 
 @implementation HRPMainViewController {
+    MBProgressHUD *progressHUD;
+
     NSUserDefaults *userApp;
     CGSize keyboardSize;
     NSInteger countt;
@@ -51,6 +54,7 @@
     // Set Scroll View constraints
     self.contentViewWidthConstraint.constant            =   CGRectGetWidth(self.view.frame);
     self.contentViewHeightConstraint.constant           =   CGRectGetHeight(self.view.frame);
+    progressHUD                                         =   [[MBProgressHUD alloc] init];
     
     // Set Status Bar
     UIView *statusBarView                               =  [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), 20.f)];
@@ -103,6 +107,15 @@
        
         if (countt == 0) {
             countt++;
+
+            if (!progressHUD.alpha) {
+                progressHUD                             =   [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                progressHUD.labelText                   =   NSLocalizedString(@"Launch text", nil);
+//                progressHUD.color                       =   [UIColor colorWithHexString:@"05A9F4" alpha:0.8f];
+                progressHUD.yOffset                     =   0.f;
+            }
+
+            
             [self startSceneTransition];
         }
     } else {
@@ -140,7 +153,7 @@
                   onSuccess:(void(^)(NSDictionary *successResult))success
                   orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
-                                                                                    initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
+                                                                                    initWithBaseURL:[NSURL URLWithString:@"http://192.168.0.29/app_dev.php/"/*@"http://xn--80awkfjh8d.com/"*/]];
     
     NSString *pathAPI                                               =   @"api/register";
 
@@ -226,7 +239,15 @@
     // Transition to VideoRecord scene
     UINavigationController *videoRecordNC           =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordNC"];
     
-    [self presentViewController:videoRecordNC animated:YES completion:nil];
+    [self presentViewController:videoRecordNC animated:YES completion:^{
+        if (progressHUD.alpha)
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+    }];
+
+/*
+    HRPCollectionViewController *collectionVC       =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+    [self presentViewController:collectionVC animated:YES completion:nil];
+ */
 }
 
 - (BOOL)isInternetConnectionAvailable {

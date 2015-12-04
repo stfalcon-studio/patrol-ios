@@ -90,9 +90,6 @@
 #pragma mark - Methods -
 - (void)startPlayVideo {
     self.videoController                        =   [[MPMoviePlayerController alloc] initWithContentURL:self.videoURL];
-//    self.videoController                        =   moviePlayer; // retain policy
-//    self.videoController.shouldAutoplay         =   NO;
-//    [self.videoController prepareToPlay];
     
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
         [self.videoController.view setFrame:CGRectMake(0.f, 20.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 20.f)];
@@ -102,6 +99,7 @@
     [self.view addSubview:self.videoController.view];
     [self.view bringSubviewToFront:self.cancelButton];
     
+    [self.videoController prepareToPlay];
     [self.videoController play];
 }
 

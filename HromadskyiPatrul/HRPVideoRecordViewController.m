@@ -16,11 +16,6 @@
 #import "HRPCollectionViewController.h"
 #import "HRPPhoto.h"
 #import <CoreLocation/CoreLocation.h>
-#import <OpenEars/OELanguageModelGenerator.h>
-#import <OpenEars/OEAcousticModel.h>
-#import <OpenEars/OEPocketsphinxController.h>
-#import <OpenEars/OEAcousticModel.h>
-#import <OpenEars/OEEventsObserver.h>
 
 
 typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
@@ -30,11 +25,9 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 };
 
 
-@interface HRPVideoRecordViewController () <CLLocationManagerDelegate, AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate, OEEventsObserverDelegate>
+@interface HRPVideoRecordViewController () <CLLocationManagerDelegate, AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
 @property (assign, nonatomic) HRPVideoRecordViewControllerMode recordingMode;
-
-@property (strong, nonatomic) OEEventsObserver *openEarsEventsObserver;
 
 @property (strong, nonatomic) IBOutlet UIView *statusView;
 @property (strong, nonatomic) IBOutlet UIView *videoView;
@@ -157,33 +150,28 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     // Start new camera video & audio session
     [self removeAllFolderMediaTempFiles];
     [self readAllFolderFile];
-    [self startCameraSession];
     
-    // Set Voice command
-    self.openEarsEventsObserver                         =   [[OEEventsObserver alloc] init];
-    [self.openEarsEventsObserver setDelegate:self];
-    [self setVoiceRecognizeSpeech];
-
+    [self startCameraSession];
     [self startStreamVideoRecording];
 }
 
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
     self.recordingMode                                  =   HRPVideoRecordViewControllerModeDismissed;
-    // Remove the video preview layer from the viewPreview view's layer.
-//    [_audioPlayer stop];
-//    [_audioPlayer prepareToPlay];
-//    [_audioSession setActive:NO error:nil];
-//    [self stopVoiceRecognizeSpeech];
-    
     [self.captureSession stopRunning];
     self.captureSession                                 =   nil;
     self.videoFileOutput                                =   nil;
-
-    [self.videoPreviewLayer removeFromSuperlayer];
-    self.videoPreviewLayer                              =   nil;
-
+    [_audioRecorder stop];
+    _audioSession                                       =   nil;
+    [_audioPlayer stop];
+    [self stopAudioRecording];
+    _composition                                        =   nil;
+    _videoConnection                                    =   nil;
+    
+//    [self.videoPreviewLayer removeFromSuperlayer];
+//    self.videoPreviewLayer                              =   nil;
+    
     [timerVideo invalidate];
     timerSeconds                                        =   0;
     self.timerLabel.text                                =   [self formattedTime:timerSeconds];
@@ -298,6 +286,30 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     [self.captureSession addInput:videoInput];
     
+    // Configure the audio session
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [audioSession setActive:YES error:nil];
+    
+    // Find the desired input port
+    NSArray* inputs = [audioSession availableInputs];
+    AVAudioSessionPortDescription *builtInMic = nil;
+    for (AVAudioSessionPortDescription* port in inputs) {
+        if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
+            builtInMic = port;
+            break;
+        }
+    }
+    
+    // Find the desired microphone
+    for (AVAudioSessionDataSourceDescription* source in builtInMic.dataSources) {
+        if ([source.orientation isEqual:AVAudioSessionOrientationFront]) {
+            [builtInMic setPreferredDataSource:source error:nil];
+            [audioSession setPreferredInput:builtInMic error:&error];
+            break;
+        }
+    }
+    
     // VIDEO
     // Add output file
     self.videoFileOutput                                =   [[AVCaptureMovieFileOutput alloc] init];
@@ -319,9 +331,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 - (void)startAudioRecording {
     if (!_audioRecorder.recording) {
-        if (![OEPocketsphinxController sharedInstance].isListening)
-            [[OEPocketsphinxController sharedInstance] setActive:TRUE error:nil];
-        
         [self setNewAudioRecorder];
         
         [_audioRecorder record];
@@ -331,7 +340,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)startStreamVideoRecording {
     [self startAudioRecording];
     [self.videoFileOutput startRecordingToOutputFileURL:[self setNewVideoFileURL:snippetNumber] recordingDelegate:self];
-    [self startVoiceRecognizeSpeech];
 }
 
 - (void)startAttentionVideoRecording {
@@ -362,21 +370,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 - (void)stopAudioRecording {
-    if (_audioRecorder.recording) {
+    if (_audioRecorder.recording)
         [_audioRecorder stop];
-        [self stopVoiceRecognizeSpeech];
-    }
-}
-
-- (void)stopVoiceRecognizeSpeech {
-    NSError *error                                      =   nil;
-    
-    if ([OEPocketsphinxController sharedInstance].isListening) {
-        error                                           =   [[OEPocketsphinxController sharedInstance] stopListening];
-        
-        if (error)
-            NSLog(@"Error stopping listening in stopButtonAction: %@", error);
-    }
 }
 
 - (NSURL *)setNewVideoFileURL:(NSInteger)count {
@@ -412,38 +407,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     else
         [_audioRecorder prepareToRecord];
-}
-
-- (void)setVoiceRecognizeSpeech {
-    NSString *voiceFileName                             =   @"voiceWords";
-    OELanguageModelGenerator *lmGenerator               =   [[OELanguageModelGenerator alloc] init];
-    [[OEPocketsphinxController sharedInstance] setActive:TRUE error:nil];
-    
-    voiceCommands                                       =   [NSArray arrayWithObjects:
-                                                             @"PAYRUSHAYNNA",
-                                                             @"NARUSHENIE",
-                                                             @"VIOLATION", nil];
-    
-    
-    // Change "AcousticModelEnglish" to "AcousticModelSpanish" to create a Spanish language model instead of an English one.
-    NSError *err                                        =   [lmGenerator generateLanguageModelFromArray:voiceCommands
-                                                                                         withFilesNamed:voiceFileName
-                                                                                 forAcousticModelAtPath:[OEAcousticModel pathToModel:@"AcousticModelEnglish"]];
-    
-    if (err == nil) {
-        voiceLanguageModelPath                          =   [lmGenerator pathToSuccessfullyGeneratedLanguageModelWithRequestedName:voiceFileName];
-        voiceDictionaryPath                             =   [lmGenerator pathToSuccessfullyGeneratedDictionaryWithRequestedName:voiceFileName];
-    } else
-        NSLog(@"Error: %@",[err localizedDescription]);
-}
-
-- (void)startVoiceRecognizeSpeech {
-    if (![OEPocketsphinxController sharedInstance].isListening) {
-        [[OEPocketsphinxController sharedInstance] startListeningWithLanguageModelAtPath:voiceLanguageModelPath
-                                                                        dictionaryAtPath:voiceDictionaryPath
-                                                                     acousticModelAtPath:[OEAcousticModel pathToModel:@"AcousticModelEnglish"]
-                                                                     languageModelIsJSGF:FALSE];
-    }
 }
 
 - (void)createStoreDataPath {
@@ -666,10 +629,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                                                     [self saveVideoRecordToFile];
                                                     
                                                     [self removeAllFolderMediaTempFiles];
-                                                    [self startCameraSession];
-                                                    timerVideo      =   [self createTimer];
-
-                                                    [self startStreamVideoRecording];
                                                 }
                                             });
                                         }];
@@ -742,6 +701,12 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     self.navigationItem.rightBarButtonItem.enabled      =   YES;
     [MBProgressHUD hideHUDForView:self.view animated:YES];
+    
+    // Start new Video Session
+    [self startCameraSession];
+    timerVideo                                          =   [self createTimer];
+    
+    [self startStreamVideoRecording];
 }
 
 

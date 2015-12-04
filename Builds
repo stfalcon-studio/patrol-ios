@@ -1,6 +1,10 @@
 API:        http://xn--80awkfjh8d.com/admin/api-doc#post--api-{user}-violation-create
 
 
+Version 1.0.2 (9):
+- add loader to Main scene;
+- ;
+
 Version 1.0.2 (8):
 - remove all voice commands;
 - create API "Upload video".

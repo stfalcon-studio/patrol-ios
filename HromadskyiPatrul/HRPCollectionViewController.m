@@ -203,28 +203,35 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                         onSuccess:(void(^)(NSDictionary *successResult))success
                         orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
-                                                                                initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
+                                                                         initWithBaseURL:[NSURL URLWithString:@"http://192.168.0.29/app_dev.php/"]];
+
+    // http://xn--80awkfjh8d.com/
     
     NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/%@/violation-video/create",
                                                                                 [userApp objectForKey:@"userAppID"]];
+  
+//    AFJSONRequestSerializer  *userRequestSerializer                  =   [AFJSONRequestSerializer serializer];
+//    
+//    [userRequestSerializer setValue:@"multipart/form-data" forHTTPHeaderField:@"Content-Type"];
+//    [userRequestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+//    [requestOperationDomainManager setRequestSerializer:userRequestSerializer];
     
-    AFHTTPRequestOperation *operationRequest    =   [requestOperationDomainManager POST:pathAPI
-                                                                             parameters:parameters
-                                                              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                                                  [formData appendPartWithFileData:parameters[@"video"]
-                                                                                              name:@"video"
-                                                                                          fileName:@"video.mov"
-                                                                                          mimeType:@"video/quicktime"];
-                                                              }
-                                                                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                                                                    if (operation.response.statusCode != 200)
-                                                                                        success(responseObject);
-                                                                                }
-                                                                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                                                    failure(operation);
-                                                                                }];
     
-    [operationRequest start];
+    [requestOperationDomainManager POST:pathAPI
+                             parameters:parameters
+              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                  [formData appendPartWithFileData:parameters[@"video"]
+                                              name:@"video"
+                                          fileName:@"video.mov"
+                                          mimeType:@"video/quicktime"];
+              }
+                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                                    if (operation.response.statusCode != 200)
+                                        success(responseObject);
+                                }
+                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                    failure(operation);
+                                }];
 }
 
 
@@ -460,6 +467,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                            long long size                               =   representation.size;
                                            NSMutableData *rawData                       =   [[NSMutableData alloc] initWithCapacity:(int)size];
                                            void *buffer                                 =   [rawData mutableBytes];
+                                           
                                            [representation getBytes:buffer fromOffset:0 length:(int)size error:nil];
                                            
                                            currentImage.imageData                       =   [[NSData alloc] initWithBytes:buffer length:(int)size];
@@ -750,15 +758,19 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         if (arrayData) {
             photosDataSource                        =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         
-            if (photosDataSource.count == 0)
+            if (photosDataSource.count == 0) {
+                [self.navigationItem.rightBarButtonItem setEnabled:YES];
+                [self.photosCollectionView setUserInteractionEnabled:YES];
                 [self.uploadActivityIndicator stopAnimating];
-
-            else
+            } else
                 [self createImagesDataSource];
         } else
             NSLog(@"File does not exist");
-    } else
+    } else {
+        photosDataSource                            =   [NSMutableArray array];
         imagesDataSource                            =   [NSMutableArray array];
+        [self.uploadActivityIndicator stopAnimating];
+    }
 }
 
 - (void)showAlertController {
