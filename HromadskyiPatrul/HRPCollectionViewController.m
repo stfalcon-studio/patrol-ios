@@ -209,14 +209,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/%@/violation-video/create",
                                                                                 [userApp objectForKey:@"userAppID"]];
-  
-//    AFJSONRequestSerializer  *userRequestSerializer                  =   [AFJSONRequestSerializer serializer];
-//    
-//    [userRequestSerializer setValue:@"multipart/form-data" forHTTPHeaderField:@"Content-Type"];
-//    [userRequestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-//    [requestOperationDomainManager setRequestSerializer:userRequestSerializer];
-    
-    
+      
     [requestOperationDomainManager POST:pathAPI
                              parameters:parameters
               constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
@@ -401,6 +394,45 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 #pragma mark - Methods -
+- (void)getVideoFromAlbumAtURL:(NSURL *)videoAssetsURL
+                     onSuccess:(void(^)(NSData *videoData))success {
+    ALAssetsLibrary *library                            =   [[ALAssetsLibrary alloc] init];
+    
+    [library assetForURL:videoAssetsURL
+             resultBlock:^(ALAsset *asset) {
+                 myAsset                                =   asset;
+                 ALAssetRepresentation *representation  =   myAsset.defaultRepresentation;
+                 Byte *buffer                           =   (Byte*)malloc((NSUInteger)representation.size);
+                 NSUInteger buffered                    =   [representation getBytes:buffer
+                                                                          fromOffset:0.0
+                                                                              length:(NSUInteger)representation.size
+                                                                               error:nil];    // you should check for errors tho!
+                 
+                 // Get the data
+                 NSData *data                           =   [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+
+                 //                 myAsset                                =   asset;
+//                 static const NSUInteger BufferSize     =   1024*1024;
+//                 ALAssetRepresentation *rep             =   [asset defaultRepresentation];
+//                 uint8_t *buffer                        =   calloc(BufferSize, sizeof(*buffer));
+//                 NSUInteger buffered                    =   [rep getBytes:buffer fromOffset:0.0 length:(NSUInteger)rep.size error:nil];
+//                 NSData *data                           =   [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+                 
+//                 ALAssetRepresentation *representation  =   myAsset.defaultRepresentation;
+//                 long long size                         =   representation.size;
+//                 NSMutableData *rawData                 =   [[NSMutableData alloc] initWithCapacity:(int)size];
+//                 void *buffer                           =   [rawData mutableBytes];
+//                 NSUInteger buffered                    =   [representation getBytes:buffer fromOffset:0 length:(int)size error:nil];
+//                 NSData *data                           =   [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+//                 NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
+                 
+                 success(data);
+             }
+            failureBlock:^(NSError *error) {
+                NSLog(@"Error: %@",error.localizedDescription);
+            }];
+}
+
 - (void)getPhotoFromAlbumAtURL:(NSURL *)assetsURL
                      onSuccess:(void(^)(UIImage *image))success {
     ALAssetsLibrary *library                        =   [[ALAssetsLibrary alloc] init];
@@ -454,30 +486,22 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 // Save to device
                 [self savePhotosCollectionToFile];
-                isUploadInProcess                                                       =   YES;
+                isUploadInProcess                                   =   YES;
                 __block UIImage *imageOriginal;
-                
-                [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
-                                   onSuccess:^(UIImage *image) {
-                                       NSDictionary *parameters;
-                                       imageOriginal                                    =   image;
-                                       
-                                       if (currentPhoto.isVideo) {
-                                           ALAssetRepresentation *representation        =   myAsset.defaultRepresentation;
-                                           long long size                               =   representation.size;
-                                           NSMutableData *rawData                       =   [[NSMutableData alloc] initWithCapacity:(int)size];
-                                           void *buffer                                 =   [rawData mutableBytes];
-                                           
-                                           [representation getBytes:buffer fromOffset:0 length:(int)size error:nil];
-                                           
-                                           currentImage.imageData                       =   [[NSData alloc] initWithBytes:buffer length:(int)size];
+                __block NSDictionary *parameters;
 
-                                           parameters                                   =   @{
-                                                                                                    @"video"        :   currentImage.imageData,
-                                                                                                    @"latitude"     :   @(currentPhoto.latitude),
-                                                                                                    @"longitude"    :   @(currentPhoto.longitude)
-                                                                                              };
-                                       
+                // Upload Video
+                if (currentPhoto.isVideo) {
+                    [self getVideoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsVideoURL]
+                                       onSuccess:^(NSData *videoData) {
+                                           currentImage.imageData   =   videoData;
+                                           
+                                           parameters               =   @{
+                                                                                @"video"        :   currentImage.imageData,
+                                                                                @"latitude"     :   @(currentPhoto.latitude),
+                                                                                @"longitude"    :   @(currentPhoto.longitude)
+                                                                        };
+                                           
                                            // API
                                            [self uploadVideoWithParameters:parameters
                                                                  onSuccess:^(NSDictionary *successResult) {
@@ -503,20 +527,26 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      
                                                                      isUploadInProcess      =   NO;
                                                                  }];
-                                       }
-                                       
-                                       else {
+                                       }];
+                }
+                
+                // Upload Photo
+                else {
+                    [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
+                                       onSuccess:^(UIImage *image) {
+                                           imageOriginal                                    =   image;
+                                           
                                            if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
-                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
+                                               currentImage.imageData                       =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
                                            else
-                                               currentImage.imageData                   =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
-
-                                           parameters                                   =   @{
-                                                                                                    @"photo"        :   currentImage.imageData,
-                                                                                                    @"latitude"     :   @(currentPhoto.latitude),
-                                                                                                    @"longitude"    :   @(currentPhoto.longitude)
-                                                                                            };
-                                       
+                                               currentImage.imageData                       =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
+                                           
+                                           parameters                                       =   @{
+                                                                                                        @"photo"        :   currentImage.imageData,
+                                                                                                        @"latitude"     :   @(currentPhoto.latitude),
+                                                                                                        @"longitude"    :   @(currentPhoto.longitude)
+                                                                                                };
+                                           
                                            // API
                                            [self uploadPhotoWithParameters:parameters
                                                                  onSuccess:^(NSDictionary *successResult) {
@@ -525,7 +555,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      
                                                                      [self savePhotosCollectionToFile];
                                                                      [currentCell.activityIndicator stopAnimating];
-                                                                     // [self.uploadActivityIndicator stopAnimating];
                                                                      
                                                                      isUploadInProcess      =   NO;
                                                                      photosNeedUploadCount--;
@@ -544,7 +573,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      isUploadInProcess      =   NO;
                                                                  }];
                                        }
-                                   }];
+                     ];
+                }
             });
         } else {
             [currentCell.activityIndicator stopAnimating];

@@ -611,7 +611,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     }
 }
 
-- (void)exportDidFinish:(AVAssetExportSession*)session {
+- (void)exportDidFinish:(AVAssetExportSession *)session {
     if (session.status == AVAssetExportSessionStatusCompleted) {
         NSURL *outputURL                                =   session.outputURL;
         ALAssetsLibrary *library                        =   [[ALAssetsLibrary alloc] init];
