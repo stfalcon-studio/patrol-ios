@@ -57,7 +57,6 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 
 @implementation HRPVideoRecordViewController {
-//    MBProgressHUD *progressHUD;
     NSUserDefaults *userApp;
     CLLocationManager *locationManager;
 
@@ -91,42 +90,39 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [super viewDidLoad];
     
     // Set Session Duration
-    sessionDuration                                     =   10;
+    sessionDuration                                         =   10;
     
     // Start Geolocation
-    locationManager                                     =   [[CLLocationManager alloc]init];    // initializing locationManager
-    locationManager.delegate                            =   self;                               // we set the delegate of locationManager to self.
-    locationManager.desiredAccuracy                     =   kCLLocationAccuracyBest;            // setting the accuracy
+    locationManager                                         =   [[CLLocationManager alloc]init];    // initializing locationManager
+    locationManager.delegate                                =   self;                               // we set the delegate of locationManager to self.
+    locationManager.desiredAccuracy                         =   kCLLocationAccuracyBest;            // setting the accuracy
     [locationManager startUpdatingLocation];                                                    //requesting location updates
 
     // App Folder
-    mediaFolderPath                                     =   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    mediaFolderPath                                         =   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
 
-    userApp                                             =   [NSUserDefaults standardUserDefaults];
+    userApp                                                 =   [NSUserDefaults standardUserDefaults];
     [self createStoreDataPath];
     [self readPhotosCollectionFromFile];
 
     // Set Media session parameters
-    snippetNumber                                       =   0;
-    isVideoSaving                                       =   NO;
-    isControlLabelFlashing                              =   NO;
-    videoFilesNames                                     =   @[@"snippet_video_0.mp4", @"snippet_video_1.mp4", @"snippet_video_2.mp4"];
-    audioFilesNames                                     =   @[@"snippet_audio_0.caf", @"snippet_audio_1.caf", @"snippet_audio_2.caf"];
+    snippetNumber                                           =   0;
+    isVideoSaving                                           =   NO;
+    isControlLabelFlashing                                  =   NO;
+    videoFilesNames                                         =   @[@"snippet_video_0.mp4", @"snippet_video_1.mp4", @"snippet_video_2.mp4"];
+    audioFilesNames                                         =   @[@"snippet_audio_0.caf", @"snippet_audio_1.caf", @"snippet_audio_2.caf"];
     
-    audioRecordSettings                                 =   [NSDictionary dictionaryWithObjectsAndKeys:
-                                                                [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
-                                                                [NSNumber numberWithInt:AVAudioQualityMax],         AVEncoderAudioQualityKey,
-                                                                [NSNumber numberWithInt:32],                        AVEncoderBitRateKey,
-                                                                [NSNumber numberWithInt:2],                         AVNumberOfChannelsKey,
-                                                                [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
-
-//    // Create ProgressHUD
-//    progressHUD                                         =   [[MBProgressHUD alloc] init];
+    audioRecordSettings                                     =   [NSDictionary dictionaryWithObjectsAndKeys:
+                                                                    [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
+                                                                    [NSNumber numberWithInt:AVAudioQualityMax],         AVEncoderAudioQualityKey,
+                                                                    [NSNumber numberWithInt:32],                        AVEncoderBitRateKey,
+                                                                    [NSNumber numberWithInt:2],                         AVNumberOfChannelsKey,
+                                                                    [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
 
 //    [self deleteFolder];
     
     // Set items
-    self.controlLabel.text                              =   nil; //NSLocalizedString(@"Attention", nil);
+    self.controlLabel.text                                  =   nil; //NSLocalizedString(@"Attention", nil);
 
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -138,16 +134,19 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    self.recordingMode                                  =   HRPVideoRecordViewControllerModeStreamVideo;
+    [self showLoaderWithText:NSLocalizedString(@"Record a Video", nil)
+          andBackgroundColor:BackgroundColorTypeBlue];
+
+    self.recordingMode                                      =   HRPVideoRecordViewControllerModeStreamVideo;
 
     // Set Status Bar
-    UIView *statusBarView                               =  [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
-    statusBarView.backgroundColor                       =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
+    UIView *statusBarView                                   =  [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
+    statusBarView.backgroundColor                           =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
     [self.navigationController.navigationBar addSubview:statusBarView];
 
-    timerSeconds                                        =   0;
-    self.timerLabel.text                                =   @"00:00:00";
-    self.navigationItem.title                           =   NSLocalizedString(@"Record a Video", nil);
+    timerSeconds                                            =   0;
+    self.timerLabel.text                                    =   @"00:00:00";
+    self.navigationItem.title                               =   NSLocalizedString(@"Record a Video", nil);
     
     // Start new camera video & audio session
     [self removeAllFolderMediaTempFiles];
@@ -160,36 +159,29 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [UIView animateWithDuration:0.5f
-                     animations:^{
-                         [self showLoaderWithText:NSLocalizedString(@"Record a Video", nil)];
-                     }
-                     completion:^(BOOL finished) {
-                         [self hideLoader];
-                     }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    self.recordingMode                                  =   HRPVideoRecordViewControllerModeDismissed;
+    self.recordingMode                                      =   HRPVideoRecordViewControllerModeDismissed;
     [self.captureSession stopRunning];
-    self.captureSession                                 =   nil;
-    self.videoFileOutput                                =   nil;
+    self.captureSession                                     =   nil;
+    self.videoFileOutput                                    =   nil;
     [_audioRecorder stop];
-    _audioSession                                       =   nil;
+    _audioSession                                           =   nil;
     [_audioPlayer stop];
     [self stopAudioRecording];
-    _composition                                        =   nil;
-    _videoConnection                                    =   nil;
+    _composition                                            =   nil;
+    _videoConnection                                        =   nil;
     
 //    [self.videoPreviewLayer removeFromSuperlayer];
 //    self.videoPreviewLayer                              =   nil;
     
     [timerVideo invalidate];
-    timerSeconds                                        =   0;
-    self.timerLabel.text                                =   [self formattedTime:timerSeconds];
-    timerVideo                                          =   nil;
+    timerSeconds                                            =   0;
+    self.timerLabel.text                                    =   [self formattedTime:timerSeconds];
+    timerVideo                                              =   nil;
 
     [locationManager stopUpdatingLocation];
 }
@@ -425,8 +417,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 - (void)createStoreDataPath {
     NSError *error;
-    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    NSArray *paths                                      =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath                                           =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
         if (![[NSFileManager defaultManager] createDirectoryAtPath:arrayPath

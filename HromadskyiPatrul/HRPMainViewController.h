@@ -7,8 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HRPBaseViewController.h"
 
-@interface HRPMainViewController : UIViewController
+
+@interface HRPMainViewController : HRPBaseViewController
 
 @end
 
