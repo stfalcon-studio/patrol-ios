@@ -2,8 +2,7 @@ API:        http://xn--80awkfjh8d.com/admin/api-doc#post--api-{user}-violation-c
 
 
 Version 1.0.2 (9):
-- add loader to Main scene;
-- ;
+- add loader to Main scene.
 
 Version 1.0.2 (8):
 - remove all voice commands;
