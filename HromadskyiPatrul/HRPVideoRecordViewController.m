@@ -14,7 +14,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UIColor+HexColor.h"
 #import "HRPButton.h"
-#import "MBProgressHUD.h"
+//#import "MBProgressHUD.h"
 #import "HRPCollectionViewController.h"
 #import "HRPPhoto.h"
 #import <CoreLocation/CoreLocation.h>
@@ -57,7 +57,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 
 @implementation HRPVideoRecordViewController {
-    MBProgressHUD *progressHUD;
+//    MBProgressHUD *progressHUD;
     NSUserDefaults *userApp;
     CLLocationManager *locationManager;
 
@@ -120,8 +120,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                                                                 [NSNumber numberWithInt:2],                         AVNumberOfChannelsKey,
                                                                 [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
 
-    // Create ProgressHUD
-    progressHUD                                         =   [[MBProgressHUD alloc] init];
+//    // Create ProgressHUD
+//    progressHUD                                         =   [[MBProgressHUD alloc] init];
 
 //    [self deleteFolder];
     
@@ -162,7 +162,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     [UIView animateWithDuration:0.5f
                      animations:^{
-                         [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)];
+                         [self showLoaderWithText:NSLocalizedString(@"Record a Video", nil)];
                      }
                      completion:^(BOOL finished) {
                          [self hideLoader];
@@ -533,13 +533,16 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 - (void)mergeAndSaveVideoFile {
-    if (!progressHUD.alpha) {
-        progressHUD                                     =   [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        progressHUD.labelText                           =   NSLocalizedString(@"Merge & Save video", nil);
-        progressHUD.color                               =   [UIColor colorWithHexString:@"05A9F4" alpha:0.8f];
-        progressHUD.yOffset                             =   0.f;
-        self.controlLabel.text                          =   nil;
-    }
+//    if (!progressHUD.alpha) {
+//        progressHUD                                     =   [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//        progressHUD.labelText                           =   NSLocalizedString(@"Merge & Save video", nil);
+//        progressHUD.color                               =   [UIColor colorWithHexString:@"05A9F4" alpha:0.8f];
+//        progressHUD.yOffset                             =   0.f;
+//        self.controlLabel.text                          =   nil;
+//    }
+
+    
+    self.controlLabel.text                              =   nil;
 
     // Create the AVMutable composition to add tracks
     self.composition                                    =   [AVMutableComposition composition];
@@ -714,7 +717,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                                           attributes:nil];
     
     self.navigationItem.rightBarButtonItem.enabled      =   YES;
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+//    [MBProgressHUD hideHUDForView:self.view animated:YES];
     
     // Start new Video Session
     [self startCameraSession];

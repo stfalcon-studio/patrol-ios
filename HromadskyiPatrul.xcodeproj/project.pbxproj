@@ -200,14 +200,14 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
-		B19C10361C1C41BF007BB9FE /* Record Video (MVC) */ = {
+		B19C10361C1C41BF007BB9FE /* Record Video Scene  */ = {
 			isa = PBXGroup;
 			children = (
 				B19C10371C1C41C7007BB9FE /* Model */,
 				B19C10391C1C41DC007BB9FE /* View */,
 				B19C10381C1C41CE007BB9FE /* Controller */,
 			);
-			name = "Record Video (MVC)";
+			name = "Record Video Scene ";
 			sourceTree = "<group>";
 		};
 		B19C10371C1C41C7007BB9FE /* Model */ = {
@@ -235,6 +235,149 @@
 			name = View;
 			sourceTree = "<group>";
 		};
+		B19C10401C1C4B24007BB9FE /* Main Scene */ = {
+			isa = PBXGroup;
+			children = (
+				B19C104C1C1C4BEA007BB9FE /* Model */,
+				B19C104B1C1C4BE7007BB9FE /* View */,
+				B19C104A1C1C4BE5007BB9FE /* Controller */,
+			);
+			name = "Main Scene";
+			sourceTree = "<group>";
+		};
+		B19C10411C1C4B51007BB9FE /* Media Collection Scene */ = {
+			isa = PBXGroup;
+			children = (
+				B19C10481C1C4BA6007BB9FE /* Model */,
+				B19C10471C1C4BA3007BB9FE /* View */,
+				B19C10461C1C4B9F007BB9FE /* Controller */,
+			);
+			name = "Media Collection Scene";
+			sourceTree = "<group>";
+		};
+		B19C10421C1C4B6C007BB9FE /* Media Preview Scene */ = {
+			isa = PBXGroup;
+			children = (
+				B19C10441C1C4B7C007BB9FE /* Model */,
+				B19C10431C1C4B77007BB9FE /* View */,
+				B19C10451C1C4B82007BB9FE /* Controller */,
+			);
+			name = "Media Preview Scene";
+			sourceTree = "<group>";
+		};
+		B19C10431C1C4B77007BB9FE /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B19C10441C1C4B7C007BB9FE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		B19C10451C1C4B82007BB9FE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */,
+				B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */,
+				B165C6A91BD01E2A00508D1D /* HRPVideoPlayerViewController.h */,
+				B165C6AA1BD01E2A00508D1D /* HRPVideoPlayerViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B19C10461C1C4B9F007BB9FE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC89BB1B87A27D009D12D6 /* HRPCollectionViewController.h */,
+				B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B19C10471C1C4BA3007BB9FE /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B19C10481C1C4BA6007BB9FE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		B19C10491C1C4BC8007BB9FE /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				B19C103D1C1C4322007BB9FE /* HRPBaseViewController.h */,
+				B19C103E1C1C4322007BB9FE /* HRPBaseViewController.m */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		B19C104A1C1C4BE5007BB9FE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */,
+				B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B19C104B1C1C4BE7007BB9FE /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B19C104C1C1C4BEA007BB9FE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		B19C104D1C1C4C49007BB9FE /* Settings Scene */ = {
+			isa = PBXGroup;
+			children = (
+				B19C10501C1C4C59007BB9FE /* Model */,
+				B19C104F1C1C4C56007BB9FE /* View */,
+				B19C104E1C1C4C54007BB9FE /* Controller */,
+			);
+			name = "Settings Scene";
+			sourceTree = "<group>";
+		};
+		B19C104E1C1C4C54007BB9FE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */,
+				B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B19C104F1C1C4C56007BB9FE /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		B19C10501C1C4C59007BB9FE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
@@ -259,14 +402,16 @@
 		B1AC89811B879A06009D12D6 /* HromadskyiPatrul */ = {
 			isa = PBXGroup;
 			children = (
-				B19C10361C1C41BF007BB9FE /* Record Video (MVC) */,
 				B1AC89861B879A06009D12D6 /* HRPAppDelegate.h */,
 				B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */,
-				B1AC89B81B87A019009D12D6 /* Resources */,
+				B1AC89BA1B87A256009D12D6 /* Global */,
 				B1AC89B71B87A002009D12D6 /* Core Data */,
-				B1AC89BA1B87A256009D12D6 /* View Controllers */,
-				B1AC89C51B87AFDA009D12D6 /* Categories */,
-				B1AC89C11B87A79E009D12D6 /* Custom Classes */,
+				B19C10401C1C4B24007BB9FE /* Main Scene */,
+				B19C10361C1C41BF007BB9FE /* Record Video Scene  */,
+				B19C10411C1C4B51007BB9FE /* Media Collection Scene */,
+				B19C10421C1C4B6C007BB9FE /* Media Preview Scene */,
+				B19C104D1C1C4C49007BB9FE /* Settings Scene */,
+				B1AC89B81B87A019009D12D6 /* Resources */,
 				B1AC89821B879A06009D12D6 /* Supporting Files */,
 			);
 			path = HromadskyiPatrul;
@@ -318,23 +463,14 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
-		B1AC89BA1B87A256009D12D6 /* View Controllers */ = {
+		B1AC89BA1B87A256009D12D6 /* Global */ = {
 			isa = PBXGroup;
 			children = (
-				B19C103D1C1C4322007BB9FE /* HRPBaseViewController.h */,
-				B19C103E1C1C4322007BB9FE /* HRPBaseViewController.m */,
-				B1AC89BB1B87A27D009D12D6 /* HRPCollectionViewController.h */,
-				B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */,
-				B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */,
-				B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */,
-				B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */,
-				B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */,
-				B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */,
-				B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */,
-				B165C6A91BD01E2A00508D1D /* HRPVideoPlayerViewController.h */,
-				B165C6AA1BD01E2A00508D1D /* HRPVideoPlayerViewController.m */,
+				B1AC89C11B87A79E009D12D6 /* Custom Classes */,
+				B1AC89C51B87AFDA009D12D6 /* Categories */,
+				B19C10491C1C4BC8007BB9FE /* View Controllers */,
 			);
-			name = "View Controllers";
+			name = Global;
 			sourceTree = "<group>";
 		};
 		B1AC89C11B87A79E009D12D6 /* Custom Classes */ = {
