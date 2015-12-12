@@ -18,6 +18,7 @@
     AVAudioPlayer *_audioPlayer;
     AVAudioSession *_audioSession;
     AVMutableComposition *_composition;
+    CLLocation *_location;
 
     NSArray *_audioFilesNames;
     NSDictionary *_audioRecordSettings;
@@ -70,6 +71,12 @@
                                      [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
         
         // [self deleteFolder];
+        
+        _locationManager                                =   [[CLLocationManager alloc] init];
+        _locationManager.delegate                       =   self;
+        _locationManager.desiredAccuracy                =   kCLLocationAccuracyBest;
+        
+        [_locationManager startUpdatingLocation];
     }
     
     return self;
@@ -161,6 +168,7 @@
 - (void)stopVideoSession {
     [_captureSession stopRunning];
     [_videoFileOutput stopRecording];
+    [_locationManager stopUpdatingLocation];
 }
 
 - (void)stopAudioRecording {
@@ -430,8 +438,8 @@
                                     photo.assetsVideoURL    =   [_videoAssetURL absoluteString];
                                     photo.assetsPhotoURL    =   [assetURL absoluteString];
                                     
-//                                    photo.latitude      =   latitude;
-//                                    photo.longitude     =   longitude;
+                                    photo.latitude          =   _location.coordinate.latitude;
+                                    photo.longitude         =   _location.coordinate.longitude;
                                     photo.isVideo           =   YES;
                                     
                                     [_photosDataSource replaceObjectAtIndex:0 withObject:photo];
@@ -505,7 +513,7 @@
       fromConnections:(NSArray *)connections error:(NSError *)error {
     [[NSNotificationCenter defaultCenter] postNotificationName:@"didFinishRecordingToOutputFileAtURL"
                                                         object:nil
-                                                      userInfo:nil];    
+                                                      userInfo:nil];
 }
 
 
@@ -519,6 +527,17 @@
 }
 
 - (void)audioPlayerDecodeErrorDidOccur:(AVAudioPlayer *)player error:(NSError *)error {
+}
+
+
+#pragma mark - CLLocationManagerDelegate -
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
+    [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
+                      andMessage:NSLocalizedString(@"Alert error location retrieving message", nil)];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    _location   =   [locations lastObject];
 }
 
 @end

@@ -7,15 +7,17 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
 
 
-@interface HRPCameraManager : AVCaptureSession <AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
+@interface HRPCameraManager : AVCaptureSession <CLLocationManagerDelegate, AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
 @property (strong, nonatomic) NSUserDefaults *userApp;
 
 @property (strong, nonatomic) AVCaptureMovieFileOutput *videoFileOutput;
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
+@property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSString *mediaFolderPath;
 @property (strong, nonatomic) NSArray *videoFilesNames;
 
