@@ -203,9 +203,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                         onSuccess:(void(^)(NSDictionary *successResult))success
                         orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
-                                                                         initWithBaseURL:[NSURL URLWithString:@"http://192.168.0.29/app_dev.php/"]];
-
-    // http://xn--80awkfjh8d.com/
+                                                                         initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
     
     NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/%@/violation-video/create",
                                                                                 [userApp objectForKey:@"userAppID"]];

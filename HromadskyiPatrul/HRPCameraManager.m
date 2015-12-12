@@ -12,8 +12,8 @@
 
 
 @implementation HRPCameraManager {
-    AVCaptureSession *_captureSession;
     AVCaptureConnection *_videoConnection;
+    AVCaptureVideoOrientation _videoOrientation;
     AVAudioRecorder *_audioRecorder;
     AVAudioPlayer *_audioPlayer;
     AVAudioSession *_audioSession;
@@ -26,6 +26,7 @@
     NSMutableArray *_photosDataSource;
     NSURL *_videoAssetURL;
     UIImage *_videoImageOriginal;
+    CGRect _previewRect;
 }
 
 #pragma mark - Constructors -
@@ -86,21 +87,16 @@
 #pragma mark - Methods -
 - (void)startVideoSession {
     NSError *error;
-    AVCaptureVideoOrientation videoOrientation          =   [self getVideoOrientation];
     
     // Initialize the Session object
     _captureSession                                     =   [[AVCaptureSession alloc] init];
     _captureSession.sessionPreset                       =   AVCaptureSessionPresetHigh;
-    
-    _videoConnection                                    =   [[AVCaptureConnection alloc] init];
-    _videoConnection.videoOrientation                   =   videoOrientation;
     
     // Initialize a Camera object
     AVCaptureDevice *videoDevice                        =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
     AVCaptureDeviceInput *videoInput                    =   [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
     AVCaptureVideoStabilizationMode stabilizationMode   =   AVCaptureVideoStabilizationModeCinematic;
     
-
     if ([videoDevice.activeFormat isVideoStabilizationModeSupported:stabilizationMode])
         [_videoConnection setPreferredVideoStabilizationMode:stabilizationMode];
     
@@ -143,8 +139,9 @@
     
     // Initialize the video preview layer
     _videoPreviewLayer                                  =   [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
-    _videoPreviewLayer.connection.videoOrientation      =   videoOrientation;
-
+    
+    [self setVideoSessionOrientation];
+    
     [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
 
     [_captureSession startRunning];
@@ -223,17 +220,31 @@
             break;
             
         case UIDeviceOrientationLandscapeLeft:
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+            videoOrientation                            =   AVCaptureVideoOrientationLandscapeRight;
             break;
             
         case UIDeviceOrientationLandscapeRight:
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeRight;
+            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
             break;
 
         default:
             videoOrientation                            =   AVCaptureVideoOrientationPortrait;
             break;
     }
+
+    CGFloat width                                       =   CGRectGetWidth([[UIScreen mainScreen] bounds]);
+    CGFloat height                                      =   CGRectGetHeight([[UIScreen mainScreen] bounds]);
+    CGFloat maxSide                                     =   (width - height > 0) ? width : height;
+    CGFloat minSide                                     =   (width - height > 0) ? height : width;
+
+    NSLog(@"minSide = %2.f, maxSide = %2.f", minSide, maxSide);
+    
+    if (videoOrientation == AVCaptureVideoOrientationPortrait ||
+        videoOrientation == AVCaptureVideoOrientationPortraitUpsideDown)
+        _previewRect                                    =   CGRectMake(0.f, 0.f, minSide, maxSide);
+    
+    else
+        _previewRect                                    =   CGRectMake(0.f, 0.f, maxSide, minSide);
 
     return videoOrientation;
 }
@@ -305,6 +316,13 @@
             [fileName containsString:@"snippet_audio_1.caf"])
             [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
     }
+}
+
+- (void)setVideoSessionOrientation {
+    _videoOrientation                                   =   [self getVideoOrientation];
+ 
+    _videoPreviewLayer.connection.videoOrientation      =   _videoOrientation;
+    _videoPreviewLayer.frame                            =   _previewRect;
 }
 
 - (NSInteger)countVideoSnippets {

@@ -31,12 +31,12 @@
     self.navigationItem.title                   =   NSLocalizedString(@"Preview a Video", nil);
 
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-        self.statusViewTopConstraint.constant   =   0.f;
+        _statusViewTopConstraint.constant       =   0.f;
     else
-        self.statusViewTopConstraint.constant   =   -20.f;
+        _statusViewTopConstraint.constant       =   -20.f;
     
-    [self.cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
-                       forState:UIControlStateNormal];
+    [_cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
+                   forState:UIControlStateNormal];
 
     [self startPlayVideo];
 }
@@ -89,28 +89,29 @@
 
 #pragma mark - Methods -
 - (void)startPlayVideo {
-    self.videoController                        =   [[MPMoviePlayerController alloc] initWithContentURL:self.videoURL];
+    _videoController                            =   [[MPMoviePlayerController alloc] initWithContentURL:_videoURL];
     
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-        [self.videoController.view setFrame:CGRectMake(0.f, 20.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 20.f)];
+        [_videoController.view setFrame:CGRectMake(0.f, 20.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame) - 20.f)];
+    
     else
-        [self.videoController.view setFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
+        [_videoController.view setFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), CGRectGetHeight(self.view.frame))];
     
-    [self.view addSubview:self.videoController.view];
-    [self.view bringSubviewToFront:self.cancelButton];
+    [self.view addSubview:_videoController.view];
+    [self.view bringSubviewToFront:_cancelButton];
     
-    [self.videoController prepareToPlay];
-    [self.videoController play];
+    [_videoController prepareToPlay];
+    [_videoController play];
 }
 
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) {
-        self.statusViewTopConstraint.constant       =   -20.f;
-        [self.videoController.view setFrame:CGRectMake(0.f, 0.f, size.width, size.height)];
+        _statusViewTopConstraint.constant       =   -20.f;
+        [_videoController.view setFrame:CGRectMake(0.f, 0.f, size.width, size.height)];
     } else {
-        self.statusViewTopConstraint.constant       =   0.f;
+        _statusViewTopConstraint.constant       =   0.f;
         [self.videoController.view setFrame:CGRectMake(0.f, 20.f, size.width, size.height - 20.f)];
     }
 }

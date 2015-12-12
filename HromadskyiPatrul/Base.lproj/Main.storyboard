@@ -486,24 +486,6 @@
             </objects>
             <point key="canvasLocation" x="2063" y="1814"/>
         </scene>
-        <!--Base View Controller-->
-        <scene sceneID="WJu-ed-7IZ">
-            <objects>
-                <viewController storyboardIdentifier="BaseVC" id="fXB-9u-tuK" customClass="HRPBaseViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3M-vF-tQi"/>
-                        <viewControllerLayoutGuide type="bottom" id="MNs-bN-rFL"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="yIV-hx-d1N">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="b1r-cf-7MS" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1582" y="-330"/>
-        </scene>
         <!--Video Record View Controller-->
         <scene sceneID="ymh-0U-nrV">
             <objects>

@@ -130,16 +130,16 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     if (!_cameraManager.isVideoSaving) {
-        [_cameraManager stopVideoSession];
-        
+        [_cameraManager.captureSession beginConfiguration];
+        [_cameraManager setVideoSessionOrientation];
+        [_cameraManager.captureSession commitConfiguration];
+
         _statusViewVerticalSpaceConstraint.constant         =   ([[UIApplication sharedApplication] statusBarOrientation] ==
                                                                  UIInterfaceOrientationPortrait) ? 0.f : -20.f;
         
         [_timerVideo invalidate];
         _timerSeconds                                       =   0;
         _timerVideo                                         =   [self createTimer];
-        
-        [_cameraManager startVideoSession];
     }
 }
 
@@ -210,6 +210,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
             [_cameraManager stopAudioRecording];
             [_cameraManager startStreamVideoRecording];
         }
+        
+        self.navigationItem.rightBarButtonItem.enabled      =   YES;
     }
 }
 

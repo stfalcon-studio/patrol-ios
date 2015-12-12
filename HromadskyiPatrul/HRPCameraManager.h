@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) NSUserDefaults *userApp;
 
+@property (strong, nonatomic) AVCaptureSession *captureSession;
 @property (strong, nonatomic) AVCaptureMovieFileOutput *videoFileOutput;
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 @property (strong, nonatomic) CLLocationManager *locationManager;
@@ -36,5 +37,7 @@
 - (void)removeMediaSnippets;
 - (void)removeAllFolderMediaTempFiles;
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL;
-    
+
+- (void)setVideoSessionOrientation;
+
 @end
