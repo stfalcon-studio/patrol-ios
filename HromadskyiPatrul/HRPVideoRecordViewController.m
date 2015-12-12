@@ -8,6 +8,8 @@
 
 
 #import "HRPVideoRecordViewController.h"
+#import "HRPVideoRecordModel.h"
+
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UIColor+HexColor.h"
@@ -87,7 +89,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     // Set Session Duration
     sessionDuration                                     =   10;
     
@@ -153,6 +155,18 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     [self startCameraSession];
     [self startStreamVideoRecording];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [UIView animateWithDuration:0.5f
+                     animations:^{
+                         [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)];
+                     }
+                     completion:^(BOOL finished) {
+                         [self hideLoader];
+                     }];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {

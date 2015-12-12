@@ -8,8 +8,9 @@
 
 
 #import <UIKit/UIKit.h>
+#import "HRPBaseViewController.h"
 
 
-@interface HRPVideoRecordViewController : UIViewController
+@interface HRPVideoRecordViewController : HRPBaseViewController
 
 @end
