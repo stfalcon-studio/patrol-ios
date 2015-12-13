@@ -10,6 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "HRPCameraManager.h"
 
 
 @interface HRPVideoPlayerViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
@@ -43,28 +44,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-//   // [self startPlayVideo];
-//        self.videoController = [[MPMoviePlayerController alloc] initWithContentURL:self.videoURL];
-//        [self.videoController prepareToPlay];
-//        
-//        CGRect frame = self.view.frame;
-//        frame.origin = CGPointZero;
-//        
-//        self.videoController.view.frame = frame;
-//        
-//        self.videoController.allowsAirPlay         = NO;
-//        self.videoController.shouldAutoplay        = NO;
-//        self.videoController.movieSourceType       = MPMovieSourceTypeFile;
-//        self.videoController.scalingMode           = MPMovieScalingModeAspectFit;
-//        self.videoController.controlStyle          = MPMovieControlStyleEmbedded;
-//        self.videoController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [self.view addSubview:self.videoController.view];
-//        });
-//
-//    [self.videoController play];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

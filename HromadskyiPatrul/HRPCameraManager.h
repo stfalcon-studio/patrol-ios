@@ -39,5 +39,6 @@
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL;
 
 - (void)setVideoSessionOrientation;
+- (void)restartStreamVideoRecording;
 
 @end

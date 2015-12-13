@@ -162,9 +162,16 @@
     }
 }
 
-- (void)stopVideoSession {
-    [_captureSession stopRunning];
+- (void)restartStreamVideoRecording {
+    _snippetNumber              =   1;
+
     [_videoFileOutput stopRecording];
+}
+
+- (void)stopVideoSession {
+//    [_captureSession stopRunning];
+    [_videoFileOutput stopRecording];
+    [self stopAudioRecording];
     [_locationManager stopUpdatingLocation];
 }
 
@@ -302,10 +309,7 @@
         if ([fileName containsString:@"snippet_"] ||
             [fileName containsString:@"attention_video"])
             [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
-    }
-    
-    // Start new video & audio session
-    _isVideoSaving              =   NO;
+    }    
 }
 
 - (void)removeMediaSnippets {
@@ -479,7 +483,7 @@
 //    self.navigationItem.rightBarButtonItem.enabled      =   YES;
     
     // Start new Video Session
-    [self stopVideoSession];
+//    [self stopVideoSession];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"startVideoSession"
                                                         object:nil

@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MBProgressHUD.h"
+
 
 typedef NS_ENUM (NSInteger, BackgroundColorType) {
     BackgroundColorTypeBlue,
@@ -15,6 +17,8 @@ typedef NS_ENUM (NSInteger, BackgroundColorType) {
 
 
 @interface HRPBaseViewController : UIViewController
+
+@property (strong, nonatomic) MBProgressHUD *HUD;
 
 - (void)showAlertViewWithTitle:(NSString *)titleText andMessage:(NSString *)messageText;
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType;

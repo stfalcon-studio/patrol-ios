@@ -7,12 +7,20 @@
 //
 
 #import "HRPBaseViewController.h"
-#import "MBProgressHUD.h"
 #import "UIColor+HexColor.h"
 #import "AFNetworking.h"
 
 
 @implementation HRPBaseViewController
+
+#pragma mark - Constructors -
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (_HUD.alpha)
+        [self hideLoader];
+}
+
 
 #pragma mark - Methods -
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType {
@@ -28,17 +36,17 @@
             break;
     }
     
-    MBProgressHUD *HUD      =   [[MBProgressHUD alloc] initWithView:self.view];
-    HUD.labelText           =   text;
-    HUD.yOffset             =   0.f;
-    HUD.color               =   [UIColor colorWithHexString:colorString alpha:0.6f];
+    _HUD                    =   [[MBProgressHUD alloc] initWithView:self.view];
+    _HUD.labelText          =   text;
+    _HUD.yOffset            =   0.f;
+    _HUD.color              =   [UIColor colorWithHexString:colorString alpha:0.6f];
 
-    [self.view addSubview:HUD];
-    [HUD showWhileExecuting:@selector(sleepTask) onTarget:self withObject:nil animated:YES];
+    [self.view addSubview:_HUD];
+    [_HUD showWhileExecuting:@selector(sleepTask) onTarget:self withObject:nil animated:YES];
 }
 
 - (void)hideLoader {
-    [MBProgressHUD hideHUDForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 - (void)showAlertViewWithTitle:(NSString *)titleText andMessage:(NSString *)messageText {
@@ -51,7 +59,7 @@
 
 - (void)sleepTask {
     // Do something usefull in here instead of sleeping ...
-    sleep(3);
+    sleep(300);
 }
 
 - (BOOL)isInternetConnectionAvailable {

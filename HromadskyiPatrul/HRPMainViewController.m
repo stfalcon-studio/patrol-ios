@@ -198,7 +198,12 @@
     // Transition to VideoRecord scene
     UINavigationController *videoRecordNC       =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordNC"];
     
-    [self presentViewController:videoRecordNC animated:YES completion:nil];
+    [self presentViewController:videoRecordNC
+                       animated:YES
+                     completion:^{
+                         if (self.HUD.alpha)
+                             [self hideLoader];
+                     }];
 }
 
 

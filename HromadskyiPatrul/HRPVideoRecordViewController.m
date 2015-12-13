@@ -1,4 +1,4 @@
-//
+
 //  HRPVideoRecordViewController.m
 //  HromadskyiPatrul
 //
@@ -53,7 +53,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
     // Set items
     _controlLabel.text                                      =   nil; //NSLocalizedString(@"Attention", nil);
-
+    
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleUserLogout:)
@@ -69,18 +69,17 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
                                              selector:@selector(handlerStartRecordingVideoFile:)
                                                  name:@"didStartRecordingToOutputFileAtURL"
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerFinishRecordingVideoFile:)
                                                  name:@"didFinishRecordingToOutputFileAtURL"
                                                object:nil];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self showLoaderWithText:NSLocalizedString(@"Record a Video", nil)
+    [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
           andBackgroundColor:BackgroundColorTypeBlue];
 
     _recordingMode                                          =   HRPVideoRecordViewControllerModeStreamVideo;
@@ -90,6 +89,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     statusBarView.backgroundColor                           =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
     [self.navigationController.navigationBar addSubview:statusBarView];
 
+    _timerVideo                                             =   nil;
     _timerSeconds                                           =   0;
     _timerLabel.text                                        =   @"00:00:00";
     _controlButton.enabled                                  =   YES;
@@ -106,6 +106,9 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    
+    if (self.HUD.alpha)
+        [self hideLoader];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -129,13 +132,18 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    if (!_cameraManager.isVideoSaving) {
-        [_cameraManager.captureSession beginConfiguration];
-        [_cameraManager setVideoSessionOrientation];
-        [_cameraManager.captureSession commitConfiguration];
+    _statusViewVerticalSpaceConstraint.constant         =   ([[UIApplication sharedApplication] statusBarOrientation] ==
+                                                             UIInterfaceOrientationPortrait) ? 0.f : -20.f;
 
-        _statusViewVerticalSpaceConstraint.constant         =   ([[UIApplication sharedApplication] statusBarOrientation] ==
-                                                                 UIInterfaceOrientationPortrait) ? 0.f : -20.f;
+    [_cameraManager.captureSession beginConfiguration];
+    [_cameraManager setVideoSessionOrientation];
+    [_cameraManager.captureSession commitConfiguration];
+
+    if (!_cameraManager.isVideoSaving && !_isControlLabelFlashing) {
+        [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
+              andBackgroundColor:BackgroundColorTypeBlue];
+        
+        [_cameraManager restartStreamVideoRecording];
         
         [_timerVideo invalidate];
         _timerSeconds                                       =   0;
@@ -163,13 +171,25 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 - (void)handlerStartVideoSession:(NSNotification *)notification {
-    [self hideLoader];
+    if (self.HUD.alpha)
+        [self hideLoader];
     
-    [_cameraManager startVideoSession];
+    [_cameraManager.captureSession beginConfiguration];
+    [_cameraManager setVideoSessionOrientation];
+    [_cameraManager.captureSession commitConfiguration];
+    
+    [_cameraManager startStreamVideoRecording];
+    
     _timerVideo                                             =   [self createTimer];
+    self.navigationItem.rightBarButtonItem.enabled          =   YES;
+    _cameraManager.isVideoSaving                            =   NO;
+    _isControlLabelFlashing                                 =   NO;
 }
 
 - (void)handlerStartRecordingVideoFile:(NSNotification *)notification {
+    if (self.HUD.alpha)
+        [self hideLoader];
+
     if (!_timerSeconds)
         _timerSeconds                                       =   0;
     
@@ -194,6 +214,11 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     else if (self.recordingMode == HRPVideoRecordViewControllerModeAttentionVideo) {
         // Get first video frame image
         if (_cameraManager.snippetNumber == 2) {
+            [self showLoaderWithText:NSLocalizedString(@"Merge & Save video", nil)
+                  andBackgroundColor:BackgroundColorTypeBlue];
+
+            _controlLabel.text                              =   nil;
+            
             _cameraManager.snippetNumber                    =   0;
             [_cameraManager stopAudioRecording];
             
@@ -210,15 +235,14 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
             [_cameraManager stopAudioRecording];
             [_cameraManager startStreamVideoRecording];
         }
-        
-        self.navigationItem.rightBarButtonItem.enabled      =   YES;
     }
 }
 
 
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
-    [self actionControlButtonTap:_controlButton];
+    if (!_cameraManager.isVideoSaving || !_isControlLabelFlashing)
+        [self actionControlButtonTap:_controlButton];
 }
 
     
@@ -233,13 +257,13 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [UIView animateWithDuration:0.10f
                           delay:0.f
                         options:UIViewAnimationOptionCurveEaseInOut |
-     UIViewAnimationOptionRepeat         |
-     UIViewAnimationOptionAutoreverse    |
-     UIViewAnimationOptionAllowUserInteraction
+                                UIViewAnimationOptionRepeat         |
+                                UIViewAnimationOptionAutoreverse    |
+                                UIViewAnimationOptionAllowUserInteraction
                      animations:^{
                          self.controlLabel.alpha            =   0.f;
                      }
-                     completion:^(BOOL finished) { }];
+                     completion:nil];
 }
 
 - (void)startAttentionVideoRecording {
