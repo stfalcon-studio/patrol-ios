@@ -89,7 +89,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     missingPhotosCount                          =   0;
     photosNeedUploadCount                       =   0;
     videosNeedUploadCount                       =   0;
-    self.navigationItem.rightBarButtonItem.enabled      =   NO;
+    self.navigationItem.rightBarButtonItem.enabled      =   YES;
     self.photosCollectionView.userInteractionEnabled    =   NO;
 
     // Set network manager
@@ -789,6 +789,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             if (photosDataSource.count == 0) {
                 [self.navigationItem.rightBarButtonItem setEnabled:YES];
                 [self.photosCollectionView setUserInteractionEnabled:YES];
+               
                 [self.uploadActivityIndicator stopAnimating];
             } else
                 [self createImagesDataSource];
@@ -797,6 +798,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     } else {
         photosDataSource                            =   [NSMutableArray array];
         imagesDataSource                            =   [NSMutableArray array];
+        
         [self.uploadActivityIndicator stopAnimating];
     }
 }

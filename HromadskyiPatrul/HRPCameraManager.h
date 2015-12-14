@@ -18,6 +18,7 @@
 @property (strong, nonatomic) AVCaptureSession *captureSession;
 @property (strong, nonatomic) AVCaptureMovieFileOutput *videoFileOutput;
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
+@property (strong, nonatomic) AVCaptureConnection *videoConnection;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) NSString *mediaFolderPath;
 @property (strong, nonatomic) NSArray *videoFilesNames;

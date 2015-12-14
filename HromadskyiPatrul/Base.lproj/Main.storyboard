@@ -146,13 +146,23 @@
                                     <constraint firstItem="HC8-Qy-0lc" firstAttribute="top" secondItem="Ia1-ZJ-FsX" secondAttribute="top" id="bFG-gr-JtA"/>
                                 </constraints>
                             </scrollView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zBI-7A-rCh" userLabel="Status Bar View">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
+                                <color key="backgroundColor" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="hcM-es-Jfc"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
+                            <constraint firstItem="zBI-7A-rCh" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="KwV-bx-AnT"/>
                             <constraint firstItem="Ia1-ZJ-FsX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="LEF-tS-CsV"/>
                             <constraint firstAttribute="trailing" secondItem="Ia1-ZJ-FsX" secondAttribute="trailing" id="SSS-eR-xcu"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="Ia1-ZJ-FsX" secondAttribute="bottom" id="UI3-nI-4zR"/>
+                            <constraint firstItem="zBI-7A-rCh" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="jIX-nh-Wla"/>
                             <constraint firstItem="Ia1-ZJ-FsX" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="vvx-2R-fMO"/>
+                            <constraint firstAttribute="trailing" secondItem="zBI-7A-rCh" secondAttribute="trailing" id="yfK-yO-dHk"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="gvf-nx-oBi" appends="YES" id="hF0-qV-hnj"/>
@@ -160,6 +170,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="KUt-PH-FUo"/>
                     <connections>
+                        <outlet property="_statusBarTopConstarint" destination="KwV-bx-AnT" id="8hV-wp-8lD"/>
                         <outlet property="aboutLabel1" destination="fio-45-fjL" id="KIg-CT-0St"/>
                         <outlet property="aboutLabel2" destination="jWR-dE-gKC" id="6mG-9X-Dwi"/>
                         <outlet property="aboutLabel3" destination="X2f-Jn-IBB" id="Xa0-7D-CNj"/>
@@ -172,6 +183,7 @@
                         <outlet property="logoLabel" destination="VsS-C1-4dJ" id="tkm-2l-pVD"/>
                         <outlet property="madeByLabel" destination="ghQ-OR-u9t" id="mHh-xJ-H7f"/>
                         <outlet property="scrollView" destination="Ia1-ZJ-FsX" id="VMG-xq-Z2l"/>
+                        <outlet property="statusBarTopConstarint" destination="KwV-bx-AnT" id="erD-3r-MoX"/>
                         <outlet property="stfalconLogoImageView" destination="zed-E7-hXh" id="MEu-9M-Eim"/>
                         <outlet property="versionLabel" destination="VkU-Dc-vJw" id="8Wl-69-I1W"/>
                     </connections>

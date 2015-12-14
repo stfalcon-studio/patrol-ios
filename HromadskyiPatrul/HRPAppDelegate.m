@@ -42,7 +42,7 @@ NSString const *DeviceMode                                  =   @"Device";
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"05A9F4" alpha:1.f]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    
+
     return YES;
 }
 

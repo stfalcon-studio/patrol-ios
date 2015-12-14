@@ -33,12 +33,13 @@
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewWidthConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *statusBarTopConstarint;
 
 @end
 
 @implementation HRPMainViewController {
     HRPMainViewModel *_mainViewModel;
-
+    
     CGSize keyboardSize;
     NSInteger countt;
 }
@@ -55,11 +56,6 @@
     // Set Scroll View constraints
     self.contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
     self.contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
-    
-    // Set Status Bar
-    UIView *statusBarView                       =  [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), 20.f)];
-    statusBarView.backgroundColor               =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
-    [self.view addSubview:statusBarView];
     
     self.versionLabel.text                      =   [NSString stringWithFormat:@"%@ %@ (%@)", NSLocalizedString(@"Version", nil),
                                                         [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
@@ -144,6 +140,9 @@
     if ([self.emailTextField.text isEmail]) {
         // API
         if ([self isInternetConnectionAvailable]) {
+            [self showLoaderWithText:NSLocalizedString(@"Authorization", nil)
+                  andBackgroundColor:BackgroundColorTypeBlack];
+            
             [_mainViewModel userLoginParameters:self.emailTextField.text
                             onSuccess:^(NSDictionary *successResult) {
                                 [self. emailTextField resignFirstResponder];
@@ -159,6 +158,8 @@
                             orFailure:^(AFHTTPRequestOperation *failureOperation) {
                                 [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
                                                   andMessage:NSLocalizedString(@"Alert error API message", nil)];
+                                
+                                [self hideLoader];
                             }];
         }
     }
@@ -204,6 +205,15 @@
                          if (self.HUD.alpha)
                              [self hideLoader];
                      }];
+}
+
+
+#pragma mark - UIViewControllerRotation -
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    _contentViewWidthConstraint.constant        =   size.width;
+    _statusBarTopConstarint.constant            =   (size.width < size.height) ? 0.f : -20.f;
+    
+    [self.view layoutIfNeeded];
 }
 
 

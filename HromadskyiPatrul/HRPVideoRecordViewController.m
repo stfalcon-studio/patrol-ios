@@ -101,6 +101,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [_cameraManager readAllFolderFile];
     
     [_cameraManager startVideoSession];
+    //_cameraManager.videoPreviewLayer                        =   (AVCaptureVideoPreviewLayer *)self.videoView.layer;
+
     [_videoView.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlButton.layer];
 }
 
@@ -247,6 +249,19 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
     
 #pragma mark - Methods -
+//- (void)startRecordVideo {
+//    AVCaptureConnection *connection = [_cameraManager.videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
+//    AVCaptureVideoPreviewLayer *previewLayer = (AVCaptureVideoPreviewLayer *)self.videoView.layer;
+//    connection.videoOrientation = previewLayer.connection.videoOrientation;
+//
+////    _cameraManager.videoConnection                          =   [_cameraManager.videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
+////    
+////    _cameraManager.videoPreviewLayer                        =   (AVCaptureVideoPreviewLayer *)self.videoView.layer;
+////    _cameraManager.videoConnection.videoOrientation         =   _cameraManager.videoPreviewLayer.connection.videoOrientation;
+//    
+//    [_cameraManager startVideoSession];
+//}
+
 - (void)startControlLabelFlashing {
     if (_isControlLabelFlashing)
         return;

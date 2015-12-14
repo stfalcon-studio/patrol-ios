@@ -12,7 +12,6 @@
 
 
 @implementation HRPCameraManager {
-    AVCaptureConnection *_videoConnection;
     AVCaptureVideoOrientation _videoOrientation;
     AVAudioRecorder *_audioRecorder;
     AVAudioPlayer *_audioPlayer;
@@ -214,7 +213,7 @@
 }
 
 - (AVCaptureVideoOrientation)getVideoOrientation {
-    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationPortrait;
+    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationLandscapeLeft;
     UIDeviceOrientation cameraOrientation               =   [[UIDevice currentDevice] orientation];
     
     switch (cameraOrientation) {
