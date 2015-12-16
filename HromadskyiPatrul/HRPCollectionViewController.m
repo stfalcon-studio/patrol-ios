@@ -31,7 +31,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *photosCollectionView;
-@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *uploadActivityIndicator;
 
 @end
 
@@ -70,7 +69,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    [self.uploadActivityIndicator startAnimating];
+    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+          andBackgroundColor:BackgroundColorTypeBlue];
 
     // HSPLocations
     locationsService                            =   [[HRPLocations alloc] init];
@@ -99,23 +99,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     UIView *statusBarView                       =  [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
     statusBarView.backgroundColor               =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
     [self.navigationController.navigationBar addSubview:statusBarView];
-    
-    // Set Data Source
-    userApp                                     =   [NSUserDefaults standardUserDefaults];
-    photosDataSource                            =   [NSMutableArray array];
-    imagesDataSource                            =   [NSMutableArray array];
-    isUploadInProcess                           =   NO;
-    
-    isPaginationRun                             =   NO;
-    
-    self.userNameBarButton.title                =   [userApp objectForKey:@"userAppEmail"];
-//    [self createTestDataSource];
-    
-    
-    [self createStoreDataPath];
-//    [self savePhotosCollectionToFile];
-//    [self removePhotosCollectionFromFile];
-    [self readPhotosCollectionFromFile];
     
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -166,7 +149,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
 }
 
 
@@ -202,8 +185,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)uploadVideoWithParameters:(NSDictionary *)parameters
                         onSuccess:(void(^)(NSDictionary *successResult))success
                         orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
+    NSString *urlString =   (0) ? @"http://192.168.0.29/app_dev.php/" : @"http://xn--80awkfjh8d.com/";
+
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
-                                                                         initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
+                                                                         initWithBaseURL:[NSURL URLWithString:urlString]];
     
     NSString *pathAPI                                               =   [NSString stringWithFormat:@"api/%@/violation-video/create",
                                                                                 [userApp objectForKey:@"userAppID"]];
@@ -230,9 +215,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (IBAction)actionCameraButtonTap:(HRPButton *)sender {
     [UIView animateWithDuration:0.05f
                      animations:^{
-                         sender.fillColor               =   [UIColor colorWithHexString:@"05A9F4" alpha:0.5f];
+                         sender.fillColor           =   [UIColor colorWithHexString:@"05A9F4" alpha:0.5f];
                      } completion:^(BOOL finished) {
-                         sender.fillColor               =   [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
+                         sender.fillColor           =   [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
                      }];
     
     UIAlertController *alertController              =   [UIAlertController alertControllerWithTitle:nil
@@ -304,7 +289,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     currentImage                                    =   currentCell.image;
     
     if (currentPhoto.state != HRPPhotoStateDone && !isUploadInProcess) {
-        [currentCell.activityIndicator startAnimating];
+        [currentCell showLoaderWithText:NSLocalizedString(@"Upload title", nil)
+                     andBackgroundColor:CellBackgroundColorTypeBlue];
+        
         [self uploadDataFromLoop:NO];
     }
 }
@@ -392,6 +379,25 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 #pragma mark - Methods -
+- (void)prepareDataSource {
+    // Set Data Source
+    userApp                                     =   [NSUserDefaults standardUserDefaults];
+    photosDataSource                            =   [NSMutableArray array];
+    imagesDataSource                            =   [NSMutableArray array];
+    isUploadInProcess                           =   NO;
+    
+    isPaginationRun                             =   NO;
+    
+    self.userNameBarButton.title                =   [userApp objectForKey:@"userAppEmail"];
+    //    [self createTestDataSource];
+    
+    
+    [self createStoreDataPath];
+    //    [self savePhotosCollectionToFile];
+    //    [self removePhotosCollectionFromFile];
+    [self readPhotosCollectionFromFile];
+}
+
 - (void)getVideoFromAlbumAtURL:(NSURL *)videoAssetsURL
                      onSuccess:(void(^)(NSData *videoData))success {
     ALAssetsLibrary *library                            =   [[ALAssetsLibrary alloc] init];
@@ -507,7 +513,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
-                                                                     [currentCell.activityIndicator stopAnimating];
+                                                                     [currentCell hideLoader];
                                                                      
                                                                      isUploadInProcess      =   NO;
                                                                      photosNeedUploadCount--;
@@ -520,10 +526,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
-                                                                     [currentCell.activityIndicator stopAnimating];
-                                                                     [self.uploadActivityIndicator stopAnimating];
+                                                                     [currentCell hideLoader];
+                                                                     [self hideLoader];
                                                                      
                                                                      isUploadInProcess      =   NO;
+                                                                     
+                                                                     [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
+                                                                                       andMessage:NSLocalizedString(@"Alert API Upload error message", nil)];
                                                                  }];
                                        }];
                 }
@@ -552,7 +561,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
-                                                                     [currentCell.activityIndicator stopAnimating];
+                                                                     [currentCell hideLoader];
                                                                      
                                                                      isUploadInProcess      =   NO;
                                                                      photosNeedUploadCount--;
@@ -565,8 +574,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
-                                                                     [currentCell.activityIndicator stopAnimating];
-                                                                     [self.uploadActivityIndicator stopAnimating];
+                                                                     [currentCell hideLoader];
+                                                                     [self hideLoader];
                                                                      
                                                                      isUploadInProcess      =   NO;
                                                                  }];
@@ -575,7 +584,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                 }
             });
         } else {
-            [currentCell.activityIndicator stopAnimating];
+            [currentCell hideLoader];
             
             // Wait for next item upload
             if (isUploadInProcess && photosNeedUploadCount > 0)
@@ -598,7 +607,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             currentCell                 =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[imagesDataSource indexOfObject:currentImage] inSection:0]];
             
             if ([self.photosCollectionView.visibleCells containsObject:currentCell] && !isUploadInProcess) {
-                [currentCell.activityIndicator startAnimating];
+                [currentCell showLoaderWithText:NSLocalizedString(@"Upload title", nil)
+                             andBackgroundColor:CellBackgroundColorTypeBlue];
+                
                 [self uploadDataFromLoop:YES];
 
                 break;
@@ -628,7 +639,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                          self.photosCollectionView.alpha     =   1.f;
                      }
                      completion:^(BOOL finished) {
-                         [self.uploadActivityIndicator stopAnimating];
+                         [self hideLoader];
                      }];
 }
 
@@ -711,7 +722,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                             self.photosCollectionView.alpha     =   1.f;
                                                         }
                                                         completion:^(BOOL finished) {
-                                                            [self.uploadActivityIndicator stopAnimating];
+                                                            [self hideLoader];
                                                             self.navigationItem.rightBarButtonItem.enabled      =   YES;
                                                             self.photosCollectionView.userInteractionEnabled    =   YES;
                                                         }];
@@ -790,7 +801,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                 [self.navigationItem.rightBarButtonItem setEnabled:YES];
                 [self.photosCollectionView setUserInteractionEnabled:YES];
                
-                [self.uploadActivityIndicator stopAnimating];
+                [self hideLoader];
             } else
                 [self createImagesDataSource];
         } else
@@ -799,7 +810,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         photosDataSource                            =   [NSMutableArray array];
         imagesDataSource                            =   [NSMutableArray array];
         
-        [self.uploadActivityIndicator stopAnimating];
+        [self hideLoader];
     }
 }
 
@@ -827,8 +838,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
                                                                                    if (!isVideoPreviewStart) {
-                                                                                       HRPVideoPlayerViewController *videoPlayerVC  =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
-                                                                                       videoPlayerVC.videoURL                       =   [NSURL URLWithString:currentPhoto.assetsVideoURL];
+                                                                                       HRPVideoPlayerViewController *videoPlayerVC  =   [[HRPVideoPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:currentPhoto.assetsVideoURL]];
                                                                                        
                                                                                        [self presentViewController:videoPlayerVC animated:YES completion:^{
                                                                                            isVideoPreviewStart                      =   YES;
@@ -848,7 +858,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                  style:UIAlertActionStyleDefault
                                                                                handler:^(UIAlertAction *action) {
                                                                                    if (currentPhoto.state != HRPPhotoStateDone) {
-                                                                                       [currentCell.activityIndicator startAnimating];
+                                                                                       [currentCell showLoaderWithText:NSLocalizedString(@"Upload title", nil)
+                                                                                                    andBackgroundColor:CellBackgroundColorTypeBlue];
                                                                                        
                                                                                        [self uploadDataFromLoop:NO];
                                                                                    }
@@ -894,8 +905,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     HRPPhotoCell *cell                              =   [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier
                                                                                                   forIndexPath:indexPath];
     
-    cell.activityIndicator.color                    =   [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
-    [cell.activityIndicator stopAnimating];
+    [cell hideLoader];
     
     HRPPhoto *photo                                 =   [photosDataSource objectAtIndex:indexPath.row];
     HRPImage *image                                 =   [imagesDataSource objectAtIndex:indexPath.row];
@@ -943,11 +953,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     if (indexPath.row == imagesDataSource.count - 2 &&
         indexPath.row != photosDataSource.count - 2) {
         isPaginationRun                             =   YES;
-        [self.uploadActivityIndicator startAnimating];
+        
+        [self showLoaderWithText:NSLocalizedString(@"Upload title", nil)
+              andBackgroundColor:BackgroundColorTypeBlue];
+        
         [self createImagesDataSource];
     }
     
-    [cell.activityIndicator stopAnimating];
+    [cell hideLoader];
 
     return cell;
 }
@@ -1028,7 +1041,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     currentCell                                     =   [[HRPPhotoCell alloc] initWithFrame:CGRectMake(0.f, 0.f, photoSize.width, photoSize.height)];
     currentCell                                     =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
-    [currentCell.activityIndicator startAnimating];
+    [currentCell showLoaderWithText:NSLocalizedString(@"Upload title", nil)
+                 andBackgroundColor:CellBackgroundColorTypeBlue];
     
     [assetsLibrary writeImageToSavedPhotosAlbum:chosenImage.CGImage
                                     orientation:(ALAssetOrientation)chosenImage.imageOrientation

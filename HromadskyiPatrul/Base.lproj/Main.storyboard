@@ -257,15 +257,6 @@
                                                         <constraint firstAttribute="height" constant="44" id="W8R-Mf-Pjw"/>
                                                     </constraints>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="hHO-x7-JQv">
-                                                    <rect key="frame" x="64" y="64" width="30" height="30"/>
-                                                    <color key="tintColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="6dB-uF-and"/>
-                                                        <constraint firstAttribute="height" constant="30" id="piD-cO-e7M"/>
-                                                    </constraints>
-                                                    <color key="color" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -273,10 +264,8 @@
                                             <constraint firstItem="g2J-pk-qCv" firstAttribute="top" secondItem="rXR-mn-0lx" secondAttribute="top" id="6YN-kq-hNg"/>
                                             <constraint firstAttribute="trailing" secondItem="OaA-9P-2qT" secondAttribute="trailing" id="7DJ-YL-G7D"/>
                                             <constraint firstAttribute="bottom" secondItem="g2J-pk-qCv" secondAttribute="bottom" id="9kR-dH-Bhj"/>
-                                            <constraint firstAttribute="centerY" secondItem="hHO-x7-JQv" secondAttribute="centerY" id="G5Q-5q-8ja"/>
                                             <constraint firstAttribute="centerX" secondItem="DEh-uv-RHa" secondAttribute="centerX" id="LuO-jo-AMW"/>
                                             <constraint firstItem="g2J-pk-qCv" firstAttribute="leading" secondItem="rXR-mn-0lx" secondAttribute="leading" id="Rcb-vc-Lgg"/>
-                                            <constraint firstAttribute="centerX" secondItem="hHO-x7-JQv" secondAttribute="centerX" id="Wc1-Dd-tUy"/>
                                             <constraint firstAttribute="centerY" secondItem="DEh-uv-RHa" secondAttribute="centerY" id="YsS-4b-MOI"/>
                                             <constraint firstAttribute="bottom" secondItem="OaA-9P-2qT" secondAttribute="bottom" id="lAN-mP-ehX"/>
                                             <constraint firstAttribute="bottom" secondItem="Y8d-oq-ydh" secondAttribute="bottom" id="pVm-GV-pKc"/>
@@ -285,7 +274,6 @@
                                         </constraints>
                                         <size key="customSize" width="158" height="158"/>
                                         <connections>
-                                            <outlet property="activityIndicator" destination="hHO-x7-JQv" id="8wW-Ru-6Mn"/>
                                             <outlet property="photoImageView" destination="g2J-pk-qCv" id="GoT-4o-wb4"/>
                                             <outlet property="photoStateButton" destination="Y8d-oq-ydh" id="TvZ-NL-m75"/>
                                             <outlet property="playVideoImageView" destination="DEh-uv-RHa" id="UsP-Tm-aRe"/>
@@ -318,17 +306,13 @@
                                     <action selector="actionCameraButtonTap:" destination="aAn-fy-MeC" eventType="touchUpInside" id="h3y-3S-H1x"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-camera" highlightedImage="icon-camera-selected" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-f2-VNU" userLabel="Camera Image View">
-                                <rect key="frame" x="260" y="509" width="20" height="18"/>
-                            </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="HoH-VM-nVs">
-                                <rect key="frame" x="135" y="291" width="50" height="50"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile-photo-logo" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-f2-VNU" userLabel="Camera Image View">
+                                <rect key="frame" x="260" y="507" width="20" height="22"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="EzU-dd-Iew"/>
-                                    <constraint firstAttribute="height" constant="50" id="hKj-kn-S4Z"/>
+                                    <constraint firstAttribute="width" constant="20" id="ZVJ-8d-hKS"/>
+                                    <constraint firstAttribute="height" constant="22" id="qnE-Nt-DKR"/>
                                 </constraints>
-                                <color key="color" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
-                            </activityIndicatorView>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -337,10 +321,8 @@
                             <constraint firstItem="B4b-m9-uhb" firstAttribute="top" secondItem="5oC-zk-fjR" secondAttribute="bottom" constant="25" id="TG1-kU-ryj"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerY" secondItem="5oC-zk-fjR" secondAttribute="centerY" id="c3t-Pd-2ck"/>
                             <constraint firstAttribute="bottom" secondItem="B1W-PM-jbV" secondAttribute="bottom" id="f7S-W7-57h"/>
-                            <constraint firstAttribute="centerX" secondItem="HoH-VM-nVs" secondAttribute="centerX" id="fC5-vl-ZNf"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerX" secondItem="5oC-zk-fjR" secondAttribute="centerX" id="g1S-cf-rAX"/>
                             <constraint firstItem="B1W-PM-jbV" firstAttribute="top" secondItem="3GM-sC-wFF" secondAttribute="top" id="kce-MC-Qe1"/>
-                            <constraint firstAttribute="centerY" secondItem="HoH-VM-nVs" secondAttribute="centerY" constant="-32" id="vUU-AN-7eD"/>
                             <constraint firstAttribute="trailing" secondItem="B1W-PM-jbV" secondAttribute="trailing" id="yIz-sj-qgR"/>
                         </constraints>
                     </view>
@@ -357,7 +339,6 @@
                     <connections>
                         <outlet property="cameraButton" destination="5oC-zk-fjR" id="9k1-Fr-lsp"/>
                         <outlet property="photosCollectionView" destination="B1W-PM-jbV" id="R9u-XL-KnP"/>
-                        <outlet property="uploadActivityIndicator" destination="HoH-VM-nVs" id="Tcn-WN-190"/>
                         <outlet property="userNameBarButton" destination="GMb-0b-1A0" id="tjh-vp-55r"/>
                     </connections>
                 </viewController>
@@ -517,7 +498,7 @@
                                     <constraint firstAttribute="height" constant="20" id="HYm-yD-oVl"/>
                                 </constraints>
                             </view>
-                            <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjC-Ec-Nht" userLabel="Video View">
+                            <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjC-Ec-Nht" userLabel="Video Preview" customClass="HRPVideoRecordView">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
                                     <button alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cb-ys-WhI" userLabel="Control Button" customClass="HRPButton">
@@ -612,7 +593,7 @@ VIDEO</string>
                         <outlet property="statusView" destination="5Ip-33-TZr" id="onf-b9-Z1P"/>
                         <outlet property="statusViewVerticalSpaceConstraint" destination="2Rr-be-pGe" id="rP8-hQ-Fg9"/>
                         <outlet property="timerLabel" destination="BzL-3N-W4p" id="sIe-Gk-r1J"/>
-                        <outlet property="videoView" destination="UjC-Ec-Nht" id="bSc-E3-9PA"/>
+                        <outlet property="videoRecordPreview" destination="UjC-Ec-Nht" id="Gge-Lf-dvV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qxG-qD-MMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -778,12 +759,11 @@ VIDEO</string>
         </scene>
     </scenes>
     <resources>
-        <image name="icon-camera" width="20" height="18"/>
-        <image name="icon-camera-selected" width="20" height="18"/>
         <image name="icon-logo" width="212" height="212"/>
         <image name="icon-play" width="1024" height="1024"/>
         <image name="icon-settings" width="20" height="20"/>
         <image name="icon-stfalcon" width="19" height="18"/>
+        <image name="profile-photo-logo" width="30" height="33"/>
         <image name="shadow" width="100" height="100"/>
     </resources>
 </document>

@@ -41,6 +41,13 @@
 "Alert error location message background"       =   "Сервіс визначення місця розташування не працює у фоновому режимі";
 "Alert error location retrieving message"       =   "Сталася помилка при візначенні вашого місця розташування";
 "Alert error saving video message"              =   "Не вдалося зберегти відео";
+"Alert create input video error message"        =   "Не вдалося створити пристрій відео входу:";
+"Alert add input video error message"           =   "Не вдалося добавити пристрій відео входу до поточної сесії";
+"Alert create input audio error message"        =   "Не вдалося створити пристрій аудіо входу:";
+"Alert add input audio error message"           =   "Не вдалося добавити пристрій аудіо входу до поточної сесії";
+"Alert add output video file error message"     =   "Не вдалося добавити загальний відео файл до поточної сесії";
+"Alert add still image error message"           =   "Не вдалося добавити зображення до поточної сесії";
+"Alert API Upload error message"                =   "Не вдалося відправити відео на сервер. Будь ласка, спробуйте ще раз";
 
 "Open a Photo"                                  =   "Переглянути фото";
 "Open a Video"                                  =   "Переглянути відео";
@@ -52,6 +59,7 @@
 "Upload Photos"                                 =   "Завантажити всі фото";
 "Upload Videos"                                 =   "Завантажити всі відео";
 "Take a Photo"                                  =   "Зробити фото";
+"Upload title"                                  =   "Завантаження";
 "Take a Video"                                  =   "Зняти відео";
 "Record a Video"                                =   "Запис відео";
 "Start a Video"                                 =   "Старт відео";

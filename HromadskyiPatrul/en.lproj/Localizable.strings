@@ -41,6 +41,13 @@
 "Alert error location message background"       =   "Background location is not enabled";
 "Alert error location retrieving message"       =   "There was an error retrieving your location";
 "Alert error saving video message"              =   "Video saving failed";
+"Alert create input video error message"        =   "Could not create video device input:";
+"Alert add input video error message"           =   "Could not add video device input to the session";
+"Alert create input audio error message"        =   "Could not create audio device input:";
+"Alert add input audio error message"           =   "Could not add audio device input to the session";
+"Alert add output video file error message"     =   "Could not add movie file output to the session";
+"Alert add still image error message"           =   "Could not add still image output to the session";
+"Alert API Upload error message"                =   "Could not upload video file to server. Please try again";
 
 "Open a Photo"                                  =   "Open a Photo";
 "Open a Video"                                  =   "Open a Video";
@@ -51,6 +58,7 @@
 "Upload a Video"                                =   "Upload a Video";
 "Upload Photos"                                 =   "Upload Photos";
 "Upload Videos"                                 =   "Upload Videos";
+"Upload title"                                  =   "Uploading";
 "Take a Photo"                                  =   "Take a Photo";
 "Take a Video"                                  =   "Take a Video";
 "Record a Video"                                =   "Record a Video";

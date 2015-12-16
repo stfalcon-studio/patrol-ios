@@ -7,15 +7,18 @@
 //
 
 #import "HRPVideoPlayerViewController.h"
+#import <AVFoundation/AVFoundation.h>
 #import <UIKit/UIKit.h>
-#import <MediaPlayer/MediaPlayer.h>
-#import <MobileCoreServices/MobileCoreServices.h>
+//#import <MediaPlayer/MediaPlayer.h>
+//#import <MobileCoreServices/MobileCoreServices.h>
 #import "HRPCameraManager.h"
 
 
 @interface HRPVideoPlayerViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
-@property (strong, nonatomic) MPMoviePlayerController *videoController;
+//@property (strong, nonatomic) MPMoviePlayerController *videoController;
+@property (strong, nonatomic) AVPlayer *player;
+@property (strong, nonatomic) AVPlayerItem *playerItem;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *statusViewTopConstraint;
@@ -23,23 +26,53 @@
 @end
 
 
-@implementation HRPVideoPlayerViewController
+@implementation HRPVideoPlayerViewController {
+    BOOL _isVideoPlaying;
+}
 
 #pragma mark - Constructors -
+-(id)initWithContentURL:(NSURL *)contentURL {
+    UIStoryboard *storyboard                        =   [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    HRPVideoPlayerViewController *previewVC         =   [storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
+    
+    self                                            =   previewVC;
+
+    if (self) {
+        _playerItem                                 =   [[AVPlayerItem alloc] initWithURL:contentURL];
+        _player                                     =   [AVPlayer playerWithPlayerItem:_playerItem];
+
+        [_player addObserver:self forKeyPath:@"status" options:0 context:nil];
+
+        AVPlayerLayer *playerLayer                  =   [AVPlayerLayer playerLayerWithPlayer:_player];
+        playerLayer.frame                           =   self.view.bounds;
+        playerLayer.videoGravity                    =   AVLayerVideoGravityResizeAspect;
+        [self.view.layer addSublayer:playerLayer];
+        
+        playerLayer.needsDisplayOnBoundsChange      =   YES;
+        self.view.layer.needsDisplayOnBoundsChange  =   YES;
+
+        _isVideoPlaying                             =   NO;
+    }
+    
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.navigationItem.title                   =   NSLocalizedString(@"Preview a Video", nil);
+    self.navigationItem.title                       =   NSLocalizedString(@"Preview a Video", nil);
 
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-        _statusViewTopConstraint.constant       =   0.f;
+        _statusViewTopConstraint.constant           =   0.f;
     else
-        _statusViewTopConstraint.constant       =   -20.f;
+        _statusViewTopConstraint.constant           =   -20.f;
     
     [_cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
                    forState:UIControlStateNormal];
 
-    [self startPlayVideo];
+    [_player play];
+
+    //[self startPlayVideo];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -50,9 +83,14 @@
     [super viewDidDisappear:animated];
     
     // Stop the video player and remove it from view
-    [self.videoController stop];
+    [_player pause];
+
+    
+    /*
+    [_player stop];
     [self.videoController.view removeFromSuperview];
     self.videoController                        =   nil;
+     */
 }
 
 - (void)didReceiveMemoryWarning {
@@ -68,6 +106,10 @@
 
 #pragma mark - Methods -
 - (void)startPlayVideo {
+
+    
+
+    /*
     _videoController                            =   [[MPMoviePlayerController alloc] initWithContentURL:_videoURL];
     
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
@@ -81,6 +123,7 @@
     
     [_videoController prepareToPlay];
     [_videoController play];
+     */
 }
 
 
@@ -88,10 +131,10 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) {
         _statusViewTopConstraint.constant       =   -20.f;
-        [_videoController.view setFrame:CGRectMake(0.f, 0.f, size.width, size.height)];
+//        [_player setFrame:CGRectMake(0.f, 0.f, size.width, size.height)];
     } else {
         _statusViewTopConstraint.constant       =   0.f;
-        [self.videoController.view setFrame:CGRectMake(0.f, 20.f, size.width, size.height - 20.f)];
+//        [self.videoController.view setFrame:CGRectMake(0.f, 20.f, size.width, size.height - 20.f)];
     }
 }
 

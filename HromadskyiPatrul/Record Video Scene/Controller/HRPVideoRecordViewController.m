@@ -12,6 +12,11 @@
 #import "UIColor+HexColor.h"
 #import "HRPButton.h"
 #import "HRPCollectionViewController.h"
+#import "HRPVideoRecordView.h"
+
+
+@import AVFoundation;
+@import Photos;
 
 
 typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
@@ -23,14 +28,18 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 @interface HRPVideoRecordViewController ()
 
-@property (assign, nonatomic) HRPVideoRecordViewControllerMode recordingMode;
 
+// Storyboard
 @property (strong, nonatomic) IBOutlet UIView *statusView;
-@property (strong, nonatomic) IBOutlet UIView *videoView;
+@property (strong, nonatomic) IBOutlet HRPVideoRecordView *videoRecordPreview;
 @property (strong, nonatomic) IBOutlet HRPButton *controlButton;
 @property (strong, nonatomic) IBOutlet UILabel *controlLabel;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *statusViewVerticalSpaceConstraint;
 @property (strong, nonatomic) IBOutlet UILabel *timerLabel;
+
+
+@property (assign, nonatomic) HRPVideoRecordViewControllerMode recordingMode;
+
 
 @end
 
@@ -49,8 +58,14 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [super viewDidLoad];
     
     // Create camera manager
-    _cameraManager                                          =   [HRPCameraManager sharedManager];
+    _cameraManager                                                  =   [HRPCameraManager sharedManager];
+    _videoRecordPreview.session                                     =   _cameraManager.captureSession;
 
+    _cameraManager.videoPreviewLayer                                =   (AVCaptureVideoPreviewLayer *)_videoRecordPreview.layer;
+    _cameraManager.videoPreviewLayer.connection.videoOrientation    =   _cameraManager.videoOrientation;
+    
+
+    
     // Set items
     _controlLabel.text                                      =   nil; //NSLocalizedString(@"Attention", nil);
     
@@ -100,10 +115,13 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [_cameraManager removeAllFolderMediaTempFiles];
     [_cameraManager readAllFolderFile];
     
-    [_cameraManager startVideoSession];
-    //_cameraManager.videoPreviewLayer                        =   (AVCaptureVideoPreviewLayer *)self.videoView.layer;
+//    [_cameraManager createCaptureSession];
+//    [_cameraManager setVideoPreviewLayerOrientation:_videoRecordPreview];
 
-    [_videoView.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlButton.layer];
+    [_videoRecordPreview.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlButton.layer];
+    
+    [_cameraManager.captureSession startRunning];
+    [_cameraManager startStreamVideoRecording];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -113,12 +131,22 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         [self hideLoader];
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
+//- (void)viewWillDisappear:(BOOL)animated {
+//
+//    _recordingMode                                          =   HRPVideoRecordViewControllerModeDismissed;
+//    
+//    [_cameraManager stopVideoSession];
+//}
+//
+
+- (void)viewDidDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    _recordingMode                                          =   HRPVideoRecordViewControllerModeDismissed;
-    
-    [_cameraManager stopVideoSession];
+    dispatch_async(_cameraManager.sessionQueue, ^{
+        if (_cameraManager.setupResult == HRPCameraManagerSetupResultSuccess) {
+            [_cameraManager.captureSession stopRunning];
+        }
+    });
 }
 
 - (void)didReceiveMemoryWarning {
@@ -133,14 +161,29 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 
 
 #pragma mark - UIViewControllerRotation -
-- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _statusViewVerticalSpaceConstraint.constant         =   ([[UIApplication sharedApplication] statusBarOrientation] ==
-                                                             UIInterfaceOrientationPortrait) ? 0.f : -20.f;
+- (BOOL)shouldAutorotate {
+    // Disable autorotation of the interface when recording is in progress.
+    return !_cameraManager.videoFileOutput.isRecording;
+}
 
-    [_cameraManager.captureSession beginConfiguration];
-    [_cameraManager setVideoSessionOrientation];
-    [_cameraManager.captureSession commitConfiguration];
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskAll;
+}
 
+- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    _statusViewVerticalSpaceConstraint.constant                         =   ([[UIApplication sharedApplication] statusBarOrientation] ==
+                                                                             UIInterfaceOrientationPortrait) ? 0.f : -20.f;
+
+    // Note that the app delegate controls the device orientation notifications required to use the device orientation.
+    UIDeviceOrientation deviceOrientation                               =   [UIDevice currentDevice].orientation;
+    
+    if (UIDeviceOrientationIsPortrait(deviceOrientation) || UIDeviceOrientationIsLandscape(deviceOrientation)) {
+        _cameraManager.videoPreviewLayer                                =   (AVCaptureVideoPreviewLayer *)_videoRecordPreview.layer;
+        _cameraManager.videoPreviewLayer.connection.videoOrientation    =   (AVCaptureVideoOrientation)deviceOrientation;
+    }
+    
     if (!_cameraManager.isVideoSaving && !_isControlLabelFlashing) {
         [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
               andBackgroundColor:BackgroundColorTypeBlue];
@@ -148,11 +191,41 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         [_cameraManager restartStreamVideoRecording];
         
         [_timerVideo invalidate];
-        _timerSeconds                                       =   0;
-        _timerVideo                                         =   [self createTimer];
+        _timerSeconds                                                   =   0;
+        _timerVideo                                                     =   [self createTimer];
     }
 }
 
+
+
+
+///*
+//- (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+//    _statusViewVerticalSpaceConstraint.constant             =   ([[UIApplication sharedApplication] statusBarOrientation] ==
+//                                                                 UIInterfaceOrientationPortrait) ? 0.f : -20.f;
+//
+//    [_cameraManager.captureSession beginConfiguration];
+//    
+//    [_cameraManager setVideoPreviewLayerOrientation:_videoRecordPreview];
+///*
+//    AVCaptureConnection *connection                         =   [_cameraManager.videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
+//    [connection setVideoOrientation:(AVCaptureVideoOrientation)coordinator];
+//    [_cameraManager setVideoSessionOrientation];
+//    */
+//    [_cameraManager.captureSession commitConfiguration];
+//
+//    if (!_cameraManager.isVideoSaving && !_isControlLabelFlashing) {
+//        [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
+//              andBackgroundColor:BackgroundColorTypeBlue];
+//        
+//        [_cameraManager restartStreamVideoRecording];
+//        
+//        [_timerVideo invalidate];
+//        _timerSeconds                                       =   0;
+//        _timerVideo                                         =   [self createTimer];
+//    }
+//}
+//*/
 
 #pragma mark - Actions -
 - (IBAction)actionControlButtonTap:(HRPButton *)sender {
@@ -337,6 +410,16 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [textField resignFirstResponder];
     
     return YES;
+}
+
+
+#pragma mark - UIStoryboardSegue -
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"CollectionSegue"]) {
+        HRPCollectionViewController *collectionVC           =   (HRPCollectionViewController *)segue.destinationViewController;
+        
+        [collectionVC prepareDataSource];
+    }
 }
 
 @end

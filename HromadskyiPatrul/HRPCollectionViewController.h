@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HRPBaseViewController.h"
 
 
-@interface HRPCollectionViewController : UIViewController
+@interface HRPCollectionViewController : HRPBaseViewController
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
+
+- (void)prepareDataSource;
 
 @end
