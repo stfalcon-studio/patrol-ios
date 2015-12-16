@@ -501,7 +501,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                            currentImage.imageData   =   videoData;
                                            
                                            parameters               =   @{
-                                                                                @"video"        :   currentImage.imageData,
+                                                                                @"video"        :   videoData,
                                                                                 @"latitude"     :   @(currentPhoto.latitude),
                                                                                 @"longitude"    :   @(currentPhoto.longitude)
                                                                         };

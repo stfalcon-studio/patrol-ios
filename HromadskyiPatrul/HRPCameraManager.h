@@ -44,7 +44,7 @@ typedef NS_ENUM ( NSInteger, HRPCameraManagerSetupResult ) {
 
 + (HRPCameraManager *)sharedManager;
 
-- (void)createCaptureSession;
+//- (void)createCaptureSession;
 - (void)startStreamVideoRecording;
 - (void)stopVideoSession;
 - (void)stopAudioRecording;

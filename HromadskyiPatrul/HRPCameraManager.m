@@ -78,6 +78,8 @@
         _locationManager.desiredAccuracy                    =   kCLLocationAccuracyBest;
         
         [_locationManager startUpdatingLocation];
+        
+        [self createCaptureSession];
     }
     
     return self;

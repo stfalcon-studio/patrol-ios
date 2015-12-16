@@ -499,10 +499,10 @@
                                 </constraints>
                             </view>
                             <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjC-Ec-Nht" userLabel="Video Preview" customClass="HRPVideoRecordView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="-20" y="0.0" width="360" height="568"/>
                                 <subviews>
                                     <button alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cb-ys-WhI" userLabel="Control Button" customClass="HRPButton">
-                                        <rect key="frame" x="117" y="480" width="86" height="86"/>
+                                        <rect key="frame" x="137" y="480" width="86" height="86"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="86" id="F2C-z8-w97"/>
                                             <constraint firstAttribute="width" constant="86" id="wja-lO-FJ7"/>
@@ -529,13 +529,13 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DxB-Zj-qIu" userLabel="Control Label">
-                                        <rect key="frame" x="133" y="454" width="55" height="21"/>
+                                        <rect key="frame" x="153" y="454" width="55" height="21"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BzL-3N-W4p" userLabel="Timer Label">
-                                        <rect key="frame" x="213" y="513" width="97" height="21"/>
+                                        <rect key="frame" x="233" y="513" width="117" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -567,12 +567,12 @@ VIDEO</string>
                             <constraint firstItem="5Ip-33-TZr" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="6bd-Jv-zj2"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="CiH-yc-uz5"/>
                             <constraint firstItem="LmS-0N-oYH" firstAttribute="top" secondItem="UjC-Ec-Nht" secondAttribute="bottom" id="FXj-1C-eCt"/>
-                            <constraint firstItem="UjC-Ec-Nht" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="Fb4-Qg-LDU"/>
+                            <constraint firstItem="UjC-Ec-Nht" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" constant="-20" id="Fb4-Qg-LDU"/>
                             <constraint firstAttribute="trailing" secondItem="Kfu-VX-Jwy" secondAttribute="trailing" constant="10" id="HYj-xv-ffJ"/>
                             <constraint firstAttribute="trailing" secondItem="5Ip-33-TZr" secondAttribute="trailing" id="cTt-E9-CJx"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="oOq-Iv-vAm"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="pas-w9-xjc"/>
-                            <constraint firstAttribute="trailing" secondItem="UjC-Ec-Nht" secondAttribute="trailing" id="px9-YN-fxM"/>
+                            <constraint firstAttribute="trailing" secondItem="UjC-Ec-Nht" secondAttribute="trailing" constant="-20" id="px9-YN-fxM"/>
                             <constraint firstItem="Kfu-VX-Jwy" firstAttribute="top" secondItem="FGf-M5-a3S" secondAttribute="bottom" constant="10" id="u5M-Zy-roW"/>
                         </constraints>
                         <connections>

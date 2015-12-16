@@ -118,10 +118,10 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 //    [_cameraManager createCaptureSession];
 //    [_cameraManager setVideoPreviewLayerOrientation:_videoRecordPreview];
 
-    [_videoRecordPreview.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlButton.layer];
+//    [_videoRecordPreview.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlButton.layer];
     
-    [_cameraManager.captureSession startRunning];
     [_cameraManager startStreamVideoRecording];
+    [_cameraManager.captureSession startRunning];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -142,11 +142,14 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    dispatch_async(_cameraManager.sessionQueue, ^{
+    if (_cameraManager.setupResult == HRPCameraManagerSetupResultSuccess)
+        [_cameraManager.captureSession stopRunning];
+
+        /*dispatch_async(_cameraManager.sessionQueue, ^{
         if (_cameraManager.setupResult == HRPCameraManagerSetupResultSuccess) {
             [_cameraManager.captureSession stopRunning];
         }
-    });
+    });*/
 }
 
 - (void)didReceiveMemoryWarning {
