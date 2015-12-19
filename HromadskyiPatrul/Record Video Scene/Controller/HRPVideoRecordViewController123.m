@@ -94,7 +94,8 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     [super viewWillAppear:animated];
     
     [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
-          andBackgroundColor:BackgroundColorTypeBlue];
+          andBackgroundColor:BackgroundColorTypeBlue
+                     forTime:5];
 
     _recordingMode                                          =   HRPVideoRecordViewControllerModeStreamVideo;
 
@@ -188,7 +189,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     
     if (!_cameraManager.isVideoSaving && !_isControlLabelFlashing) {
         [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
-              andBackgroundColor:BackgroundColorTypeBlue];
+              andBackgroundColor:BackgroundColorTypeBlue forTime:5];
         
         [_cameraManager restartStreamVideoRecording];
         
@@ -292,7 +293,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         // Get first video frame image
         if (_cameraManager.snippetNumber == 2) {
             [self showLoaderWithText:NSLocalizedString(@"Merge & Save video", nil)
-                  andBackgroundColor:BackgroundColorTypeBlue];
+                  andBackgroundColor:BackgroundColorTypeBlue forTime:5];
 
             _controlLabel.text                              =   nil;
             
@@ -373,21 +374,21 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 }
 
 - (void)timerTicked:(NSTimer *)timer {
-    _timerSeconds++;
-    
-    if (_timerSeconds == _cameraManager.sessionDuration) {
-        if (_recordingMode == HRPVideoRecordViewControllerModeStreamVideo)
-            _timerSeconds                                   =   0;
-        
-        else {
-            [_timerVideo invalidate];
-            _timerSeconds                                   =   0;
-        }
-        
-        [_cameraManager.videoFileOutput stopRecording];
-    }
-    
-    _timerLabel.text                                        =   [self formattedTime:_timerSeconds];
+//    _timerSeconds++;
+//    
+//    if (_timerSeconds == _cameraManager.sessionDuration) {
+//        if (_recordingMode == HRPVideoRecordViewControllerModeStreamVideo)
+//            _timerSeconds                                   =   0;
+//        
+//        else {
+//            [_timerVideo invalidate];
+//            _timerSeconds                                   =   0;
+//        }
+//        
+//        [_cameraManager.videoFileOutput stopRecording];
+//    }
+//    
+//    _timerLabel.text                                        =   [self formattedTime:_timerSeconds];
 }
 
 - (NSString *)formattedTime:(NSInteger)secondsTotal {

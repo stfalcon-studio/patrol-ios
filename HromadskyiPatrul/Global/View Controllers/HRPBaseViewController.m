@@ -12,7 +12,9 @@
 #import "AFNetworking.h"
 
 
-@implementation HRPBaseViewController
+@implementation HRPBaseViewController {
+    unsigned int _sleepDuration;
+}
 
 #pragma mark - Constructors -
 - (void)viewWillDisappear:(BOOL)animated {
@@ -24,8 +26,9 @@
 
 
 #pragma mark - Methods -
-- (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType {
+- (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType forTime:(unsigned int)duration {
     NSString *colorString   =   nil;
+    _sleepDuration          =   duration;
     
     switch (colorType) {
         case BackgroundColorTypeBlue:
@@ -60,7 +63,7 @@
 
 - (void)sleepTask {
     // Do something usefull in here instead of sleeping ...
-    sleep(300);
+    sleep(_sleepDuration);
 }
 
 - (BOOL)isInternetConnectionAvailable {

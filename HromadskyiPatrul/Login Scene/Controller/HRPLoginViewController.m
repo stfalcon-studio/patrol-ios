@@ -52,7 +52,8 @@
     [self hideNavigationBar];
     
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
-          andBackgroundColor:BackgroundColorTypeBlack];
+          andBackgroundColor:BackgroundColorTypeBlack
+                     forTime:5];
 
     // Create model
     _loginViewModel     =   [[HRPLoginViewModel alloc] init];
@@ -90,14 +91,6 @@
     
     if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
         _emailTextField.text    =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
-    
-    [self hideLoader];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    [self hideLoader];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -118,7 +111,8 @@
             [sender setUserInteractionEnabled:NO];
             
             [self showLoaderWithText:NSLocalizedString(@"Authorization", nil)
-                  andBackgroundColor:BackgroundColorTypeBlack];
+                  andBackgroundColor:BackgroundColorTypeBlack
+                             forTime:100];
             
             [_loginViewModel userLoginParameters:self.emailTextField.text
                                       onSuccess:^(NSDictionary *successResult) {

@@ -17,6 +17,12 @@ typedef NS_ENUM ( NSInteger, HRPCameraManagerSetupResult ) {
     HRPCameraManagerSetupResultSessionConfigurationFailed
 };
 
+typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
+    NSTimerVideoSessionModeStream,
+    NSTimerVideoSessionModeAttention,
+    NSTimerVideoSessionModeDismissed
+};
+
 
 @interface HRPCameraManager : AVCaptureSession <CLLocationManagerDelegate, AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
@@ -37,7 +43,6 @@ typedef NS_ENUM ( NSInteger, HRPCameraManagerSetupResult ) {
 @property (strong, nonatomic) NSString *mediaFolderPath;
 @property (strong, nonatomic) NSArray *videoFilesNames;
 
-@property (assign, nonatomic) NSInteger sessionDuration;
 @property (assign, nonatomic) NSInteger snippetNumber;
 @property (assign, nonatomic) BOOL isVideoSaving;
 @property (assign, nonatomic, getter = isSessionRunning) BOOL sessionRunning;
@@ -56,5 +61,11 @@ typedef NS_ENUM ( NSInteger, HRPCameraManagerSetupResult ) {
 - (void)setVideoPreviewLayerOrientation:(UIView *)view;
 - (void)setVideoSessionOrientation;
 - (void)restartStreamVideoRecording;
+
+// Timer
+@property (strong, nonatomic) NSTimer *timer;
+@property (assign, nonatomic) NSTimerVideoSessionMode videoSessionMode;
+
+- (void)createTimerWithLabel:(UILabel *)label;
 
 @end

@@ -19,6 +19,7 @@
     AVMutableComposition *_composition;
     CLLocation *_location;
     HRPCameraManagerSetupResult _setupResult;
+    UILabel *_timerLabel;
 
     NSArray *_audioFilesNames;
     NSDictionary *_audioRecordSettings;
@@ -27,6 +28,9 @@
     NSURL *_videoAssetURL;
     UIImage *_videoImageOriginal;
     CGRect _previewRect;
+    
+    NSInteger _sessionDuration;
+    NSInteger _timerSeconds;
 }
 
 #pragma mark - Constructors -
@@ -45,8 +49,6 @@
     self                                                =   [super init];
     
     if (self) {
-        _sessionDuration                                =   10; // seconds
-
         // App Folder
         _mediaFolderPath                                =   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
         
@@ -79,10 +81,66 @@
         
         [_locationManager startUpdatingLocation];
         
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handlerVideoSessionStopRecording:)
+                                                     name:@"videoSessionStopRecording"
+                                                   object:nil];
+
         [self createCaptureSession];
     }
     
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+#pragma mark - NSNotification -
+- (void)handlerVideoSessionStopRecording:(NSNotification *)notification {
+    [_videoFileOutput stopRecording];
+}
+
+
+#pragma mark - Timer Methods -
+- (void)createTimerWithLabel:(UILabel *)label {
+    _timerSeconds           =   0;
+    _sessionDuration        =   11;
+    _timerLabel             =   label;
+    _timerLabel.text        =   [self formattedTime:_timerSeconds];    
+    
+    _timer                  =   [NSTimer scheduledTimerWithTimeInterval:1.f
+                                                                 target:self
+                                                               selector:@selector(timerTicked:)
+                                                               userInfo:nil
+                                                                repeats:YES];
+}
+
+- (void)timerTicked:(NSTimer *)timer {
+    _timerSeconds++;
+    
+    if (_timerSeconds == _sessionDuration) {
+        if (_videoSessionMode == NSTimerVideoSessionModeStream)
+            _timerSeconds   =   0;
+        
+        else {
+            [_timer invalidate];
+            _timerSeconds   =   0;
+        }
+        
+        [_videoFileOutput stopRecording];
+    }
+    
+    _timerLabel.text        =   [self formattedTime:_timerSeconds];
+}
+
+- (NSString *)formattedTime:(NSInteger)secondsTotal {
+    NSInteger seconds       =   secondsTotal % 60;
+    NSInteger minutes       =   (secondsTotal / 60) % 60;
+    NSInteger hours         =   secondsTotal / 3600;
+    
+    return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)hours, (long)minutes, (long)seconds];
 }
 
 

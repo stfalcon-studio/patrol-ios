@@ -70,7 +70,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewDidLoad];
 
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
-          andBackgroundColor:BackgroundColorTypeBlue];
+          andBackgroundColor:BackgroundColorTypeBlue
+                     forTime:100];
 
     // HSPLocations
     locationsService                            =   [[HRPLocations alloc] init];
@@ -955,7 +956,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         isPaginationRun                             =   YES;
         
         [self showLoaderWithText:NSLocalizedString(@"Upload title", nil)
-              andBackgroundColor:BackgroundColorTypeBlue];
+              andBackgroundColor:BackgroundColorTypeBlue
+                         forTime:100];
         
         [self createImagesDataSource];
     }
