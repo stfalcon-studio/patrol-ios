@@ -367,7 +367,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fq6-3R-0JT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2645" y="1103"/>
+            <point key="canvasLocation" x="2253" y="1153"/>
         </scene>
         <!--Photo Preview View Controller-->
         <scene sceneID="gzu-SY-AEA">
@@ -446,7 +446,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xjb-S7-r9y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1581" y="1814"/>
+            <point key="canvasLocation" x="2253" y="1922"/>
         </scene>
         <!--Video Player View Controller-->
         <scene sceneID="2aw-lF-DCf">
@@ -500,7 +500,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7bK-QL-ckZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2063" y="1814"/>
+            <point key="canvasLocation" x="2253" y="371"/>
         </scene>
         <!--Video Record View Controller-->
         <scene sceneID="ymh-0U-nrV">
@@ -514,51 +514,17 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ip-33-TZr" userLabel="Status View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
-                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="HYm-yD-oVl"/>
-                                </constraints>
-                            </view>
                             <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjC-Ec-Nht" userLabel="Video View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
-                                    <button alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4cb-ys-WhI" userLabel="Control Button" customClass="HRPButton">
-                                        <rect key="frame" x="117" y="480" width="86" height="86"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="86" id="F2C-z8-w97"/>
-                                            <constraint firstAttribute="width" constant="86" id="wja-lO-FJ7"/>
-                                        </constraints>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="fillColor">
-                                                <color key="value" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="43"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="11"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" red="1" green="0.2784313725" blue="0.30588235289999999" alpha="0.80000000000000004" colorSpace="calibratedRGB"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="actionControlButtonTap:" destination="nnf-vR-Oke" eventType="touchUpInside" id="Osm-Mx-7T9"/>
-                                        </connections>
-                                    </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DxB-Zj-qIu" userLabel="Control Label">
-                                        <rect key="frame" x="133" y="454" width="55" height="21"/>
+                                        <rect key="frame" x="133" y="486" width="55" height="21"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BzL-3N-W4p" userLabel="Timer Label">
-                                        <rect key="frame" x="213" y="513" width="97" height="21"/>
+                                        <rect key="frame" x="238" y="527" width="72" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -566,23 +532,19 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="BzL-3N-W4p" secondAttribute="bottom" constant="20" id="9Tj-vG-MhL"/>
                                     <constraint firstAttribute="centerX" secondItem="DxB-Zj-qIu" secondAttribute="centerX" id="Aau-nq-zM7"/>
-                                    <constraint firstAttribute="centerX" secondItem="4cb-ys-WhI" secondAttribute="centerX" id="N3J-OG-53q"/>
+                                    <constraint firstItem="BzL-3N-W4p" firstAttribute="top" secondItem="DxB-Zj-qIu" secondAttribute="bottom" constant="20" id="FzV-bo-CQl"/>
                                     <constraint firstAttribute="trailing" secondItem="BzL-3N-W4p" secondAttribute="trailing" constant="10" id="NSZ-6X-Qod"/>
-                                    <constraint firstItem="BzL-3N-W4p" firstAttribute="leading" secondItem="4cb-ys-WhI" secondAttribute="trailing" constant="10" id="Ubi-i3-lwT"/>
-                                    <constraint firstItem="4cb-ys-WhI" firstAttribute="top" secondItem="DxB-Zj-qIu" secondAttribute="bottom" constant="5" id="chW-mF-TXH"/>
-                                    <constraint firstItem="BzL-3N-W4p" firstAttribute="centerY" secondItem="4cb-ys-WhI" secondAttribute="centerY" id="miA-94-EI3"/>
-                                    <constraint firstAttribute="bottom" secondItem="4cb-ys-WhI" secondAttribute="bottom" constant="2" id="uzP-cB-myO"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kfu-VX-Jwy" userLabel="Voice Commands Label">
-                                <rect key="frame" x="258" y="74" width="52" height="40"/>
-                                <string key="text">START
-VIDEO</string>
-                                <fontDescription key="fontDescription" name="Tahoma" family="Tahoma" pointSize="17"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ip-33-TZr" userLabel="Status View">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
+                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="HYm-yD-oVl"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -591,41 +553,18 @@ VIDEO</string>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="CiH-yc-uz5"/>
                             <constraint firstItem="LmS-0N-oYH" firstAttribute="top" secondItem="UjC-Ec-Nht" secondAttribute="bottom" id="FXj-1C-eCt"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="Fb4-Qg-LDU"/>
-                            <constraint firstAttribute="trailing" secondItem="Kfu-VX-Jwy" secondAttribute="trailing" constant="10" id="HYj-xv-ffJ"/>
                             <constraint firstAttribute="trailing" secondItem="5Ip-33-TZr" secondAttribute="trailing" id="cTt-E9-CJx"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="oOq-Iv-vAm"/>
                             <constraint firstItem="UjC-Ec-Nht" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="pas-w9-xjc"/>
                             <constraint firstAttribute="trailing" secondItem="UjC-Ec-Nht" secondAttribute="trailing" id="px9-YN-fxM"/>
-                            <constraint firstItem="Kfu-VX-Jwy" firstAttribute="top" secondItem="FGf-M5-a3S" secondAttribute="bottom" constant="10" id="u5M-Zy-roW"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="jAl-Is-mnm" appends="YES" id="3tU-gl-JBy"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" id="Pqj-2S-yxW">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="k55-pK-X8K" userLabel="Gallery List">
-                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <connections>
-                                <segue destination="aAn-fy-MeC" kind="push" identifier="CollectionSegue" id="KZc-E2-8Oz"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="controlButton" destination="4cb-ys-WhI" id="ORL-DO-xlm"/>
-                        <outlet property="controlLabel" destination="DxB-Zj-qIu" id="6zR-4i-3bI"/>
-                        <outlet property="statusView" destination="5Ip-33-TZr" id="onf-b9-Z1P"/>
-                        <outlet property="statusViewVerticalSpaceConstraint" destination="2Rr-be-pGe" id="rP8-hQ-Fg9"/>
-                        <outlet property="timerLabel" destination="BzL-3N-W4p" id="sIe-Gk-r1J"/>
-                        <outlet property="videoView" destination="UjC-Ec-Nht" id="bSc-E3-9PA"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qxG-qD-MMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="jAl-Is-mnm">
-                    <connections>
-                        <action selector="tapGesture:" destination="nnf-vR-Oke" id="egA-5b-6ZC"/>
-                        <outlet property="delegate" destination="nnf-vR-Oke" id="pMV-Xi-rIE"/>
-                    </connections>
-                </tapGestureRecognizer>
+                <tapGestureRecognizer id="jAl-Is-mnm"/>
             </objects>
             <point key="canvasLocation" x="1660" y="1153"/>
         </scene>
@@ -756,7 +695,7 @@ VIDEO</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H4p-4y-a8J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3127" y="1103"/>
+            <point key="canvasLocation" x="2855" y="1153"/>
         </scene>
         <!--Main View Controller-->
         <scene sceneID="vnq-62-si2">

@@ -36,6 +36,8 @@
 		B12805681C257C120058BAC8 /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805601C257C120058BAC8 /* 5.png */; };
 		B12805691C257C120058BAC8 /* 6.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805611C257C120058BAC8 /* 6.png */; };
 		B128056A1C257C120058BAC8 /* 7.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805621C257C120058BAC8 /* 7.png */; };
+		B12805701C2582950058BAC8 /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */; };
+		B12805731C258B6A0058BAC8 /* HRPVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */; };
 		B18F75B01B95A3B600143338 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */; };
 		B1AC89851B879A06009D12D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89841B879A06009D12D6 /* main.m */; };
 		B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */; };
@@ -45,7 +47,7 @@
 		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
-		B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController.m */; };
+		B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController123.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController123.m */; };
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
 		B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
@@ -114,6 +116,10 @@
 		B12805601C257C120058BAC8 /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 5.png; sourceTree = "<group>"; };
 		B12805611C257C120058BAC8 /* 6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 6.png; sourceTree = "<group>"; };
 		B12805621C257C120058BAC8 /* 7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 7.png; sourceTree = "<group>"; };
+		B128056E1C2582950058BAC8 /* UIViewController+NavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NavigationBar.h"; sourceTree = "<group>"; };
+		B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NavigationBar.m"; sourceTree = "<group>"; };
+		B12805711C258B6A0058BAC8 /* HRPVideoRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewController.h; sourceTree = "<group>"; };
+		B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewController.m; sourceTree = "<group>"; };
 		B13B0F161B94B33700247CF1 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		B1669E1C1BD657C500C4156D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -133,8 +139,8 @@
 		B1AC89B51B879CE3009D12D6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B61B879CEC009D12D6 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
-		B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewController.h; sourceTree = "<group>"; };
-		B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewController.m; sourceTree = "<group>"; };
+		B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController123.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewController123.h; sourceTree = "<group>"; };
+		B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController123.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewController123.m; sourceTree = "<group>"; };
 		B1C07F031C21DD98002868F9 /* HRPVideoRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordView.h; sourceTree = "<group>"; };
 		B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordView.m; sourceTree = "<group>"; };
 		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -256,8 +262,10 @@
 		B19C10381C1C41CE007BB9FE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController.h */,
-				B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController.m */,
+				B12805711C258B6A0058BAC8 /* HRPVideoRecordViewController.h */,
+				B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */,
+				B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController123.h */,
+				B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController123.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -487,6 +495,8 @@
 				B12805401C257A370058BAC8 /* UIColor+HexColor.m */,
 				B12805411C257A370058BAC8 /* UIImage+ChangeOriginalImage.h */,
 				B12805421C257A370058BAC8 /* UIImage+ChangeOriginalImage.m */,
+				B128056E1C2582950058BAC8 /* UIViewController+NavigationBar.h */,
+				B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -695,10 +705,12 @@
 				B12805261C2578E30058BAC8 /* HRPMainViewModel.m in Sources */,
 				B12805551C257B240058BAC8 /* HRPPhotoPreviewViewController.m in Sources */,
 				B12805591C257B5A0058BAC8 /* HRPCollectionViewController.m in Sources */,
-				B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController.m in Sources */,
+				B12805701C2582950058BAC8 /* UIViewController+NavigationBar.m in Sources */,
+				B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController123.m in Sources */,
 				B128053C1C257A0F0058BAC8 /* HRPLocations.m in Sources */,
 				B128053E1C257A0F0058BAC8 /* HRPPhotoCell.m in Sources */,
 				B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */,
+				B12805731C258B6A0058BAC8 /* HRPVideoRecordViewController.m in Sources */,
 				B128053A1C257A0F0058BAC8 /* HRPButton.m in Sources */,
 				B12805491C257A620058BAC8 /* HRPBaseViewController.m in Sources */,
 				B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */,

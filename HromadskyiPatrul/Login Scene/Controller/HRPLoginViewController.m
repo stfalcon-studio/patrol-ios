@@ -8,7 +8,7 @@
 
 #import "HRPLoginViewController.h"
 #import "HRPCollectionViewController.h"
-#import "HRPVideoRecordViewController.h"
+#import "HRPVideoRecordViewController123.h"
 #import "HRPButton.h"
 #import "UIColor+HexColor.h"
 #import <NSString+Email.h>
@@ -130,7 +130,7 @@
                                           [_loginViewModel.userApp synchronize];
 
                                           // Transition to VideoRecord scene
-                                          HRPVideoRecordViewController *videoRecordVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+                                          HRPVideoRecordViewController123 *videoRecordVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
                                           
                                           [self.navigationController pushViewController:videoRecordVC animated:YES];
                                           [sender setUserInteractionEnabled:YES];

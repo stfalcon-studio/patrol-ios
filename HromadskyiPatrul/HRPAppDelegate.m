@@ -7,7 +7,6 @@
 //
 
 #import "HRPAppDelegate.h"
-#import "UIColor+HexColor.h"
 #import "AFNetworking.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
@@ -38,9 +37,6 @@ NSString const *DeviceMode                                  =   @"Device";
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];
 
-    // Navigation Bar
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"05A9F4" alpha:1.f]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 
     return YES;

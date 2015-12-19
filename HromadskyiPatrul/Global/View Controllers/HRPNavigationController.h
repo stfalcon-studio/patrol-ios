@@ -11,6 +11,5 @@
 
 @interface HRPNavigationController : UINavigationController
 
-- (void)hideNavigationBar;
 
 @end

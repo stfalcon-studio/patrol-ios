@@ -19,7 +19,7 @@
 #import "AFNetworking.h"
 #import <AFHTTPRequestOperation.h>
 #import "HRPPhotoPreviewViewController.h"
-#import "HRPVideoRecordViewController.h"
+#import "HRPVideoRecordViewController123.h"
 #import "HRPVideoPlayerViewController.h"
 
 

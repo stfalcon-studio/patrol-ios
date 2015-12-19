@@ -9,7 +9,7 @@
 #import "HRPMainViewModel.h"
 #import "HRPBaseViewController.h"
 
-@class HRPVideoRecordViewController;
+@class HRPVideoRecordViewController123;
 
 
 @implementation HRPMainViewModel

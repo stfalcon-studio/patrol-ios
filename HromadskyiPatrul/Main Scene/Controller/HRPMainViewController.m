@@ -24,7 +24,6 @@
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewWidthConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *statusBarTopConstarint;
 
 @end
 
@@ -70,8 +69,7 @@
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _contentViewWidthConstraint.constant        =   size.width;
-    _statusBarTopConstarint.constant            =   (size.width < size.height) ? 0.f : -20.f;
+    _contentViewWidthConstraint.constant    =   size.width;
     
     [self.view layoutIfNeeded];
 }

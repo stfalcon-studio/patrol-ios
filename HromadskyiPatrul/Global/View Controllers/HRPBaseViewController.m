@@ -58,10 +58,6 @@
                       otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
 }
 
-- (void)hideNavigationBar {
-    [(HRPNavigationController *)self.navigationController hideNavigationBar];
-}
-
 - (void)sleepTask {
     // Do something usefull in here instead of sleeping ...
     sleep(300);
