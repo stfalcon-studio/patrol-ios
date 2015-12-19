@@ -8,15 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class AFHTTPRequestOperation;
-
 
 @interface HRPMainViewModel : NSObject
 
 @property (strong, nonatomic) NSUserDefaults *userApp;
 
-- (void)userLoginParameters:(NSString *)email
-                  onSuccess:(void(^)(NSDictionary *successResult))success
-                  orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure;
+- (NSString *)getAppVersion;
+- (NSString *)selectNextSceneStoryboardID;
 
 @end

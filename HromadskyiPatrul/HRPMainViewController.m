@@ -7,26 +7,17 @@
 //
 
 #import "HRPMainViewController.h"
-#import "HRPCollectionViewController.h"
-#import "HRPVideoRecordViewController.h"
-#import "HRPButton.h"
-#import "UIColor+HexColor.h"
-#import <NSString+Email.h>
+#import "HRPNavigationController.h"
 #import "HRPMainViewModel.h"
 
 
-@interface HRPMainViewController () <UITextFieldDelegate>
+@interface HRPMainViewController ()
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 
 @property (strong, nonatomic) IBOutlet UIImageView *logoImageView;
 @property (strong, nonatomic) IBOutlet UILabel *logoLabel;
-@property (strong, nonatomic) IBOutlet UILabel *aboutLabel1;
-@property (strong, nonatomic) IBOutlet UILabel *aboutLabel2;
-@property (strong, nonatomic) IBOutlet UILabel *aboutLabel3;
-@property (strong, nonatomic) IBOutlet UITextField *emailTextField;
-@property (strong, nonatomic) IBOutlet HRPButton *loginButton;
 @property (strong, nonatomic) IBOutlet UILabel *madeByLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *stfalconLogoImageView;
 @property (strong, nonatomic) IBOutlet UILabel *versionLabel;
@@ -39,9 +30,6 @@
 
 @implementation HRPMainViewController {
     HRPMainViewModel *_mainViewModel;
-    
-    CGSize keyboardSize;
-    NSInteger countt;
 }
 
 #pragma mark - Constructors -
@@ -49,162 +37,34 @@
     [super viewDidLoad];
 
     // Create model
-    _mainViewModel                              =   [[HRPMainViewModel alloc] init];
-    
-    countt                                      =   0;
+    _mainViewModel                          =   [[HRPMainViewModel alloc] init];
     
     // Set Scroll View constraints
-    self.contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
-    self.contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
+    _contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
+    _contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
     
-    self.versionLabel.text                      =   [NSString stringWithFormat:@"%@ %@ (%@)", NSLocalizedString(@"Version", nil),
-                                                        [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
-                                                        [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]];
+    _versionLabel.text                      =   [_mainViewModel getAppVersion];
     
     // Set Logo text
-    self.logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
-    self.aboutLabel1.text                       =   NSLocalizedString(@"About text 1", nil);
-    self.aboutLabel2.text                       =   NSLocalizedString(@"About text 2", nil);
-    self.aboutLabel3.text                       =   NSLocalizedString(@"About text 3", nil);
-    
-    // Set button title
-    [self.loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
-    
-    // Keyboard notifications
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidShow:)
-                                                 name:UIKeyboardDidShowNotification
-                                               object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardDidHide:)
-                                                 name:UIKeyboardDidHideNotification
-                                               object:nil];
+    _logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
     
-    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil) andBackgroundColor:BackgroundColorTypeBlack];
-
-    if ([_mainViewModel.userApp objectForKey:@"userAppEmail"]) {
-        self.emailTextField.text                =   [_mainViewModel.userApp objectForKey:@"userAppEmail"];
-       
-        if (countt == 0) {
-            countt++;
-            
-            [self startSceneTransition];
-        }
-    }
+    [self hideNavigationBar];
     
-    else {
-        [UIView animateWithDuration:1.3f
-                         animations:^{
-                             self.versionLabel.alpha                                =   0.f;
-                         } completion:^(BOOL finished) {
-                             [UIView animateWithDuration:0.7f
-                                              animations:^{
-                                                  self.stfalconLogoImageView.alpha  =   1.f;
-                                                  self.madeByLabel.alpha            =   1.f;
-                                              }
-                                              completion:^(BOOL finished) {
-                                                  [self hideLoader];
-                                              }];
-                         }];
-    }
+    // Select Next Scene
+    HRPBaseViewController *nextVC           =   [self.storyboard instantiateViewControllerWithIdentifier:
+                                                    [_mainViewModel selectNextSceneStoryboardID]];
+    
+    HRPNavigationController *navBar         =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
+    
+    [self.navigationController presentViewController:navBar animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-}
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-}
-
-
-#pragma mark - Actions -
-- (IBAction)actionLoginButtonTap:(HRPButton *)sender {
-    // Email validation
-    if ([self.emailTextField.text isEmail]) {
-        // API
-        if ([self isInternetConnectionAvailable]) {
-            [self showLoaderWithText:NSLocalizedString(@"Authorization", nil)
-                  andBackgroundColor:BackgroundColorTypeBlack];
-            
-            [_mainViewModel userLoginParameters:self.emailTextField.text
-                            onSuccess:^(NSDictionary *successResult) {
-                                [self. emailTextField resignFirstResponder];
-
-                                // Transition to VideoRecord scene
-                                [self startSceneTransition];
-                                
-                                // Set NSUserDefaults item
-                                [_mainViewModel.userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
-                                [_mainViewModel.userApp setObject:successResult[@"id"] forKey:@"userAppID"];
-                                [_mainViewModel.userApp synchronize];
-                            }
-                            orFailure:^(AFHTTPRequestOperation *failureOperation) {
-                                [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
-                                                  andMessage:NSLocalizedString(@"Alert error API message", nil)];
-                                
-                                [self hideLoader];
-                            }];
-        }
-    }
-    
-    // Email error
-    else
-        [self showAlertViewWithTitle:NSLocalizedString(@"Alert error email title", nil)
-                          andMessage:NSLocalizedString(@"Alert error email message", nil)];
-}
-
-
-#pragma mark - NSNotification -
-- (void)keyboardDidShow:(NSNotification *)notification {
-    NSDictionary *info                          =   [notification userInfo];
-    keyboardSize                                =   [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-
-    CGFloat emailPositionY                      =   CGRectGetMaxY(self.emailTextField.frame);
-    CGFloat keyboardPositionTop                 =   self.contentViewHeightConstraint.constant - keyboardSize.height - 10.f;
-    
-    if (emailPositionY > keyboardPositionTop)
-        [self.scrollView setContentOffset:CGPointMake(0.f, emailPositionY - keyboardPositionTop) animated:YES];
-}
-
-- (void)keyboardDidHide:(NSNotification *)notification {
-    [self.scrollView setContentOffset:CGPointZero animated:YES];
-}
-
-
-#pragma mark - UIGestureRecognizer -
-- (IBAction)handleGestureRecognizerTap:(UITapGestureRecognizer *)sender {
-    [self. emailTextField resignFirstResponder];
-}
-
-
-#pragma mark - Methods -
-- (void)startSceneTransition {
-    // Transition to VideoRecord scene
-    UINavigationController *videoRecordNC       =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordNC"];
-    
-    [self presentViewController:videoRecordNC
-                       animated:YES
-                     completion:^{
-                         if (self.HUD.alpha)
-                             [self hideLoader];
-                     }];
 }
 
 
@@ -214,14 +74,6 @@
     _statusBarTopConstarint.constant            =   (size.width < size.height) ? 0.f : -20.f;
     
     [self.view layoutIfNeeded];
-}
-
-
-#pragma mark - UITextFieldDelegate -
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self actionLoginButtonTap:self.loginButton];
-    
-    return  YES;
 }
 
 @end

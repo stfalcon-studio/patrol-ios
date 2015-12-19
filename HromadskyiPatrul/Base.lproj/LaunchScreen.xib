@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -11,8 +11,8 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-logo" translatesAutoresizingMaskIntoConstraints="NO" id="haI-0J-sLg" userLabel="Logo Image View">
-                    <rect key="frame" x="155" y="4" width="170" height="170"/>
+                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-logo" translatesAutoresizingMaskIntoConstraints="NO" id="haI-0J-sLg" userLabel="Logo Image View">
+                    <rect key="frame" x="155" y="20" width="170" height="170"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="170" id="PYh-XX-bsP"/>
                         <constraint firstAttribute="width" constant="170" id="TOr-ZW-ina"/>
@@ -30,8 +30,8 @@
             <constraints>
                 <constraint firstAttribute="centerX" secondItem="haI-0J-sLg" secondAttribute="centerX" id="0WF-XQ-P7t"/>
                 <constraint firstAttribute="trailing" secondItem="huH-EM-mZn" secondAttribute="trailing" id="ZpV-8Z-DBZ"/>
+                <constraint firstItem="haI-0J-sLg" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="20" id="p2V-ma-kYD"/>
                 <constraint firstItem="huH-EM-mZn" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="vKd-I5-4vU"/>
-                <constraint firstAttribute="centerY" secondItem="haI-0J-sLg" secondAttribute="centerY" multiplier="2.7" id="wVM-Yh-7uG"/>
                 <constraint firstItem="huH-EM-mZn" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="x0O-Mu-JI3"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>

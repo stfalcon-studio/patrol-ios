@@ -7,50 +7,41 @@
 //
 
 #import "HRPMainViewModel.h"
-#import "AFNetworking.h"
-#import <AFHTTPRequestOperation.h>
+#import "HRPBaseViewController.h"
+
+@class HRPVideoRecordViewController;
 
 
 @implementation HRPMainViewModel
 
 #pragma mark - Constructors -
 - (instancetype)init {
-    self            =   [super init];
+    self                    =   [super init];
     
     if (self) {
-        _userApp    =   [NSUserDefaults standardUserDefaults];
+        _userApp            =   [NSUserDefaults standardUserDefaults];
     }
     
     return self;
 }
 
 
-#pragma mark - API -
-- (void)userLoginParameters:(NSString *)email
-                  onSuccess:(void(^)(NSDictionary *successResult))success
-                  orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
-    NSString *urlString =   (0) ? @"http://192.168.0.29/app_dev.php/" : @"http://xn--80awkfjh8d.com/";
+#pragma mark - Methods -
+- (NSString *)getAppVersion {
+    NSString *appVersion    =   [NSString stringWithFormat:@"%@ %@ (%@)", NSLocalizedString(@"Version", nil),
+                                 [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+                                 [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]];
     
-    AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
-                                                                         initWithBaseURL:[NSURL URLWithString:urlString]];
-    
-    NSString *pathAPI                                               =   @"api/register";
-    
-    AFHTTPRequestSerializer *userRequestSerializer                  =   [AFHTTPRequestSerializer serializer];
-    [userRequestSerializer setValue:@"application/json" forHTTPHeaderField:@"CONTENT_TYPE"];
-    
-    [requestOperationDomainManager POST:pathAPI
-                             parameters:@{ @"email" : email }
-                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    if (operation.response.statusCode == 200)
-                                        success(responseObject);
-                                }
-                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                    if (operation.response.statusCode == 400)
-                                        failure(operation);
-                                }];
+    return appVersion;
 }
 
-#pragma mark - Methods -
+- (NSString *)selectNextSceneStoryboardID {
+    NSString *selectedVC    =   @"VideoRecordVC";
+    
+    if (![_userApp objectForKey:@"userAppEmail"])
+        selectedVC          =   @"LoginVC";
+    
+    return selectedVC;
+}
 
 @end

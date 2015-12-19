@@ -7,6 +7,7 @@
 //
 
 #import "HRPBaseViewController.h"
+#import "HRPNavigationController.h"
 #import "UIColor+HexColor.h"
 #import "AFNetworking.h"
 
@@ -55,6 +56,10 @@
                                delegate:nil
                       cancelButtonTitle:nil
                       otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+}
+
+- (void)hideNavigationBar {
+    [(HRPNavigationController *)self.navigationController hideNavigationBar];
 }
 
 - (void)sleepTask {
