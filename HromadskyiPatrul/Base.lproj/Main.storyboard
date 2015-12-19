@@ -514,30 +514,18 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UjC-Ec-Nht" userLabel="Video View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DxB-Zj-qIu" userLabel="Control Label" customClass="HRPLabel">
-                                        <rect key="frame" x="133" y="486" width="55" height="21"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BzL-3N-W4p" userLabel="Timer Label">
-                                        <rect key="frame" x="238" y="527" width="72" height="21"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="BzL-3N-W4p" secondAttribute="bottom" constant="20" id="9Tj-vG-MhL"/>
-                                    <constraint firstAttribute="centerX" secondItem="DxB-Zj-qIu" secondAttribute="centerX" id="Aau-nq-zM7"/>
-                                    <constraint firstItem="BzL-3N-W4p" firstAttribute="top" secondItem="DxB-Zj-qIu" secondAttribute="bottom" constant="20" id="FzV-bo-CQl"/>
-                                    <constraint firstAttribute="trailing" secondItem="BzL-3N-W4p" secondAttribute="trailing" constant="10" id="NSZ-6X-Qod"/>
-                                </constraints>
-                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DxB-Zj-qIu" userLabel="Control Label" customClass="HRPLabel">
+                                <rect key="frame" x="132" y="486" width="55" height="21"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BzL-3N-W4p" userLabel="Timer Label">
+                                <rect key="frame" x="238" y="527" width="72" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ip-33-TZr" userLabel="Status View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
                                 <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
@@ -546,17 +534,15 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="5Ip-33-TZr" firstAttribute="top" secondItem="UjC-Ec-Nht" secondAttribute="top" id="2Rr-be-pGe"/>
                             <constraint firstItem="5Ip-33-TZr" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="6bd-Jv-zj2"/>
-                            <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="CiH-yc-uz5"/>
-                            <constraint firstItem="LmS-0N-oYH" firstAttribute="top" secondItem="UjC-Ec-Nht" secondAttribute="bottom" id="FXj-1C-eCt"/>
-                            <constraint firstItem="UjC-Ec-Nht" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="Fb4-Qg-LDU"/>
+                            <constraint firstAttribute="bottom" secondItem="BzL-3N-W4p" secondAttribute="bottom" constant="20" id="KZd-eL-p7P"/>
+                            <constraint firstItem="BzL-3N-W4p" firstAttribute="top" secondItem="DxB-Zj-qIu" secondAttribute="bottom" constant="20" id="SxB-T0-dGt"/>
                             <constraint firstAttribute="trailing" secondItem="5Ip-33-TZr" secondAttribute="trailing" id="cTt-E9-CJx"/>
-                            <constraint firstItem="UjC-Ec-Nht" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="oOq-Iv-vAm"/>
-                            <constraint firstItem="UjC-Ec-Nht" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="pas-w9-xjc"/>
-                            <constraint firstAttribute="trailing" secondItem="UjC-Ec-Nht" secondAttribute="trailing" id="px9-YN-fxM"/>
+                            <constraint firstItem="5Ip-33-TZr" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="heK-bg-gkv"/>
+                            <constraint firstItem="DxB-Zj-qIu" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="vQT-Pm-m5r"/>
+                            <constraint firstAttribute="trailing" secondItem="BzL-3N-W4p" secondAttribute="trailing" constant="10" id="wA1-vS-36D"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="jAl-Is-mnm" appends="YES" id="3tU-gl-JBy"/>
@@ -565,10 +551,15 @@
                     <connections>
                         <outlet property="_controlLabel" destination="DxB-Zj-qIu" id="kvp-Am-MNR"/>
                         <outlet property="_timerLabel" destination="BzL-3N-W4p" id="oGy-jp-eCJ"/>
+                        <outlet property="view" destination="Lh8-SN-AYI" id="ktR-Ng-rGf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qxG-qD-MMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="jAl-Is-mnm"/>
+                <tapGestureRecognizer id="jAl-Is-mnm">
+                    <connections>
+                        <action selector="tapGesture:" destination="nnf-vR-Oke" id="wsa-EA-Q4X"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1660" y="1153"/>
         </scene>

@@ -8,6 +8,7 @@
 
 #import "HRPCameraManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "HRPVideoRecordView.h"
 #import "HRPPhoto.h"
 
 
@@ -85,8 +86,6 @@
                                                  selector:@selector(handlerVideoSessionStopRecording:)
                                                      name:@"videoSessionStopRecording"
                                                    object:nil];
-
-        [self createCaptureSession];
     }
     
     return self;
@@ -106,7 +105,7 @@
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
     _timerSeconds           =   0;
-    _sessionDuration        =   11;
+    _sessionDuration        =   5;
     _timerLabel             =   label;
     _timerLabel.text        =   [self formattedTime:_timerSeconds];    
     
@@ -146,228 +145,75 @@
 
 #pragma mark - Methods -
 - (void)createCaptureSession {
-//    NSError *error;
+    NSError *error;
     
-    // Create the AVCaptureSession.
-    _captureSession                                         =   [[AVCaptureSession alloc] init];
-    _captureSession.sessionPreset                           =   AVCaptureSessionPresetHigh;
+    // Initialize the Session object
+    _captureSession                                     =   [[AVCaptureSession alloc] init];
+    _captureSession.sessionPreset                       =   AVCaptureSessionPresetHigh;
     
+    // Initialize a Camera object
+    AVCaptureDevice *videoDevice                        =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceInput *videoInput                    =   [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
+    _videoConnection                                    =   [_videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
     
-    // Communicate with the session and other session objects on this queue.
-    _sessionQueue                                           =   dispatch_queue_create( "session queue", DISPATCH_QUEUE_SERIAL );
-    _setupResult                                            =   HRPCameraManagerSetupResultSuccess;
+    AVCaptureVideoStabilizationMode stabilizationMode   =   AVCaptureVideoStabilizationModeCinematic;
     
-    [self checkVideoAuthorizationStatus];
+    if ([videoDevice.activeFormat isVideoStabilizationModeSupported:stabilizationMode])
+        [_videoConnection setPreferredVideoStabilizationMode:stabilizationMode];
     
-    [self setupCaptureSession];
+    [_captureSession addInput:videoInput];
     
+    // Configure the audio session
+    AVAudioSession *audioSession                        =   [AVAudioSession sharedInstance];
+    [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    [audioSession setActive:YES error:nil];
     
-/*
-    // VIDEO
-    // Add output file
-    _videoFileOutput                                        =   [[AVCaptureMovieFileOutput alloc] init];
-
-    _videoConnection                                        =   [_videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    // Find the desired input port
+    NSArray *inputs                                     =   [audioSession availableInputs];
+    AVAudioSessionPortDescription *builtInMic           =   nil;
     
-    if ([_videoConnection isVideoOrientationSupported])
-        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
-
-    if ([_captureSession canAddOutput:_videoFileOutput])
-        [_captureSession addOutput:_videoFileOutput];
-    
-    // Initialize the video preview layer
-    _videoPreviewLayer                                      =   [[AVCaptureVideoPreviewLayer alloc] initWithSession:_captureSession];
-    CGRect layerRect                                        =   [[UIScreen mainScreen] bounds];
-    CGPoint layerCenter                                     =   CGPointMake(CGRectGetMidX(layerRect), CGRectGetMidY(layerRect));
-
-    [_videoPreviewLayer setBounds:layerRect];
-    [_videoPreviewLayer setPosition:layerCenter];
-    _videoPreviewLayer.connection.videoOrientation          =   AVCaptureVideoOrientationPortrait;
-//    [self setVideoSessionOrientation];
-    
-    [_videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill]; 
- */
-}
-
-- (void)checkVideoAuthorizationStatus {
-    // Check video authorization status. Video access is required and audio access is optional.
-    // If audio access is denied, audio is not recorded during movie recording.
-    switch ( [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo] ) {
-        case AVAuthorizationStatusAuthorized: {
-            // The user has previously granted access to the camera.
-            break;
-        }
-            
-        case AVAuthorizationStatusNotDetermined: {
-            // The user has not yet been presented with the option to grant video access.
-            // We suspend the session queue to delay session setup until the access request has completed to avoid
-            // asking the user for audio access if video access is denied.
-            // Note that audio access will be implicitly requested when we create an AVCaptureDeviceInput for audio during session setup.
-            
-            dispatch_suspend(_sessionQueue);
-            
-            [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^( BOOL granted ) {
-                if (!granted) {
-                    _setupResult                            =   HRPCameraManagerSetupResultCameraNotAuthorized;
-                }
-                
-                dispatch_resume(_sessionQueue);
-            }];
-            
-            break;
-        }
-            
-        default: {
-            // The user has previously denied access.
-            _setupResult                                    =   HRPCameraManagerSetupResultCameraNotAuthorized;
+    for (AVAudioSessionPortDescription *port in inputs) {
+        if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
+            builtInMic                                  =   port;
+           
             break;
         }
     }
+    
+    // Find the desired microphone
+    for (AVAudioSessionDataSourceDescription *source in builtInMic.dataSources) {
+        if ([source.orientation isEqual:AVAudioSessionOrientationFront]) {
+            [builtInMic setPreferredDataSource:source error:nil];
+            [audioSession setPreferredInput:builtInMic error:&error];
+           
+            break;
+        }
+    }
+    
+    // VIDEO
+    // Add output file
+    _videoFileOutput                                    =   [[AVCaptureMovieFileOutput alloc] init];
+    
+    if ([_captureSession canAddOutput:_videoFileOutput])
+        [_captureSession addOutput:_videoFileOutput];
 }
 
-- (void)setupCaptureSession {
-    // Setup the capture session.
-    // In general it is not safe to mutate an AVCaptureSession or any of its inputs, outputs, or connections from multiple threads at the same time.
-    // Why not do all of this on the main queue?
-    // Because -[AVCaptureSession startRunning] is a blocking call which can take a long time. We dispatch session setup to the sessionQueue
-    // so that the main queue isn't blocked, which keeps the UI responsive.
-    dispatch_async( _sessionQueue, ^{
-        if (_setupResult != HRPCameraManagerSetupResultSuccess)
-            return;
-        
-        NSError *error                                      =   nil;
-        
-        // VIDEO
-        // Initialize a Camera object
-        AVCaptureDevice *videoDevice                        =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-        _videoDeviceInput                                   =   [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-//        AVCaptureVideoStabilizationMode stabilizationMode   =   AVCaptureVideoStabilizationModeCinematic;
-        
-//        if ([videoDevice.activeFormat isVideoStabilizationModeSupported:stabilizationMode])
-//            [_videoConnection setPreferredVideoStabilizationMode:stabilizationMode];
-//        
-
-        if (!_videoDeviceInput)
-            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                              andMessage:[NSLocalizedString(@"Alert create input video error message", nil) stringByAppendingString:error.localizedDescription]];
-        
-        else {
-            [_captureSession beginConfiguration];
-            
-            if ([_captureSession canAddInput:_videoDeviceInput]) {
-                [_captureSession addInput:_videoDeviceInput];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    // Why are we dispatching this to the main queue?
-                    // Because AVCaptureVideoPreviewLayer is the backing layer for AAPLPreviewView and UIView
-                    // can only be manipulated on the main thread.
-                    // Note: As an exception to the above rule, it is not necessary to serialize video orientation changes
-                    // on the AVCaptureVideoPreviewLayer’s connection with other session manipulation.
-                    
-                    // Use the status bar orientation as the initial video orientation. Subsequent orientation changes are handled by
-                    // -[viewWillTransitionToSize:withTransitionCoordinator:].
-                    
-                    UIInterfaceOrientation statusBarOrientation         =   [UIApplication sharedApplication].statusBarOrientation;
-                        _videoOrientation                               =   AVCaptureVideoOrientationPortrait;
-                    
-                    if (statusBarOrientation != UIInterfaceOrientationUnknown)
-                        _videoOrientation                               =   (AVCaptureVideoOrientation)statusBarOrientation;
-                } );
-            }
-            
-            else {
-                [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                                  andMessage:NSLocalizedString(@"Alert add input video error message", nil)];
-
-                _setupResult                                            =   HRPCameraManagerSetupResultSessionConfigurationFailed;
-            }
-        }
-
-        // AUDIO
-        // Configure the audio session
-        AVAudioSession *audioSession                            =   [AVAudioSession sharedInstance];
-        [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-        [audioSession setActive:YES error:nil];
-        
-        // Find the desired input port
-        NSArray *inputs                                         =   [audioSession availableInputs];
-        AVAudioSessionPortDescription *builtInMic               =   nil;
-        
-        for (AVAudioSessionPortDescription *port in inputs) {
-            if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
-                builtInMic                                      =   port;
-                
-                break;
-            }
-        }
-        
-        // Find the desired microphone
-        for (AVAudioSessionDataSourceDescription *source in builtInMic.dataSources) {
-            if ([source.orientation isEqual:AVAudioSessionOrientationFront]) {
-                [builtInMic setPreferredDataSource:source error:nil];
-                [audioSession setPreferredInput:builtInMic error:&error];
-                
-                break;
-            }
-        }
-
-        AVCaptureDevice *audioDevice                            =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
-        AVCaptureDeviceInput *audioDeviceInput                  =   [AVCaptureDeviceInput deviceInputWithDevice:audioDevice error:&error];
-        
-        if (!audioDeviceInput)
-            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                              andMessage:[NSLocalizedString(@"Alert create input audio error message", nil) stringByAppendingString:error.localizedDescription]];
-        
-        if ([_captureSession canAddInput:audioDeviceInput])
-            [_captureSession addInput:audioDeviceInput];
-        
-        else
-            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                              andMessage:NSLocalizedString(@"Alert add input audio error message", nil)];
-        
-        // Video output
-        _videoFileOutput                                        =   [[AVCaptureMovieFileOutput alloc] init];
-        
-        if ([_captureSession canAddOutput:_videoFileOutput]) {
-            [_captureSession addOutput:_videoFileOutput];
-            
-            AVCaptureConnection *connection                     =   [_videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
-            
-            if (connection.isVideoStabilizationSupported)
-                connection.preferredVideoStabilizationMode      =   AVCaptureVideoStabilizationModeAuto;
-        }
-        
-        else {
-            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                              andMessage:NSLocalizedString(@"Alert add output video file error message", nil)];
-            
-            _setupResult                                        =   HRPCameraManagerSetupResultSessionConfigurationFailed;
-        }
-        
-        // Screenshot
-        _stillImageOutput                                       =   [[AVCaptureStillImageOutput alloc] init];
-        
-        if ([_captureSession canAddOutput:_stillImageOutput]) {
-            _stillImageOutput.outputSettings                    =   @{ AVVideoCodecKey : AVVideoCodecJPEG };
-
-            [_captureSession addOutput:_stillImageOutput];
-        }
-        
-        else {
-            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                              andMessage:NSLocalizedString(@"Alert add still image error message", nil)];
-            
-            _setupResult                                        =   HRPCameraManagerSetupResultSessionConfigurationFailed;
-        }
-        
-        [_captureSession commitConfiguration];
-    } );
+- (void)createVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)videoPreviewLayer {
+    _videoPreviewLayer                                  =   videoPreviewLayer;
+    _videoPreviewLayer.connection.videoOrientation      =   self.videoOrientation;
 }
 
-- (void)startStreamVideoRecording {
+- (void)startStreamVideoRecording {    
     [self startAudioRecording];
     
     [_videoFileOutput startRecordingToOutputFileURL:[self setNewVideoFileURL:_snippetNumber] recordingDelegate:self];
+}
+
+- (void)startAttentionVideoRecording {
+    // Stop video capture and make the capture session object nil
+    _timerSeconds       =   0;
+    
+    [_videoFileOutput stopRecording];
 }
 
 - (void)startAudioRecording {
@@ -379,7 +225,7 @@
 }
 
 - (void)restartStreamVideoRecording {
-    _snippetNumber              =   1;
+    _snippetNumber      =   1;
 
     [_videoFileOutput stopRecording];
 }
@@ -429,19 +275,45 @@
         [_audioRecorder prepareToRecord];
 }
 
-- (void)setVideoPreviewLayerOrientation:(UIView *)view {
-    _videoPreviewLayer.frame    =   view.bounds;
+- (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
+    _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
     _videoConnection            =   _videoPreviewLayer.connection;
     
-    if ([_videoConnection isVideoOrientationSupported])
-        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
+//    if ([_videoConnection isVideoOrientationSupported])
+//        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
+}
+
+- (void)setPreviewLayerVideoOrientation {
+    UIInterfaceOrientation cameraOrientation            =   [[UIApplication sharedApplication] statusBarOrientation];
+    AVCaptureConnection *previewLayerConnection         =   _videoPreviewLayer.connection;
+    
+    switch (cameraOrientation) {
+        case UIInterfaceOrientationPortrait:
+            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+            break;
+            
+        case UIInterfaceOrientationPortraitUpsideDown:
+            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
+            break;
+            
+        case UIInterfaceOrientationLandscapeLeft:
+            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+            break;
+            
+        case UIInterfaceOrientationLandscapeRight:
+            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+            break;
+            
+        default:
+            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+            break;
+    }
 }
 
 - (AVCaptureVideoOrientation)getVideoOrientation {
     AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationLandscapeLeft;
-//    UIDeviceOrientation cameraOrientation               =   [[UIDevice currentDevice] orientation];
     UIInterfaceOrientation cameraOrientation            =   [[UIApplication sharedApplication] statusBarOrientation];
-    
+
     switch (cameraOrientation) {
         case UIInterfaceOrientationPortrait:
             videoOrientation                            =   AVCaptureVideoOrientationPortrait;
@@ -707,11 +579,6 @@
                                             contents:arrayData
                                           attributes:nil];
     
-//    self.navigationItem.rightBarButtonItem.enabled      =   YES;
-    
-    // Start new Video Session
-//    [self stopVideoSession];
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:@"startVideoSession"
                                                         object:nil
                                                       userInfo:nil];
@@ -753,9 +620,15 @@
 #pragma mark - AVCaptureFileOutputRecordingDelegate -
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL
       fromConnections:(NSArray *)connections {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didStartRecordingToOutputFileAtURL"
-                                                        object:nil
-                                                      userInfo:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didStartRecordingToOutputFileAtURL"
+//                                                        object:nil
+//                                                      userInfo:nil];
+    
+    if (!_timerSeconds)
+        _timerSeconds       =   0;
+    
+    if (!_timer)
+        [self createTimerWithLabel:_timerLabel];
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
@@ -763,6 +636,44 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"didFinishRecordingToOutputFileAtURL"
                                                         object:nil
                                                       userInfo:nil];
+    
+    // START Button taped
+    if (_videoSessionMode == NSTimerVideoSessionModeStream) {
+        _snippetNumber      =   (_snippetNumber == 0) ? 1 : 0;
+        
+        [self stopAudioRecording];
+        [self startStreamVideoRecording];
+        
+        // Delete media snippets_1
+        if (_snippetNumber == 0)
+            [self removeMediaSnippets];
+    }
+    
+    // ATTENTION Button taped
+    else if (_videoSessionMode == NSTimerVideoSessionModeAttention) {
+        // Get first video frame image
+        if (_snippetNumber == 2) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"showMergeAndSaveAlertMessage"
+                                                                object:nil
+                                                              userInfo:nil];
+
+            _snippetNumber              =   0;
+
+            [self stopAudioRecording];
+            
+            NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:_videoFilesNames[2]];
+            NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
+            
+            [self extractFirstFrameFromVideoFilePath:videoFileURL];
+        }
+        
+        else {
+            _snippetNumber              =   2;
+            
+            [self stopAudioRecording];
+            [self startStreamVideoRecording];
+        }
+    }
 }
 
 

@@ -13,4 +13,6 @@
 
 @property (assign, nonatomic) BOOL isLabelFlashing;
 
+- (void)startFlashing;
+
 @end

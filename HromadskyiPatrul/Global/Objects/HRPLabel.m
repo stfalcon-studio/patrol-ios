@@ -21,4 +21,25 @@
     return self;
 }
 
+
+#pragma mark - Methods -
+- (void)startFlashing {
+    if (_isLabelFlashing)
+        return;
+    
+    _isLabelFlashing        =   YES;
+    self.alpha              =   1.f;
+    
+    [UIView animateWithDuration:0.10f
+                          delay:0.f
+                        options:UIViewAnimationOptionCurveEaseInOut |
+                                UIViewAnimationOptionRepeat         |
+                                UIViewAnimationOptionAutoreverse    |
+                                UIViewAnimationOptionAllowUserInteraction
+                     animations:^{
+                         self.alpha     =   0.f;
+                     }
+                     completion:nil];
+}
+
 @end

@@ -49,8 +49,10 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 
 + (HRPCameraManager *)sharedManager;
 
-//- (void)createCaptureSession;
+- (void)createCaptureSession;
+- (void)createVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)videoPreviewLayer;
 - (void)startStreamVideoRecording;
+- (void)startAttentionVideoRecording;
 - (void)stopVideoSession;
 - (void)stopAudioRecording;
 - (void)readAllFolderFile;
@@ -58,8 +60,9 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 - (void)removeAllFolderMediaTempFiles;
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL;
 
-- (void)setVideoPreviewLayerOrientation:(UIView *)view;
+- (void)setVideoPreviewLayerOrientation:(CGSize)newSize;
 - (void)setVideoSessionOrientation;
+- (void)setPreviewLayerVideoOrientation;
 - (void)restartStreamVideoRecording;
 
 // Timer

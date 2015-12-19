@@ -53,7 +53,7 @@
     
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
           andBackgroundColor:BackgroundColorTypeBlack
-                     forTime:5];
+                     forTime:3];
 
     // Create model
     _loginViewModel     =   [[HRPLoginViewModel alloc] init];
