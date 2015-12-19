@@ -29,14 +29,14 @@
 - (void)userLoginParameters:(NSString *)email
                   onSuccess:(void(^)(NSDictionary *successResult))success
                   orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
-    NSString *urlString =   (0) ? @"http://192.168.0.29/app_dev.php/" : @"http://xn--80awkfjh8d.com/";
+    NSString *urlString     =   ([self isServerURLLocal]) ? @"http://192.168.0.29/app_dev.php/" : @"http://patrol.stfalcon.com/";
     
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
                                                                          initWithBaseURL:[NSURL URLWithString:urlString]];
     
     NSString *pathAPI                                               =   @"api/register";
-    
     AFHTTPRequestSerializer *userRequestSerializer                  =   [AFHTTPRequestSerializer serializer];
+    
     [userRequestSerializer setValue:@"application/json" forHTTPHeaderField:@"CONTENT_TYPE"];
     
     [requestOperationDomainManager POST:pathAPI
@@ -49,6 +49,12 @@
                                     if (operation.response.statusCode == 400)
                                         failure(operation);
                                 }];
+}
+
+
+#pragma mark - Methods -
+- (BOOL)isServerURLLocal {
+    return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"isLocalServerURL"] boolValue];
 }
 
 @end

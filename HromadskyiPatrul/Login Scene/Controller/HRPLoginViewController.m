@@ -43,7 +43,6 @@
     CGSize _keyboardSize;
     CGSize _screenSize;
     BOOL _isKeyboardShow;
-    NSInteger countt;
 }
 
 #pragma mark - Constructors -
@@ -52,27 +51,24 @@
     
     [self hideNavigationBar];
     
+    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+          andBackgroundColor:BackgroundColorTypeBlack];
+
     // Create model
-    _loginViewModel                             =   [[HRPLoginViewModel alloc] init];
-    
-    countt                                      =   0;
+    _loginViewModel     =   [[HRPLoginViewModel alloc] init];
     
     // Set Scroll View constraints
     self.contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
     self.contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
     
-    self.versionLabel.text                      =   [NSString stringWithFormat:@"%@ %@ (%@)", NSLocalizedString(@"Version", nil),
-                                                     [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
-                                                     [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]];
-    
     // Set Logo text
-    self.logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
-    self.aboutLabel1.text                       =   NSLocalizedString(@"About text 1", nil);
-    self.aboutLabel2.text                       =   NSLocalizedString(@"About text 2", nil);
-    self.aboutLabel3.text                       =   NSLocalizedString(@"About text 3", nil);
+    _logoLabel.text     =   NSLocalizedString(@"Public patrol", nil);
+    _aboutLabel1.text   =   NSLocalizedString(@"About text 1", nil);
+    _aboutLabel2.text   =   NSLocalizedString(@"About text 2", nil);
+    _aboutLabel3.text   =   NSLocalizedString(@"About text 3", nil);
     
     // Set button title
-    [self.loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
+    [_loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
     
     // Keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -91,38 +87,17 @@
     
     _screenSize     =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
                                    CGRectGetHeight([[UIScreen mainScreen] bounds]));
+    
+    if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
+        _emailTextField.text    =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
+    
+    [self hideLoader];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
     
-    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil) andBackgroundColor:BackgroundColorTypeBlack];
-    
-    if ([_loginViewModel.userApp objectForKey:@"userAppEmail"]) {
-        self.emailTextField.text                =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
-        
-        if (countt == 0) {
-            countt++;
-            
-            [self startSceneTransition];
-        }
-    }
-    
-    else {
-        [UIView animateWithDuration:1.3f
-                         animations:^{
-                             self.versionLabel.alpha                                =   0.f;
-                         } completion:^(BOOL finished) {
-                             [UIView animateWithDuration:0.7f
-                                              animations:^{
-                                                  self.stfalconLogoImageView.alpha  =   1.f;
-                                                  self.madeByLabel.alpha            =   1.f;
-                                              }
-                                              completion:^(BOOL finished) {
-                                                  [self hideLoader];
-                                              }];
-                         }];
-    }
+    [self hideLoader];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -133,13 +108,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
-}
-
 
 #pragma mark - Actions -
 - (IBAction)actionLoginButtonTap:(HRPButton *)sender {
@@ -147,6 +115,8 @@
     if ([self.emailTextField.text isEmail]) {
         // API
         if ([self isInternetConnectionAvailable]) {
+            [sender setUserInteractionEnabled:NO];
+            
             [self showLoaderWithText:NSLocalizedString(@"Authorization", nil)
                   andBackgroundColor:BackgroundColorTypeBlack];
             
@@ -154,19 +124,23 @@
                                       onSuccess:^(NSDictionary *successResult) {
                                           [self. emailTextField resignFirstResponder];
                                           
-                                          // Transition to VideoRecord scene
-                                          [self startSceneTransition];
-                                          
                                           // Set NSUserDefaults item
                                           [_loginViewModel.userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
                                           [_loginViewModel.userApp setObject:successResult[@"id"] forKey:@"userAppID"];
                                           [_loginViewModel.userApp synchronize];
+
+                                          // Transition to VideoRecord scene
+                                          HRPVideoRecordViewController *videoRecordVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+                                          
+                                          [self.navigationController pushViewController:videoRecordVC animated:YES];
+                                          [sender setUserInteractionEnabled:YES];
                                       }
                                       orFailure:^(AFHTTPRequestOperation *failureOperation) {
                                           [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
                                                             andMessage:NSLocalizedString(@"Alert error API message", nil)];
                                           
                                           [self hideLoader];
+                                          [sender setUserInteractionEnabled:YES];
                                       }];
         }
     }
@@ -214,18 +188,6 @@
         [_scrollView setContentOffset:CGPointZero];
 }
 
-- (void)startSceneTransition {
-    // Transition to VideoRecord scene
-    UINavigationController *videoRecordNC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordNC"];
-    
-    [self presentViewController:videoRecordNC
-                       animated:YES
-                     completion:^{
-                         if (self.HUD.alpha)
-                             [self hideLoader];
-                     }];
-}
-
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
@@ -240,7 +202,7 @@
 
 #pragma mark - UITextFieldDelegate -
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self actionLoginButtonTap:self.loginButton];
+    [textField resignFirstResponder];
     
     return  YES;
 }

@@ -8,47 +8,47 @@
 
 /* Begin PBXBuildFile section */
 		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
-		B105625B1B9834490036DC30 /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562551B9834490036DC30 /* 0.png */; };
-		B105625E1B9834490036DC30 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562581B9834490036DC30 /* 3.png */; };
-		B105625F1B9834490036DC30 /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562591B9834490036DC30 /* 4.png */; };
-		B10562601B9834490036DC30 /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = B105625A1B9834490036DC30 /* 5.png */; };
-		B10562631B9836AF0036DC30 /* 6.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562611B9836AF0036DC30 /* 6.png */; };
-		B10562641B9836AF0036DC30 /* 7.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562621B9836AF0036DC30 /* 7.png */; };
-		B10562671B983BFC0036DC30 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562651B983BFC0036DC30 /* 1.png */; };
-		B10562681B983BFC0036DC30 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B10562661B983BFC0036DC30 /* 2.png */; };
-		B12804F61C2542550058BAC8 /* HRPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804F51C2542550058BAC8 /* HRPLoginViewController.m */; };
 		B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
-		B12804FF1C25462C0058BAC8 /* HRPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FE1C25462C0058BAC8 /* HRPNavigationController.m */; };
-		B137A0BD1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */; };
-		B13B0F151B94998100247CF1 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B13B0F141B94998100247CF1 /* Images.xcassets */; };
-		B165C6AB1BD01E2A00508D1D /* HRPVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B165C6AA1BD01E2A00508D1D /* HRPVideoPlayerViewController.m */; };
+		B12805231C25781A0058BAC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
+		B12805261C2578E30058BAC8 /* HRPMainViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805251C2578E30058BAC8 /* HRPMainViewModel.m */; };
+		B12805291C25791D0058BAC8 /* HRPMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805281C25791D0058BAC8 /* HRPMainViewController.m */; };
+		B128052C1C25795C0058BAC8 /* HRPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B128052B1C25795C0058BAC8 /* HRPLoginViewController.m */; };
+		B128052F1C2579B00058BAC8 /* HRPCameraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B128052E1C2579B00058BAC8 /* HRPCameraManager.m */; };
+		B128053A1C257A0F0058BAC8 /* HRPButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805311C257A0F0058BAC8 /* HRPButton.m */; };
+		B128053B1C257A0F0058BAC8 /* HRPImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805331C257A0F0058BAC8 /* HRPImage.m */; };
+		B128053C1C257A0F0058BAC8 /* HRPLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805351C257A0F0058BAC8 /* HRPLocations.m */; };
+		B128053D1C257A0F0058BAC8 /* HRPPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805371C257A0F0058BAC8 /* HRPPhoto.m */; };
+		B128053E1C257A0F0058BAC8 /* HRPPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805391C257A0F0058BAC8 /* HRPPhotoCell.m */; };
+		B12805431C257A370058BAC8 /* UIColor+HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805401C257A370058BAC8 /* UIColor+HexColor.m */; };
+		B12805441C257A370058BAC8 /* UIImage+ChangeOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805421C257A370058BAC8 /* UIImage+ChangeOriginalImage.m */; };
+		B12805491C257A620058BAC8 /* HRPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805461C257A620058BAC8 /* HRPBaseViewController.m */; };
+		B128054A1C257A620058BAC8 /* HRPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805481C257A620058BAC8 /* HRPNavigationController.m */; };
+		B128054D1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B128054B1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld */; };
+		B12805501C257AD40058BAC8 /* HRPSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B128054F1C257AD40058BAC8 /* HRPSettingsViewController.m */; };
+		B12805551C257B240058BAC8 /* HRPPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805521C257B240058BAC8 /* HRPPhotoPreviewViewController.m */; };
+		B12805561C257B240058BAC8 /* HRPVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805541C257B240058BAC8 /* HRPVideoPlayerViewController.m */; };
+		B12805591C257B5A0058BAC8 /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805581C257B5A0058BAC8 /* HRPCollectionViewController.m */; };
+		B12805631C257C120058BAC8 /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055B1C257C120058BAC8 /* 0.png */; };
+		B12805641C257C120058BAC8 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055C1C257C120058BAC8 /* 1.png */; };
+		B12805651C257C120058BAC8 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055D1C257C120058BAC8 /* 2.png */; };
+		B12805661C257C120058BAC8 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055E1C257C120058BAC8 /* 3.png */; };
+		B12805671C257C120058BAC8 /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055F1C257C120058BAC8 /* 4.png */; };
+		B12805681C257C120058BAC8 /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805601C257C120058BAC8 /* 5.png */; };
+		B12805691C257C120058BAC8 /* 6.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805611C257C120058BAC8 /* 6.png */; };
+		B128056A1C257C120058BAC8 /* 7.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805621C257C120058BAC8 /* 7.png */; };
 		B18F75B01B95A3B600143338 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */; };
-		B19C103F1C1C4322007BB9FE /* HRPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C103E1C1C4322007BB9FE /* HRPBaseViewController.m */; };
-		B19C10531C1C4CBC007BB9FE /* HRPMainViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B19C10521C1C4CBC007BB9FE /* HRPMainViewModel.m */; };
 		B1AC89851B879A06009D12D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89841B879A06009D12D6 /* main.m */; };
 		B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */; };
-		B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */; };
-		B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */; };
 		B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
 		B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
 		B1AC89A21B879A07009D12D6 /* HromadskyiPatrulTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */; };
 		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
-		B1AC89BD1B87A27D009D12D6 /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */; };
-		B1AC89C01B87A2A0009D12D6 /* HRPSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */; };
-		B1AC89C41B87A7C5009D12D6 /* HRPButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89C31B87A7C5009D12D6 /* HRPButton.m */; };
-		B1AC89C81B87B03E009D12D6 /* UIColor+HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89C71B87B03E009D12D6 /* UIColor+HexColor.m */; };
-		B1AFA95B1B8E052900FBE416 /* HRPPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA95A1B8E052900FBE416 /* HRPPhotoCell.m */; };
-		B1AFA95E1B8E083000FBE416 /* HRPPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA95D1B8E083000FBE416 /* HRPPhoto.m */; };
-		B1AFA9631B8E12CD00FBE416 /* HRPImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA9621B8E12CD00FBE416 /* HRPImage.m */; };
-		B1AFA9661B8E133700FBE416 /* UIImage+ChangeOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AFA9651B8E133700FBE416 /* UIImage+ChangeOriginalImage.m */; };
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
 		B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController.m */; };
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
 		B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
-		B1EE06C71B8F655B00CD3A03 /* HRPLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = B1EE06C61B8F655B00CD3A03 /* HRPLocations.m */; };
 		B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
-		B1F0072B1C1C7EED00944E74 /* HRPCameraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B1F0072A1C1C7EED00944E74 /* HRPCameraManager.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,43 +65,63 @@
 		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
-		B10562551B9834490036DC30 /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
-		B10562581B9834490036DC30 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
-		B10562591B9834490036DC30 /* 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4.png; sourceTree = "<group>"; };
-		B105625A1B9834490036DC30 /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 5.png; sourceTree = "<group>"; };
-		B10562611B9836AF0036DC30 /* 6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 6.png; sourceTree = "<group>"; };
-		B10562621B9836AF0036DC30 /* 7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 7.png; sourceTree = "<group>"; };
-		B10562651B983BFC0036DC30 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
-		B10562661B983BFC0036DC30 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		B12804F41C2542550058BAC8 /* HRPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HRPLoginViewController.h; path = ../../HRPLoginViewController.h; sourceTree = "<group>"; };
-		B12804F51C2542550058BAC8 /* HRPLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HRPLoginViewController.m; path = ../../HRPLoginViewController.m; sourceTree = "<group>"; };
 		B12804FA1C25432D0058BAC8 /* HRPLoginViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPLoginViewModel.h; sourceTree = "<group>"; };
 		B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPLoginViewModel.m; sourceTree = "<group>"; };
-		B12804FD1C25462C0058BAC8 /* HRPNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPNavigationController.h; sourceTree = "<group>"; };
-		B12804FE1C25462C0058BAC8 /* HRPNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPNavigationController.m; sourceTree = "<group>"; };
-		B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhotoPreviewViewController.h; sourceTree = "<group>"; };
-		B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoPreviewViewController.m; sourceTree = "<group>"; };
-		B13B0F141B94998100247CF1 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B12805221C25781A0058BAC8 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = HromadskyiPatrul/Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
+		B12805241C2578E30058BAC8 /* HRPMainViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPMainViewModel.h; sourceTree = "<group>"; };
+		B12805251C2578E30058BAC8 /* HRPMainViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPMainViewModel.m; sourceTree = "<group>"; };
+		B12805271C25791D0058BAC8 /* HRPMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPMainViewController.h; sourceTree = "<group>"; };
+		B12805281C25791D0058BAC8 /* HRPMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPMainViewController.m; sourceTree = "<group>"; };
+		B128052A1C25795C0058BAC8 /* HRPLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPLoginViewController.h; sourceTree = "<group>"; };
+		B128052B1C25795C0058BAC8 /* HRPLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPLoginViewController.m; sourceTree = "<group>"; };
+		B128052D1C2579B00058BAC8 /* HRPCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCameraManager.h; sourceTree = "<group>"; };
+		B128052E1C2579B00058BAC8 /* HRPCameraManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCameraManager.m; sourceTree = "<group>"; };
+		B12805301C257A0F0058BAC8 /* HRPButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPButton.h; sourceTree = "<group>"; };
+		B12805311C257A0F0058BAC8 /* HRPButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPButton.m; sourceTree = "<group>"; };
+		B12805321C257A0F0058BAC8 /* HRPImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPImage.h; sourceTree = "<group>"; };
+		B12805331C257A0F0058BAC8 /* HRPImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPImage.m; sourceTree = "<group>"; };
+		B12805341C257A0F0058BAC8 /* HRPLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPLocations.h; sourceTree = "<group>"; };
+		B12805351C257A0F0058BAC8 /* HRPLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPLocations.m; sourceTree = "<group>"; };
+		B12805361C257A0F0058BAC8 /* HRPPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhoto.h; sourceTree = "<group>"; };
+		B12805371C257A0F0058BAC8 /* HRPPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhoto.m; sourceTree = "<group>"; };
+		B12805381C257A0F0058BAC8 /* HRPPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhotoCell.h; sourceTree = "<group>"; };
+		B12805391C257A0F0058BAC8 /* HRPPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoCell.m; sourceTree = "<group>"; };
+		B128053F1C257A370058BAC8 /* UIColor+HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColor.h"; sourceTree = "<group>"; };
+		B12805401C257A370058BAC8 /* UIColor+HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColor.m"; sourceTree = "<group>"; };
+		B12805411C257A370058BAC8 /* UIImage+ChangeOriginalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ChangeOriginalImage.h"; sourceTree = "<group>"; };
+		B12805421C257A370058BAC8 /* UIImage+ChangeOriginalImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ChangeOriginalImage.m"; sourceTree = "<group>"; };
+		B12805451C257A620058BAC8 /* HRPBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPBaseViewController.h; sourceTree = "<group>"; };
+		B12805461C257A620058BAC8 /* HRPBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPBaseViewController.m; sourceTree = "<group>"; };
+		B12805471C257A620058BAC8 /* HRPNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPNavigationController.h; sourceTree = "<group>"; };
+		B12805481C257A620058BAC8 /* HRPNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPNavigationController.m; sourceTree = "<group>"; };
+		B128054C1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HromadskyiPatrul.xcdatamodel; sourceTree = "<group>"; };
+		B128054E1C257AD40058BAC8 /* HRPSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPSettingsViewController.h; sourceTree = "<group>"; };
+		B128054F1C257AD40058BAC8 /* HRPSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPSettingsViewController.m; sourceTree = "<group>"; };
+		B12805511C257B240058BAC8 /* HRPPhotoPreviewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhotoPreviewViewController.h; sourceTree = "<group>"; };
+		B12805521C257B240058BAC8 /* HRPPhotoPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoPreviewViewController.m; sourceTree = "<group>"; };
+		B12805531C257B240058BAC8 /* HRPVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoPlayerViewController.h; sourceTree = "<group>"; };
+		B12805541C257B240058BAC8 /* HRPVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPlayerViewController.m; sourceTree = "<group>"; };
+		B12805571C257B5A0058BAC8 /* HRPCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewController.h; sourceTree = "<group>"; };
+		B12805581C257B5A0058BAC8 /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
+		B128055B1C257C120058BAC8 /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
+		B128055C1C257C120058BAC8 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
+		B128055D1C257C120058BAC8 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
+		B128055E1C257C120058BAC8 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
+		B128055F1C257C120058BAC8 /* 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4.png; sourceTree = "<group>"; };
+		B12805601C257C120058BAC8 /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 5.png; sourceTree = "<group>"; };
+		B12805611C257C120058BAC8 /* 6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 6.png; sourceTree = "<group>"; };
+		B12805621C257C120058BAC8 /* 7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 7.png; sourceTree = "<group>"; };
 		B13B0F161B94B33700247CF1 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
-		B165C6A91BD01E2A00508D1D /* HRPVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoPlayerViewController.h; sourceTree = "<group>"; };
-		B165C6AA1BD01E2A00508D1D /* HRPVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPlayerViewController.m; sourceTree = "<group>"; };
 		B1669E1C1BD657C500C4156D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		B19C103D1C1C4322007BB9FE /* HRPBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPBaseViewController.h; sourceTree = "<group>"; };
-		B19C103E1C1C4322007BB9FE /* HRPBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPBaseViewController.m; sourceTree = "<group>"; };
-		B19C10511C1C4CBC007BB9FE /* HRPMainViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPMainViewModel.h; sourceTree = "<group>"; };
-		B19C10521C1C4CBC007BB9FE /* HRPMainViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPMainViewModel.m; sourceTree = "<group>"; };
 		B1AC897F1B879A06009D12D6 /* HromadskyiPatrul.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HromadskyiPatrul.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1AC89831B879A06009D12D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AC89841B879A06009D12D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B1AC89861B879A06009D12D6 /* HRPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HRPAppDelegate.h; sourceTree = "<group>"; };
 		B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HRPAppDelegate.m; sourceTree = "<group>"; };
-		B1AC898A1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HromadskyiPatrul.xcdatamodel; sourceTree = "<group>"; };
-		B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HRPMainViewController.h; sourceTree = "<group>"; };
-		B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HRPMainViewController.m; sourceTree = "<group>"; };
 		B1AC89901B879A07009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B1AC89951B879A07009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		B1AC899B1B879A07009D12D6 /* HromadskyiPatrulTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HromadskyiPatrulTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,33 +132,13 @@
 		B1AC89B41B879C91009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B51B879CE3009D12D6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B61B879CEC009D12D6 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
-		B1AC89BB1B87A27D009D12D6 /* HRPCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewController.h; sourceTree = "<group>"; };
-		B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
-		B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPSettingsViewController.h; sourceTree = "<group>"; };
-		B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPSettingsViewController.m; sourceTree = "<group>"; };
-		B1AC89C21B87A7C5009D12D6 /* HRPButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPButton.h; sourceTree = "<group>"; };
-		B1AC89C31B87A7C5009D12D6 /* HRPButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPButton.m; sourceTree = "<group>"; };
-		B1AC89C61B87B03E009D12D6 /* UIColor+HexColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+HexColor.h"; sourceTree = "<group>"; };
-		B1AC89C71B87B03E009D12D6 /* UIColor+HexColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+HexColor.m"; sourceTree = "<group>"; };
-		B1AFA9591B8E052900FBE416 /* HRPPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhotoCell.h; sourceTree = "<group>"; };
-		B1AFA95A1B8E052900FBE416 /* HRPPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoCell.m; sourceTree = "<group>"; };
-		B1AFA95C1B8E083000FBE416 /* HRPPhoto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPPhoto.h; sourceTree = "<group>"; };
-		B1AFA95D1B8E083000FBE416 /* HRPPhoto.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhoto.m; sourceTree = "<group>"; };
-		B1AFA9611B8E12CD00FBE416 /* HRPImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPImage.h; sourceTree = "<group>"; };
-		B1AFA9621B8E12CD00FBE416 /* HRPImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPImage.m; sourceTree = "<group>"; };
-		B1AFA9641B8E133700FBE416 /* UIImage+ChangeOriginalImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ChangeOriginalImage.h"; sourceTree = "<group>"; };
-		B1AFA9651B8E133700FBE416 /* UIImage+ChangeOriginalImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ChangeOriginalImage.m"; sourceTree = "<group>"; };
 		B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewController.h; sourceTree = "<group>"; };
 		B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewController.m; sourceTree = "<group>"; };
 		B1C07F031C21DD98002868F9 /* HRPVideoRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordView.h; sourceTree = "<group>"; };
 		B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordView.m; sourceTree = "<group>"; };
 		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
-		B1EE06C51B8F655B00CD3A03 /* HRPLocations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPLocations.h; sourceTree = "<group>"; };
-		B1EE06C61B8F655B00CD3A03 /* HRPLocations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPLocations.m; sourceTree = "<group>"; };
 		B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
-		B1F007291C1C7EED00944E74 /* HRPCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCameraManager.h; sourceTree = "<group>"; };
-		B1F0072A1C1C7EED00944E74 /* HRPCameraManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCameraManager.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,21 +190,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		B10562481B9833410036DC30 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				B10562551B9834490036DC30 /* 0.png */,
-				B10562651B983BFC0036DC30 /* 1.png */,
-				B10562661B983BFC0036DC30 /* 2.png */,
-				B10562581B9834490036DC30 /* 3.png */,
-				B10562591B9834490036DC30 /* 4.png */,
-				B105625A1B9834490036DC30 /* 5.png */,
-				B10562611B9836AF0036DC30 /* 6.png */,
-				B10562621B9836AF0036DC30 /* 7.png */,
-			);
-			name = Images;
-			sourceTree = "<group>";
-		};
 		B12804F71C25425B0058BAC8 /* Login Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -217,8 +202,8 @@
 		B12804F81C2542900058BAC8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B12804F41C2542550058BAC8 /* HRPLoginViewController.h */,
-				B12804F51C2542550058BAC8 /* HRPLoginViewController.m */,
+				B128052A1C25795C0058BAC8 /* HRPLoginViewController.h */,
+				B128052B1C25795C0058BAC8 /* HRPLoginViewController.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -230,6 +215,32 @@
 				B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B12805101C2576AA0058BAC8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				B128055A1C257BF50058BAC8 /* Images */,
+				B12805221C25781A0058BAC8 /* Images.xcassets */,
+				B1AC898F1B879A07009D12D6 /* Main.storyboard */,
+				B1AC89941B879A07009D12D6 /* LaunchScreen.xib */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		B128055A1C257BF50058BAC8 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				B128055B1C257C120058BAC8 /* 0.png */,
+				B128055C1C257C120058BAC8 /* 1.png */,
+				B128055D1C257C120058BAC8 /* 2.png */,
+				B128055E1C257C120058BAC8 /* 3.png */,
+				B128055F1C257C120058BAC8 /* 4.png */,
+				B12805601C257C120058BAC8 /* 5.png */,
+				B12805611C257C120058BAC8 /* 6.png */,
+				B12805621C257C120058BAC8 /* 7.png */,
+			);
+			path = Images;
 			sourceTree = "<group>";
 		};
 		B19C10361C1C41BF007BB9FE /* Record Video Scene  */ = {
@@ -257,7 +268,7 @@
 				B19C104C1C1C4BEA007BB9FE /* Model */,
 				B19C104A1C1C4BE5007BB9FE /* Controller */,
 			);
-			name = "Main Scene";
+			path = "Main Scene";
 			sourceTree = "<group>";
 		};
 		B19C10411C1C4B51007BB9FE /* Media Collection Scene */ = {
@@ -266,7 +277,7 @@
 				B19C10481C1C4BA6007BB9FE /* Model */,
 				B19C10461C1C4B9F007BB9FE /* Controller */,
 			);
-			name = "Media Collection Scene";
+			path = "Media Collection Scene";
 			sourceTree = "<group>";
 		};
 		B19C10421C1C4B6C007BB9FE /* Media Preview Scene */ = {
@@ -275,70 +286,70 @@
 				B19C10441C1C4B7C007BB9FE /* Model */,
 				B19C10451C1C4B82007BB9FE /* Controller */,
 			);
-			name = "Media Preview Scene";
+			path = "Media Preview Scene";
 			sourceTree = "<group>";
 		};
 		B19C10441C1C4B7C007BB9FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B19C10451C1C4B82007BB9FE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B137A0BB1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.h */,
-				B137A0BC1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m */,
-				B165C6A91BD01E2A00508D1D /* HRPVideoPlayerViewController.h */,
-				B165C6AA1BD01E2A00508D1D /* HRPVideoPlayerViewController.m */,
+				B12805511C257B240058BAC8 /* HRPPhotoPreviewViewController.h */,
+				B12805521C257B240058BAC8 /* HRPPhotoPreviewViewController.m */,
+				B12805531C257B240058BAC8 /* HRPVideoPlayerViewController.h */,
+				B12805541C257B240058BAC8 /* HRPVideoPlayerViewController.m */,
 			);
-			name = Controller;
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		B19C10461C1C4B9F007BB9FE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC89BB1B87A27D009D12D6 /* HRPCollectionViewController.h */,
-				B1AC89BC1B87A27D009D12D6 /* HRPCollectionViewController.m */,
+				B12805571C257B5A0058BAC8 /* HRPCollectionViewController.h */,
+				B12805581C257B5A0058BAC8 /* HRPCollectionViewController.m */,
 			);
-			name = Controller;
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		B19C10481C1C4BA6007BB9FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B19C10491C1C4BC8007BB9FE /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				B19C103D1C1C4322007BB9FE /* HRPBaseViewController.h */,
-				B19C103E1C1C4322007BB9FE /* HRPBaseViewController.m */,
-				B12804FD1C25462C0058BAC8 /* HRPNavigationController.h */,
-				B12804FE1C25462C0058BAC8 /* HRPNavigationController.m */,
+				B12805451C257A620058BAC8 /* HRPBaseViewController.h */,
+				B12805461C257A620058BAC8 /* HRPBaseViewController.m */,
+				B12805471C257A620058BAC8 /* HRPNavigationController.h */,
+				B12805481C257A620058BAC8 /* HRPNavigationController.m */,
 			);
-			name = "View Controllers";
+			path = "View Controllers";
 			sourceTree = "<group>";
 		};
 		B19C104A1C1C4BE5007BB9FE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC898C1B879A07009D12D6 /* HRPMainViewController.h */,
-				B1AC898D1B879A07009D12D6 /* HRPMainViewController.m */,
+				B12805271C25791D0058BAC8 /* HRPMainViewController.h */,
+				B12805281C25791D0058BAC8 /* HRPMainViewController.m */,
 			);
-			name = Controller;
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		B19C104C1C1C4BEA007BB9FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B19C10511C1C4CBC007BB9FE /* HRPMainViewModel.h */,
-				B19C10521C1C4CBC007BB9FE /* HRPMainViewModel.m */,
+				B12805241C2578E30058BAC8 /* HRPMainViewModel.h */,
+				B12805251C2578E30058BAC8 /* HRPMainViewModel.m */,
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B19C104D1C1C4C49007BB9FE /* Settings Scene */ = {
@@ -347,23 +358,23 @@
 				B19C10501C1C4C59007BB9FE /* Model */,
 				B19C104E1C1C4C54007BB9FE /* Controller */,
 			);
-			name = "Settings Scene";
+			path = "Settings Scene";
 			sourceTree = "<group>";
 		};
 		B19C104E1C1C4C54007BB9FE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC89BE1B87A2A0009D12D6 /* HRPSettingsViewController.h */,
-				B1AC89BF1B87A2A0009D12D6 /* HRPSettingsViewController.m */,
+				B128054E1C257AD40058BAC8 /* HRPSettingsViewController.h */,
+				B128054F1C257AD40058BAC8 /* HRPSettingsViewController.m */,
 			);
-			name = Controller;
+			path = Controller;
 			sourceTree = "<group>";
 		};
 		B19C10501C1C4C59007BB9FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
 			);
-			name = Model;
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B1AC89761B879A06009D12D6 = {
@@ -400,7 +411,7 @@
 				B19C10411C1C4B51007BB9FE /* Media Collection Scene */,
 				B19C10421C1C4B6C007BB9FE /* Media Preview Scene */,
 				B19C104D1C1C4C49007BB9FE /* Settings Scene */,
-				B1AC89B81B87A019009D12D6 /* Resources */,
+				B12805101C2576AA0058BAC8 /* Resources */,
 				B1AC89821B879A06009D12D6 /* Supporting Files */,
 			);
 			path = HromadskyiPatrul;
@@ -436,59 +447,48 @@
 		B1AC89B71B87A002009D12D6 /* Core Data */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */,
+				B128054B1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld */,
 			);
-			name = "Core Data";
-			sourceTree = "<group>";
-		};
-		B1AC89B81B87A019009D12D6 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				B10562481B9833410036DC30 /* Images */,
-				B1AC898F1B879A07009D12D6 /* Main.storyboard */,
-				B1AC89941B879A07009D12D6 /* LaunchScreen.xib */,
-				B13B0F141B94998100247CF1 /* Images.xcassets */,
-			);
-			name = Resources;
+			path = "Core Data";
 			sourceTree = "<group>";
 		};
 		B1AC89BA1B87A256009D12D6 /* Global */ = {
 			isa = PBXGroup;
 			children = (
 				B1F007281C1C7E9F00944E74 /* Singletons */,
-				B1AC89C11B87A79E009D12D6 /* Custom Classes */,
+				B1AC89C11B87A79E009D12D6 /* Objects */,
 				B1AC89C51B87AFDA009D12D6 /* Categories */,
 				B19C10491C1C4BC8007BB9FE /* View Controllers */,
 			);
-			name = Global;
+			path = Global;
 			sourceTree = "<group>";
 		};
-		B1AC89C11B87A79E009D12D6 /* Custom Classes */ = {
+		B1AC89C11B87A79E009D12D6 /* Objects */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC89C21B87A7C5009D12D6 /* HRPButton.h */,
-				B1AC89C31B87A7C5009D12D6 /* HRPButton.m */,
-				B1AFA9591B8E052900FBE416 /* HRPPhotoCell.h */,
-				B1AFA95A1B8E052900FBE416 /* HRPPhotoCell.m */,
-				B1AFA95C1B8E083000FBE416 /* HRPPhoto.h */,
-				B1AFA95D1B8E083000FBE416 /* HRPPhoto.m */,
-				B1AFA9611B8E12CD00FBE416 /* HRPImage.h */,
-				B1AFA9621B8E12CD00FBE416 /* HRPImage.m */,
-				B1EE06C51B8F655B00CD3A03 /* HRPLocations.h */,
-				B1EE06C61B8F655B00CD3A03 /* HRPLocations.m */,
+				B12805301C257A0F0058BAC8 /* HRPButton.h */,
+				B12805311C257A0F0058BAC8 /* HRPButton.m */,
+				B12805321C257A0F0058BAC8 /* HRPImage.h */,
+				B12805331C257A0F0058BAC8 /* HRPImage.m */,
+				B12805341C257A0F0058BAC8 /* HRPLocations.h */,
+				B12805351C257A0F0058BAC8 /* HRPLocations.m */,
+				B12805361C257A0F0058BAC8 /* HRPPhoto.h */,
+				B12805371C257A0F0058BAC8 /* HRPPhoto.m */,
+				B12805381C257A0F0058BAC8 /* HRPPhotoCell.h */,
+				B12805391C257A0F0058BAC8 /* HRPPhotoCell.m */,
 			);
-			name = "Custom Classes";
+			path = Objects;
 			sourceTree = "<group>";
 		};
 		B1AC89C51B87AFDA009D12D6 /* Categories */ = {
 			isa = PBXGroup;
 			children = (
-				B1AC89C61B87B03E009D12D6 /* UIColor+HexColor.h */,
-				B1AC89C71B87B03E009D12D6 /* UIColor+HexColor.m */,
-				B1AFA9641B8E133700FBE416 /* UIImage+ChangeOriginalImage.h */,
-				B1AFA9651B8E133700FBE416 /* UIImage+ChangeOriginalImage.m */,
+				B128053F1C257A370058BAC8 /* UIColor+HexColor.h */,
+				B12805401C257A370058BAC8 /* UIColor+HexColor.m */,
+				B12805411C257A370058BAC8 /* UIImage+ChangeOriginalImage.h */,
+				B12805421C257A370058BAC8 /* UIImage+ChangeOriginalImage.m */,
 			);
-			name = Categories;
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		B1C07EFF1C21DC4F002868F9 /* View */ = {
@@ -503,10 +503,10 @@
 		B1F007281C1C7E9F00944E74 /* Singletons */ = {
 			isa = PBXGroup;
 			children = (
-				B1F007291C1C7EED00944E74 /* HRPCameraManager.h */,
-				B1F0072A1C1C7EED00944E74 /* HRPCameraManager.m */,
+				B128052D1C2579B00058BAC8 /* HRPCameraManager.h */,
+				B128052E1C2579B00058BAC8 /* HRPCameraManager.m */,
 			);
-			name = Singletons;
+			path = Singletons;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -596,19 +596,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B10562681B983BFC0036DC30 /* 2.png in Resources */,
-				B10562601B9834490036DC30 /* 5.png in Resources */,
-				B10562641B9836AF0036DC30 /* 7.png in Resources */,
-				B105625B1B9834490036DC30 /* 0.png in Resources */,
+				B12805681C257C120058BAC8 /* 5.png in Resources */,
+				B128056A1C257C120058BAC8 /* 7.png in Resources */,
+				B12805631C257C120058BAC8 /* 0.png in Resources */,
+				B12805231C25781A0058BAC8 /* Images.xcassets in Resources */,
+				B12805651C257C120058BAC8 /* 2.png in Resources */,
+				B12805661C257C120058BAC8 /* 3.png in Resources */,
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
-				B105625E1B9834490036DC30 /* 3.png in Resources */,
+				B12805691C257C120058BAC8 /* 6.png in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
-				B10562631B9836AF0036DC30 /* 6.png in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
-				B13B0F151B94998100247CF1 /* Images.xcassets in Resources */,
-				B10562671B983BFC0036DC30 /* 1.png in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
-				B105625F1B9834490036DC30 /* 4.png in Resources */,
+				B12805671C257C120058BAC8 /* 4.png in Resources */,
+				B12805641C257C120058BAC8 /* 1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,29 +687,29 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B12804F61C2542550058BAC8 /* HRPLoginViewController.m in Sources */,
 				B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */,
-				B1AC89C01B87A2A0009D12D6 /* HRPSettingsViewController.m in Sources */,
-				B1AC89C81B87B03E009D12D6 /* UIColor+HexColor.m in Sources */,
-				B12804FF1C25462C0058BAC8 /* HRPNavigationController.m in Sources */,
+				B128052C1C25795C0058BAC8 /* HRPLoginViewController.m in Sources */,
+				B12805441C257A370058BAC8 /* UIImage+ChangeOriginalImage.m in Sources */,
+				B12805561C257B240058BAC8 /* HRPVideoPlayerViewController.m in Sources */,
+				B128054A1C257A620058BAC8 /* HRPNavigationController.m in Sources */,
+				B12805261C2578E30058BAC8 /* HRPMainViewModel.m in Sources */,
+				B12805551C257B240058BAC8 /* HRPPhotoPreviewViewController.m in Sources */,
+				B12805591C257B5A0058BAC8 /* HRPCollectionViewController.m in Sources */,
 				B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController.m in Sources */,
-				B1AFA9661B8E133700FBE416 /* UIImage+ChangeOriginalImage.m in Sources */,
-				B19C10531C1C4CBC007BB9FE /* HRPMainViewModel.m in Sources */,
+				B128053C1C257A0F0058BAC8 /* HRPLocations.m in Sources */,
+				B128053E1C257A0F0058BAC8 /* HRPPhotoCell.m in Sources */,
 				B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */,
+				B128053A1C257A0F0058BAC8 /* HRPButton.m in Sources */,
+				B12805491C257A620058BAC8 /* HRPBaseViewController.m in Sources */,
 				B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */,
-				B1AFA95E1B8E083000FBE416 /* HRPPhoto.m in Sources */,
-				B137A0BD1B90DFFD00E60A17 /* HRPPhotoPreviewViewController.m in Sources */,
-				B165C6AB1BD01E2A00508D1D /* HRPVideoPlayerViewController.m in Sources */,
+				B12805501C257AD40058BAC8 /* HRPSettingsViewController.m in Sources */,
+				B12805291C25791D0058BAC8 /* HRPMainViewController.m in Sources */,
 				B1AC89851B879A06009D12D6 /* main.m in Sources */,
-				B1AC898E1B879A07009D12D6 /* HRPMainViewController.m in Sources */,
-				B19C103F1C1C4322007BB9FE /* HRPBaseViewController.m in Sources */,
-				B1EE06C71B8F655B00CD3A03 /* HRPLocations.m in Sources */,
-				B1AC898B1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodeld in Sources */,
-				B1AC89C41B87A7C5009D12D6 /* HRPButton.m in Sources */,
-				B1AFA95B1B8E052900FBE416 /* HRPPhotoCell.m in Sources */,
-				B1AFA9631B8E12CD00FBE416 /* HRPImage.m in Sources */,
-				B1AC89BD1B87A27D009D12D6 /* HRPCollectionViewController.m in Sources */,
-				B1F0072B1C1C7EED00944E74 /* HRPCameraManager.m in Sources */,
+				B128052F1C2579B00058BAC8 /* HRPCameraManager.m in Sources */,
+				B12805431C257A370058BAC8 /* UIColor+HexColor.m in Sources */,
+				B128053B1C257A0F0058BAC8 /* HRPImage.m in Sources */,
+				B128054D1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld in Sources */,
+				B128053D1C257A0F0058BAC8 /* HRPPhoto.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -738,6 +738,7 @@
 				B1AC89901B879A07009D12D6 /* Base */,
 			);
 			name = Main.storyboard;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		B1AC89941B879A07009D12D6 /* LaunchScreen.xib */ = {
@@ -746,6 +747,7 @@
 				B1AC89951B879A07009D12D6 /* Base */,
 			);
 			name = LaunchScreen.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		B1AC89B31B879C8B009D12D6 /* Localizable.strings */ = {
@@ -939,12 +941,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		B1AC89891B879A06009D12D6 /* HromadskyiPatrul.xcdatamodeld */ = {
+		B128054B1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				B1AC898A1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodel */,
+				B128054C1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodel */,
 			);
-			currentVersion = B1AC898A1B879A07009D12D6 /* HromadskyiPatrul.xcdatamodel */;
+			currentVersion = B128054C1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodel */;
 			path = HromadskyiPatrul.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
