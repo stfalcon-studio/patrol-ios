@@ -56,7 +56,9 @@
 
     [self customizeNavigationBarWithTitle:NSLocalizedString(@"Record a Video", nil)
                     andLeftBarButtonImage:[UIImage new]
-                   andRightBarButtonImage:[UIImage imageNamed:@"icon-action-close"]];
+                        withActionEnabled:NO
+                   andRightBarButtonImage:[UIImage imageNamed:@"icon-action-close"]
+                        withActionEnabled:YES];
     
     _cameraManager                      =   [HRPCameraManager sharedManager];
     [_cameraManager createCaptureSession];
@@ -66,7 +68,7 @@
     
     [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [_cameraManager.videoPreviewLayer setFrame:self.view.layer.bounds];
-    [_cameraManager setPreviewLayerVideoOrientation];
+    [_cameraManager setPreviewLayerVideoOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
     
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlLabel.layer];
     
@@ -162,6 +164,34 @@
     return UIInterfaceOrientationMaskAll;
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
+    switch (orientation) {
+        case UIInterfaceOrientationPortrait:
+            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+            break;
+        
+        case UIInterfaceOrientationPortraitUpsideDown:
+            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
+            break;
+       
+        case UIInterfaceOrientationLandscapeLeft:
+            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+            break;
+        
+        case UIInterfaceOrientationLandscapeRight:
+            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+            break;
+            
+        default:
+            
+            break;
+    }
+}
+
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     // Restart Timer only in Stream Video mode
@@ -170,7 +200,10 @@
               andBackgroundColor:BackgroundColorTypeBlue
                          forTime:2];
 
-        [_cameraManager setPreviewLayerVideoOrientation];
+//        [_cameraManager setPreviewLayerVideoOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+        
+        _cameraManager.videoPreviewLayer.frame  =   CGRectMake(0.f, 0.f, size.width, size.height);
+        
         
         [_cameraManager.timer invalidate];
         

@@ -39,6 +39,7 @@
 		B12805701C2582950058BAC8 /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */; };
 		B12805731C258B6A0058BAC8 /* HRPVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */; };
 		B12805761C2591F60058BAC8 /* HRPLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805751C2591F60058BAC8 /* HRPLabel.m */; };
+		B128059F1C25FC9D0058BAC8 /* HRPCollectionViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B128059E1C25FC9D0058BAC8 /* HRPCollectionViewModel.m */; };
 		B18F75B01B95A3B600143338 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */; };
 		B1AC89851B879A06009D12D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89841B879A06009D12D6 /* main.m */; };
 		B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */; };
@@ -123,6 +124,8 @@
 		B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewController.m; sourceTree = "<group>"; };
 		B12805741C2591F60058BAC8 /* HRPLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPLabel.h; sourceTree = "<group>"; };
 		B12805751C2591F60058BAC8 /* HRPLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPLabel.m; sourceTree = "<group>"; };
+		B128059D1C25FC9D0058BAC8 /* HRPCollectionViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewModel.h; sourceTree = "<group>"; };
+		B128059E1C25FC9D0058BAC8 /* HRPCollectionViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewModel.m; sourceTree = "<group>"; };
 		B13B0F161B94B33700247CF1 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		B1669E1C1BD657C500C4156D /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -330,6 +333,8 @@
 		B19C10481C1C4BA6007BB9FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B128059D1C25FC9D0058BAC8 /* HRPCollectionViewModel.h */,
+				B128059E1C25FC9D0058BAC8 /* HRPCollectionViewModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -708,6 +713,7 @@
 				B12805561C257B240058BAC8 /* HRPVideoPlayerViewController.m in Sources */,
 				B128054A1C257A620058BAC8 /* HRPNavigationController.m in Sources */,
 				B12805261C2578E30058BAC8 /* HRPMainViewModel.m in Sources */,
+				B128059F1C25FC9D0058BAC8 /* HRPCollectionViewModel.m in Sources */,
 				B12805551C257B240058BAC8 /* HRPPhotoPreviewViewController.m in Sources */,
 				B12805591C257B5A0058BAC8 /* HRPCollectionViewController.m in Sources */,
 				B12805701C2582950058BAC8 /* UIViewController+NavigationBar.m in Sources */,

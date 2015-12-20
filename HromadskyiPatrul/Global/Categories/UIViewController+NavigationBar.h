@@ -15,11 +15,21 @@
 
 - (void)customizeNavigationBarWithTitle:(NSString *)title
                   andLeftBarButtonImage:(UIImage *)imageLeftBarButton
-                 andRightBarButtonImage:(UIImage *)imageRightBarButton;
+                      withActionEnabled:(BOOL)leftButtonEnabled
+                 andRightBarButtonImage:(UIImage *)imageRightBarButton
+                      withActionEnabled:(BOOL)rightButtonEnabled;
 
 - (void)customizeNavigationBarWithTitle:(NSString *)title
                   andLeftBarButtonImage:(UIImage *)imageLeftBarButton
-                  andRightBarButtonText:(NSString *)textRightBarButton;
+                      withActionEnabled:(BOOL)leftButtonEnabled
+                  andRightBarButtonText:(NSString *)textRightBarButton
+                      withActionEnabled:(BOOL)rightButtonEnabled;
+
+- (void)customizeNavigationBarWithTitle:(NSString *)title
+                   andLeftBarButtonText:(NSString *)textLeftBarButton
+                      withActionEnabled:(BOOL)leftButtonEnabled
+                 andRightBarButtonImage:(UIImage *)imageRightBarButton
+                      withActionEnabled:(BOOL)rightButtonEnabled;
 
 - (void)handlerLeftBarButtonTap:(UIBarButtonItem *)sender;
 - (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender;

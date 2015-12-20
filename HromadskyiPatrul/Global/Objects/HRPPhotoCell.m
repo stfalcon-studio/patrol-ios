@@ -10,7 +10,9 @@
 #import "UIColor+HexColor.h"
 
 
-@implementation HRPPhotoCell
+@implementation HRPPhotoCell {
+    unsigned int _sleepDuration;
+}
 
 #pragma mark - Actions -
 - (IBAction)actionPhotoStateButtonTap:(UIButton *)sender {
@@ -21,8 +23,9 @@
 
 
 #pragma mark - Methods -
-- (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType {
+- (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration {
     NSString *colorString   =   nil;
+    _sleepDuration          =   duration;
     
     switch (colorType) {
         case CellBackgroundColorTypeBlue:
@@ -49,7 +52,7 @@
 
 - (void)sleepTask {
     // Do something usefull in here instead of sleeping ...
-    sleep(300);
+    sleep(_sleepDuration);
 }
 
 @end

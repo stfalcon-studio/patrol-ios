@@ -212,7 +212,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B1W-PM-jbV" userLabel="Photos Collection View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="xfD-Ca-Wh2">
                                     <size key="itemSize" width="158" height="158"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -257,15 +257,6 @@
                                                         <constraint firstAttribute="height" constant="44" id="W8R-Mf-Pjw"/>
                                                     </constraints>
                                                 </imageView>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="hHO-x7-JQv">
-                                                    <rect key="frame" x="64" y="64" width="30" height="30"/>
-                                                    <color key="tintColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="30" id="6dB-uF-and"/>
-                                                        <constraint firstAttribute="height" constant="30" id="piD-cO-e7M"/>
-                                                    </constraints>
-                                                    <color key="color" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -273,10 +264,8 @@
                                             <constraint firstItem="g2J-pk-qCv" firstAttribute="top" secondItem="rXR-mn-0lx" secondAttribute="top" id="6YN-kq-hNg"/>
                                             <constraint firstAttribute="trailing" secondItem="OaA-9P-2qT" secondAttribute="trailing" id="7DJ-YL-G7D"/>
                                             <constraint firstAttribute="bottom" secondItem="g2J-pk-qCv" secondAttribute="bottom" id="9kR-dH-Bhj"/>
-                                            <constraint firstAttribute="centerY" secondItem="hHO-x7-JQv" secondAttribute="centerY" id="G5Q-5q-8ja"/>
                                             <constraint firstAttribute="centerX" secondItem="DEh-uv-RHa" secondAttribute="centerX" id="LuO-jo-AMW"/>
                                             <constraint firstItem="g2J-pk-qCv" firstAttribute="leading" secondItem="rXR-mn-0lx" secondAttribute="leading" id="Rcb-vc-Lgg"/>
-                                            <constraint firstAttribute="centerX" secondItem="hHO-x7-JQv" secondAttribute="centerX" id="Wc1-Dd-tUy"/>
                                             <constraint firstAttribute="centerY" secondItem="DEh-uv-RHa" secondAttribute="centerY" id="YsS-4b-MOI"/>
                                             <constraint firstAttribute="bottom" secondItem="OaA-9P-2qT" secondAttribute="bottom" id="lAN-mP-ehX"/>
                                             <constraint firstAttribute="bottom" secondItem="Y8d-oq-ydh" secondAttribute="bottom" id="pVm-GV-pKc"/>
@@ -285,7 +274,6 @@
                                         </constraints>
                                         <size key="customSize" width="158" height="158"/>
                                         <connections>
-                                            <outlet property="activityIndicator" destination="hHO-x7-JQv" id="8wW-Ru-6Mn"/>
                                             <outlet property="photoImageView" destination="g2J-pk-qCv" id="GoT-4o-wb4"/>
                                             <outlet property="photoStateButton" destination="Y8d-oq-ydh" id="TvZ-NL-m75"/>
                                             <outlet property="playVideoImageView" destination="DEh-uv-RHa" id="UsP-Tm-aRe"/>
@@ -297,6 +285,13 @@
                                     <outlet property="delegate" destination="aAn-fy-MeC" id="WNd-cS-JRl"/>
                                 </connections>
                             </collectionView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-video" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-f2-VNU" userLabel="Camera Image View">
+                                <rect key="frame" x="260" y="507" width="20" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="7Ym-sc-S1p"/>
+                                    <constraint firstAttribute="height" constant="22" id="y9l-Yb-yl5"/>
+                                </constraints>
+                            </imageView>
                             <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oC-zk-fjR" userLabel="Camera Button" customClass="HRPButton">
                                 <rect key="frame" x="245" y="493" width="50" height="50"/>
                                 <constraints>
@@ -318,33 +313,16 @@
                                     <action selector="actionCameraButtonTap:" destination="aAn-fy-MeC" eventType="touchUpInside" id="h3y-3S-H1x"/>
                                 </connections>
                             </button>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-video" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-f2-VNU" userLabel="Camera Image View">
-                                <rect key="frame" x="260" y="507" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="7Ym-sc-S1p"/>
-                                    <constraint firstAttribute="height" constant="22" id="y9l-Yb-yl5"/>
-                                </constraints>
-                            </imageView>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="HoH-VM-nVs">
-                                <rect key="frame" x="135" y="291" width="50" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="50" id="EzU-dd-Iew"/>
-                                    <constraint firstAttribute="height" constant="50" id="hKj-kn-S4Z"/>
-                                </constraints>
-                                <color key="color" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
-                            </activityIndicatorView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="B1W-PM-jbV" firstAttribute="leading" secondItem="3GM-sC-wFF" secondAttribute="leading" id="Idn-1T-TWm"/>
                             <constraint firstAttribute="trailing" secondItem="5oC-zk-fjR" secondAttribute="trailing" constant="25" id="OZg-41-ywC"/>
                             <constraint firstItem="B4b-m9-uhb" firstAttribute="top" secondItem="5oC-zk-fjR" secondAttribute="bottom" constant="25" id="TG1-kU-ryj"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerY" secondItem="5oC-zk-fjR" secondAttribute="centerY" id="c3t-Pd-2ck"/>
                             <constraint firstAttribute="bottom" secondItem="B1W-PM-jbV" secondAttribute="bottom" id="f7S-W7-57h"/>
-                            <constraint firstAttribute="centerX" secondItem="HoH-VM-nVs" secondAttribute="centerX" id="fC5-vl-ZNf"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerX" secondItem="5oC-zk-fjR" secondAttribute="centerX" id="g1S-cf-rAX"/>
                             <constraint firstItem="B1W-PM-jbV" firstAttribute="top" secondItem="3GM-sC-wFF" secondAttribute="top" id="kce-MC-Qe1"/>
-                            <constraint firstAttribute="centerY" secondItem="HoH-VM-nVs" secondAttribute="centerY" constant="-32" id="vUU-AN-7eD"/>
                             <constraint firstAttribute="trailing" secondItem="B1W-PM-jbV" secondAttribute="trailing" id="yIz-sj-qgR"/>
                         </constraints>
                     </view>
@@ -352,16 +330,12 @@
                         <barButtonItem key="leftBarButtonItem" title="User name" id="GMb-0b-1A0" userLabel="User Name Bar Button"/>
                         <barButtonItem key="rightBarButtonItem" image="icon-settings" id="xff-By-TBQ" userLabel="Settings Bar Button">
                             <color key="tintColor" red="0.0" green="0.3411764705882353" blue="0.60784313725490191" alpha="1" colorSpace="calibratedRGB"/>
-                            <connections>
-                                <segue destination="JJw-Ua-K2j" kind="push" identifier="SettingsTVCSegue" id="tRg-mE-Dob"/>
-                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="cameraButton" destination="5oC-zk-fjR" id="9k1-Fr-lsp"/>
                         <outlet property="photosCollectionView" destination="B1W-PM-jbV" id="R9u-XL-KnP"/>
-                        <outlet property="uploadActivityIndicator" destination="HoH-VM-nVs" id="Tcn-WN-190"/>
                         <outlet property="userNameBarButton" destination="GMb-0b-1A0" id="tjh-vp-55r"/>
                     </connections>
                 </viewController>

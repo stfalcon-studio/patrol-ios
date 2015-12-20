@@ -283,11 +283,11 @@
 //        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
 }
 
-- (void)setPreviewLayerVideoOrientation {
-    UIInterfaceOrientation cameraOrientation            =   [[UIApplication sharedApplication] statusBarOrientation];
+- (void)setPreviewLayerVideoOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    //UIInterfaceOrientation cameraOrientation            =   [[UIApplication sharedApplication] statusBarOrientation];
     AVCaptureConnection *previewLayerConnection         =   _videoPreviewLayer.connection;
     
-    switch (cameraOrientation) {
+    switch (interfaceOrientation) {
         case UIInterfaceOrientationPortrait:
             [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
             break;
@@ -569,11 +569,10 @@
 }
 
 - (void)savePhotosCollectionToFile {
-    NSData *arrayData                                       =   [NSKeyedArchiver archivedDataWithRootObject:_photosDataSource];
-    NSArray *paths                                          =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    _arrayPath                                              =   paths[0];
-    // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    _arrayPath                                              =   [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
+    NSData *arrayData   =   [NSKeyedArchiver archivedDataWithRootObject:_photosDataSource];
+    NSArray *paths      =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    _arrayPath          =   paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    _arrayPath          =   [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
     
     [[NSFileManager defaultManager] createFileAtPath:_arrayPath
                                             contents:arrayData
@@ -596,13 +595,15 @@
     UIImageOrientation imageOrientation;
     
     if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-        imageOrientation                                =   UIImageOrientationUp;
-    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeRight)
-        imageOrientation                                =   UIImageOrientationRight;
-    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeLeft)
-        imageOrientation                                =   UIImageOrientationLeft;
+        imageOrientation    =   UIImageOrientationUp;
     
-    _videoImageOriginal                                 =   [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:imageOrientation];
+    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeRight)
+        imageOrientation    =   UIImageOrientationRight;
+    
+    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeLeft)
+        imageOrientation    =   UIImageOrientationLeft;
+    
+    _videoImageOriginal     =   [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:imageOrientation];
     
     if (_videoImageOriginal)
         [self mergeAndSaveVideoFile];

@@ -7,6 +7,7 @@
 //
 
 #import "HRPSettingsViewController.h"
+#import "UIViewController+NavigationBar.h"
 
 
 @interface HRPSettingsViewController () 
@@ -21,21 +22,27 @@
 
 
 @implementation HRPSettingsViewController {
-    NSUserDefaults *userApp;
+    NSUserDefaults *_userApp;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    userApp                                         =   [NSUserDefaults standardUserDefaults];
-    self.navigationItem.title                       =   NSLocalizedString(@"Settings", nil);
+    _userApp    =   [NSUserDefaults standardUserDefaults];
+    
+    [self customizeNavigationBarWithTitle:NSLocalizedString(@"Settings", nil)
+                    andLeftBarButtonImage:[UIImage imageNamed:@"icon-arrow-left"]
+                        withActionEnabled:YES
+                   andRightBarButtonImage:[UIImage new]
+                        withActionEnabled:NO];
     
     // Set titles
-    self.sendingSwitch.on                           =   [userApp boolForKey:@"sendingTypeStatus"];
-    self.sendingTypeLabel.text                      =   NSLocalizedString(@"Switch sending title", nil);
-    self.networkSwitch.on                           =   [userApp boolForKey:@"networkStatus"];
-    self.networkLabel.text                          =   NSLocalizedString(@"Switch network title", nil);
+    self.sendingSwitch.on       =   [_userApp boolForKey:@"sendingTypeStatus"];
+    self.sendingTypeLabel.text  =   NSLocalizedString(@"Switch sending title", nil);
+    self.networkSwitch.on       =   [_userApp boolForKey:@"networkStatus"];
+    self.networkLabel.text      =   NSLocalizedString(@"Switch network title", nil);
+    
     [self.logoutButton setTitle:NSLocalizedString(@"Logout", nil) forState:UIControlStateNormal];
 }
 
@@ -45,24 +52,32 @@
 
 
 #pragma mark - Actions -
+- (void)handlerLeftBarButtonTap:(UIBarButtonItem *)sender {
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender {
+    
+}
+
 - (IBAction)actionLogoutButtonTap:(UIButton *)sender {
-    [userApp removeObjectForKey:@"userAppEmail"];
-    [userApp removeObjectForKey:@"sendingTypeStatus"];
-    [userApp removeObjectForKey:@"networkStatus"];
+    [_userApp removeObjectForKey:@"userAppEmail"];
+    [_userApp removeObjectForKey:@"sendingTypeStatus"];
+    [_userApp removeObjectForKey:@"networkStatus"];
 
     [self.navigationController popToRootViewControllerAnimated:YES];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
-                                                        object:nil
-                                                      userInfo:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
+//                                                        object:nil
+//                                                      userInfo:nil];
 }
 
 - (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {
-    [userApp setBool:sender.on forKey:@"sendingTypeStatus"];
+    [_userApp setBool:sender.on forKey:@"sendingTypeStatus"];
 }
 
 - (IBAction)actionNetworkSwitchChangeValue:(UISwitch *)sender {
-    [userApp setBool:sender.on forKey:@"networkStatus"];
+    [_userApp setBool:sender.on forKey:@"networkStatus"];
 }
 
 

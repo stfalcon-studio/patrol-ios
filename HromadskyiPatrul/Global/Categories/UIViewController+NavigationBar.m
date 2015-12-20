@@ -39,7 +39,9 @@
 
 - (void)customizeNavigationBarWithTitle:(NSString *)title
                   andLeftBarButtonImage:(UIImage *)imageLeftBarButton
-                 andRightBarButtonImage:(UIImage *)imageRightBarButton {
+                      withActionEnabled:(BOOL)leftButtonEnabled
+                 andRightBarButtonImage:(UIImage *)imageRightBarButton
+                      withActionEnabled:(BOOL)rightButtonEnabled {
     // Set NavigationBar Style
     [self showNavigationBar];
 
@@ -47,15 +49,17 @@
     [self.navigationItem setTitle:title];
     
     // Set Left BarButton image
-    [self customizeLeftBarButtonWithImage:imageLeftBarButton];
+    [self customizeLeftBarButtonWithImage:imageLeftBarButton withActionEnabled:leftButtonEnabled];
 
     // Set Right BarButton image
-    [self customizeRightBarButtonWithImage:imageRightBarButton];
+    [self customizeRightBarButtonWithImage:imageRightBarButton withActionEnabled:rightButtonEnabled];
 }
 
 - (void)customizeNavigationBarWithTitle:(NSString *)title
                   andLeftBarButtonImage:(UIImage *)imageLeftBarButton
-                  andRightBarButtonText:(NSString *)textRightBarButton {
+                      withActionEnabled:(BOOL)leftButtonEnabled
+                  andRightBarButtonText:(NSString *)textRightBarButton
+                      withActionEnabled:(BOOL)rightButtonEnabled {
     // Set NavigationBar Style
     [self showNavigationBar];
     
@@ -63,13 +67,31 @@
     [self.navigationItem setTitle:title];
     
     // Set Left BarButton image
-    [self customizeLeftBarButtonWithImage:imageLeftBarButton];
+    [self customizeLeftBarButtonWithImage:imageLeftBarButton withActionEnabled:leftButtonEnabled];
     
     // Set Right BarButton image
-    [self customizeRightBarButtonWithText:textRightBarButton];
+    [self customizeRightBarButtonWithText:textRightBarButton withActionEnabled:rightButtonEnabled];
 }
 
-- (void)customizeLeftBarButtonWithImage:(UIImage *)image {
+- (void)customizeNavigationBarWithTitle:(NSString *)title
+                   andLeftBarButtonText:(NSString *)textLeftBarButton
+                      withActionEnabled:(BOOL)leftButtonEnabled
+                 andRightBarButtonImage:(UIImage *)imageRightBarButton
+                      withActionEnabled:(BOOL)rightButtonEnabled {
+    // Set NavigationBar Style
+    [self showNavigationBar];
+    
+    // Set Title text
+    [self.navigationItem setTitle:title];
+    
+    // Set Left BarButton image
+    [self customizeLeftBarButtonWithText:textLeftBarButton withActionEnabled:leftButtonEnabled];
+    
+    // Set Right BarButton image
+    [self customizeRightBarButtonWithImage:imageRightBarButton withActionEnabled:rightButtonEnabled];
+}
+
+- (void)customizeLeftBarButtonWithImage:(UIImage *)image withActionEnabled:(BOOL)enabled {
     UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 33.f, 20.f, 12.f)];
     
     [button setImage:image forState:UIControlStateNormal];
@@ -77,11 +99,11 @@
     [button addTarget:self
                action:@selector(handlerLeftBarButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     
-    [button setUserInteractionEnabled:(image) ? YES : NO];
+    [button setUserInteractionEnabled:enabled];
     [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:button]];
 }
 
-- (void)customizeRightBarButtonWithImage:(UIImage *)image {
+- (void)customizeRightBarButtonWithImage:(UIImage *)image withActionEnabled:(BOOL)enabled {
     UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 33.f, 20.f, 12.f)];
         
     [button setImage:image forState:UIControlStateNormal];
@@ -89,11 +111,11 @@
     [button addTarget:self
                action:@selector(handlerRightBarButtonTap:) forControlEvents:UIControlEventTouchUpInside];
         
-    [button setUserInteractionEnabled:(image) ? YES : NO];
+    [button setUserInteractionEnabled:enabled];
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:button]];
 }
 
-- (void)customizeRightBarButtonWithText:(NSString *)text {
+- (void)customizeLeftBarButtonWithText:(NSString *)text withActionEnabled:(BOOL)enabled {
     UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 33.f, 20.f, 12.f)];
     
     [button setTitle:text forState:UIControlStateNormal];
@@ -101,7 +123,19 @@
     [button addTarget:self
                action:@selector(handlerRightBarButtonTap:) forControlEvents:UIControlEventTouchUpInside];
     
-    [button setUserInteractionEnabled:(text) ? YES : NO];
+    [button setUserInteractionEnabled:enabled];
+    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:button]];
+}
+
+- (void)customizeRightBarButtonWithText:(NSString *)text withActionEnabled:(BOOL)enabled {
+    UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 33.f, 20.f, 12.f)];
+    
+    [button setTitle:text forState:UIControlStateNormal];
+    
+    [button addTarget:self
+               action:@selector(handlerRightBarButtonTap:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button setUserInteractionEnabled:enabled];
     [self.navigationItem setRightBarButtonItem:[[UIBarButtonItem alloc] initWithCustomView:button]];
 }
 

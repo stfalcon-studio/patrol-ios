@@ -60,9 +60,10 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 - (void)removeAllFolderMediaTempFiles;
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL;
 
+// Orientation
+- (void)setPreviewLayerVideoOrientation:(UIInterfaceOrientation)interfaceOrientation;
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize;
 - (void)setVideoSessionOrientation;
-- (void)setPreviewLayerVideoOrientation;
 - (void)restartStreamVideoRecording;
 
 // Timer
