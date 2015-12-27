@@ -66,10 +66,11 @@
     [_userApp removeObjectForKey:@"networkStatus"];
 
     [self.navigationController popToRootViewControllerAnimated:YES];
+    [self hideNavigationBar];
     
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
-//                                                        object:nil
-//                                                      userInfo:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
+                                                        object:nil
+                                                      userInfo:nil];
 }
 
 - (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {

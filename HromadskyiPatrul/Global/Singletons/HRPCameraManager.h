@@ -43,7 +43,6 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (strong, nonatomic) NSString *mediaFolderPath;
 @property (strong, nonatomic) NSArray *videoFilesNames;
 
-@property (assign, nonatomic) NSInteger snippetNumber;
 @property (assign, nonatomic) BOOL isVideoSaving;
 @property (assign, nonatomic, getter = isSessionRunning) BOOL sessionRunning;
 

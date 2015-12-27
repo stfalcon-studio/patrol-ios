@@ -32,6 +32,11 @@
 
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleUserLogout:)
+                                                 name:@"HRPSettingsViewControllerUserLogout"
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerStartVideoSession:)
                                                  name:@"startVideoSession"
                                                object:nil];
@@ -39,11 +44,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerMergeAndSaveVideo:)
                                                  name:@"showMergeAndSaveAlertMessage"
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handlerFinishRecordingVideoFile:)
-                                                 name:@"didFinishRecordingToOutputFileAtURL"
                                                object:nil];
 }
 
@@ -67,9 +67,13 @@
     _cameraManager.videoPreviewLayer    =   [[AVCaptureVideoPreviewLayer alloc] initWithSession:_cameraManager.captureSession];
     
     [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [_cameraManager.videoPreviewLayer setFrame:self.view.layer.bounds];
-    [_cameraManager setPreviewLayerVideoOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
+    [_cameraManager.videoPreviewLayer setFrame:self.view.bounds];
     
+    _cameraManager.videoConnection      =   _cameraManager.videoPreviewLayer.connection;
+    
+    if ([_cameraManager.videoConnection isVideoOrientationSupported])
+        [_cameraManager setVideoSessionOrientation];
+
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlLabel.layer];
     
     [self customizeViewStyle];
@@ -92,42 +96,44 @@
 #pragma mark - Actions -
 - (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender {
     // Stop Video Record Session
-    
+    [_cameraManager stopVideoSession];
+    [_cameraManager.videoPreviewLayer removeFromSuperlayer];
+   
     // Transition to Collection Scene
     HRPCollectionViewController *collectionVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
     
     // Prepare DataSource
+    [collectionVC.userNameBarButton setTitle:[_cameraManager.userApp objectForKey:@"userAppEmail"]];
+    [collectionVC prepareDataSource];    
     
     [self.navigationController pushViewController:collectionVC animated:YES];
 }
 
 
 #pragma mark - NSNotification -
+- (void)handleUserLogout:(NSNotification *)notification {
+    [self.navigationController popToRootViewControllerAnimated:NO];
+}
+
 - (void)handlerStartVideoSession:(NSNotification *)notification {
     if (self.HUD.alpha)
         [self hideLoader];
         
-    _cameraManager.videoSessionMode                     =   NSTimerVideoSessionModeStream;
-
-    [_cameraManager startStreamVideoRecording];
-    [_cameraManager createTimerWithLabel:_timerLabel];
+    _cameraManager.videoSessionMode                         =   NSTimerVideoSessionModeStream;
+    _cameraManager.isVideoSaving                            =   NO;
+    self.navigationItem.rightBarButtonItem.enabled          =   YES;
     
-    self.navigationItem.rightBarButtonItem.enabled      =   YES;
-    _cameraManager.isVideoSaving                        =   NO;
-    _controlLabel.isLabelFlashing                       =   NO;
+    [_cameraManager startStreamVideoRecording];
+    [_cameraManager createTimerWithLabel:_timerLabel];    
 }
 
 - (void)handlerMergeAndSaveVideo:(NSNotification *)notification {
-    _controlLabel.text      =   nil;
+    _controlLabel.text                                      =   nil;
+    _controlLabel.isLabelFlashing                           =   NO;
     
     [self showLoaderWithText:NSLocalizedString(@"Merge & Save video", nil)
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:300];
-}
-
-- (void)handlerFinishRecordingVideoFile:(NSNotification *)notification {
-    if (self.HUD.alpha)
-        [self hideLoader];
 }
 
 
@@ -148,7 +154,7 @@
 
 #pragma mark - Methods -
 - (void)customizeViewStyle {
-    _controlLabel.hidden                        =   YES;
+    _controlLabel.hidden                                    =   YES;
     
     [_cameraManager createTimerWithLabel:_timerLabel];
 }
@@ -156,8 +162,7 @@
 
 #pragma mark - UIViewControllerRotation -
 - (BOOL)shouldAutorotate {
-    // Disable autorotation of the interface when recording is in progress.
-    return !_cameraManager.videoFileOutput.isRecording;
+    return (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream);
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
@@ -200,10 +205,7 @@
               andBackgroundColor:BackgroundColorTypeBlue
                          forTime:2];
 
-//        [_cameraManager setPreviewLayerVideoOrientation:[[UIApplication sharedApplication] statusBarOrientation]];
-        
-        _cameraManager.videoPreviewLayer.frame  =   CGRectMake(0.f, 0.f, size.width, size.height);
-        
+        [_cameraManager setVideoPreviewLayerOrientation:size];
         
         [_cameraManager.timer invalidate];
         

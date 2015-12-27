@@ -49,6 +49,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _screenSize         =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
+                                       CGRectGetHeight([[UIScreen mainScreen] bounds]));
+
     [self hideNavigationBar];
     
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
@@ -57,10 +60,6 @@
 
     // Create model
     _loginViewModel     =   [[HRPLoginViewModel alloc] init];
-    
-    // Set Scroll View constraints
-    self.contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
-    self.contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
     
     // Set Logo text
     _logoLabel.text     =   NSLocalizedString(@"Public patrol", nil);
@@ -71,6 +70,12 @@
     // Set button title
     [_loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
     
+    // Set Notification Observers
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleUserLogout:)
+                                                 name:@"HRPSettingsViewControllerUserLogout"
+                                               object:nil];
+
     // Keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidShow:)
@@ -86,8 +91,18 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    _screenSize     =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
-                                   CGRectGetHeight([[UIScreen mainScreen] bounds]));
+    // Set Scroll View constraints
+    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+        _contentViewWidthConstraint.constant    =   _screenSize.width;
+        _statusBarTopConstarint.constant        =   0.f;
+    }
+    
+    else {
+        _contentViewWidthConstraint.constant    =   _screenSize.width;
+        _statusBarTopConstarint.constant        =   -20.f;
+    }
+    
+    [self.view layoutIfNeeded];
     
     if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
         _emailTextField.text    =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
@@ -147,6 +162,10 @@
 
 
 #pragma mark - NSNotification -
+- (void)handleUserLogout:(NSNotification *)notification {
+    [self dismissViewControllerAnimated:NO completion:nil];
+}
+
 - (void)keyboardDidShow:(NSNotification *)notification {
     NSDictionary *info      =   [notification userInfo];
     _keyboardSize           =   [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;

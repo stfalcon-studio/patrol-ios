@@ -28,7 +28,7 @@
 "Alert error button Ok"                         =   "Ок";
 "Alert error button Cancel"                     =   "Скасувати";
 "Alert error internet message"                  =   "Будь ласка, \n перевірте підключення до Інтернету";
-"Switch network title"                          =   "Завантажувати тільки по WiFi";
+"Switch network title"                          =   "Завантажувати \nтільки по WiFi";
 "Switch sending title"                          =   "Завантажувати автоматично";
 "Camera is not available"                       =   "Камера недоступна";
 "Photo is missing"                              =   "Фотографія відсутня";

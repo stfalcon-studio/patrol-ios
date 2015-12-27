@@ -142,14 +142,13 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
 
-    if (_cameraManager.setupResult == HRPCameraManagerSetupResultSuccess)
+    if (_cameraManager.setupResult == HRPCameraManagerSetupResultSuccess) {
         [_cameraManager.captureSession stopRunning];
 
-        /*dispatch_async(_cameraManager.sessionQueue, ^{
-        if (_cameraManager.setupResult == HRPCameraManagerSetupResultSuccess) {
-            [_cameraManager.captureSession stopRunning];
-        }
-    });*/
+        [_cameraManager.videoPreviewLayer removeFromSuperlayer];
+        _cameraManager.videoPreviewLayer    =   nil;
+        _cameraManager.captureSession       =   nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -275,7 +274,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
         _timerVideo                                         =   [self createTimer];
 }
 
-- (void)handlerFinishRecordingVideoFile:(NSNotification *)notification {
+- (void)handlerFinishRecordingVideoFile:(NSNotification *)notification {/*
     // START Button taped
     if (self.recordingMode == HRPVideoRecordViewControllerModeStreamVideo) {
         _cameraManager.snippetNumber                        =   (_cameraManager.snippetNumber == 0) ? 1 : 0;
@@ -313,7 +312,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
             [_cameraManager stopAudioRecording];
             [_cameraManager startStreamVideoRecording];
         }
-    }
+    }*/
 }
 
 
@@ -421,6 +420,7 @@ typedef NS_ENUM (NSInteger, HRPVideoRecordViewControllerMode) {
     if ([segue.identifier isEqualToString:@"CollectionSegue"]) {
         HRPCollectionViewController *collectionVC           =   (HRPCollectionViewController *)segue.destinationViewController;
         
+        [collectionVC.userNameBarButton setTitle:[_cameraManager.userApp objectForKey:@"userAppEmail"]];
         [collectionVC prepareDataSource];
     }
 }

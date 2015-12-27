@@ -13,7 +13,7 @@
 
 
 @implementation HRPCameraManager {
-    AVCaptureVideoOrientation _videoOrientation;
+//    AVCaptureVideoOrientation _videoOrientation;
     AVAudioRecorder *_audioRecorder;
     AVAudioPlayer *_audioPlayer;
     AVAudioSession *_audioSession;
@@ -32,6 +32,7 @@
     
     NSInteger _sessionDuration;
     NSInteger _timerSeconds;
+    NSInteger _snippetNumber;
 }
 
 #pragma mark - Constructors -
@@ -98,7 +99,8 @@
 
 #pragma mark - NSNotification -
 - (void)handlerVideoSessionStopRecording:(NSNotification *)notification {
-    [_videoFileOutput stopRecording];
+    // Stop Video & Audio recording
+    [self stopVideoRecording];
 }
 
 
@@ -127,8 +129,9 @@
             [_timer invalidate];
             _timerSeconds   =   0;
         }
-        
-        [_videoFileOutput stopRecording];
+
+        // Stop Video & Audio recording
+        [self stopVideoRecording];
     }
     
     _timerLabel.text        =   [self formattedTime:_timerSeconds];
@@ -193,27 +196,45 @@
     // VIDEO
     // Add output file
     _videoFileOutput                                    =   [[AVCaptureMovieFileOutput alloc] init];
+    _videoConnection                                    =   nil;
+    
+    for (AVCaptureConnection *connection in _videoFileOutput.connections) {
+        NSLog(@"%@", connection);
+        
+        for ( AVCaptureInputPort *port in connection.inputPorts) {
+            NSLog(@"%@", port);
+            if ([port.mediaType isEqual:AVMediaTypeVideo])
+                _videoConnection                        =   connection;
+        }
+    }
+    
+    //[_videoConnection setVideoOrientation:[self getVideoOrientation]];
     
     if ([_captureSession canAddOutput:_videoFileOutput])
         [_captureSession addOutput:_videoFileOutput];
 }
 
-- (void)createVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)videoPreviewLayer {
-    _videoPreviewLayer                                  =   videoPreviewLayer;
-    _videoPreviewLayer.connection.videoOrientation      =   self.videoOrientation;
-}
+//- (void)createVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)videoPreviewLayer {
+//    _videoPreviewLayer                                  =   videoPreviewLayer;
+//    _videoPreviewLayer.connection.videoOrientation      =   self.videoOrientation;
+//}
 
-- (void)startStreamVideoRecording {    
+- (void)startStreamVideoRecording {
+    if ([_videoConnection isVideoOrientationSupported])
+        [self setVideoSessionOrientation];
+
     [self startAudioRecording];
     
-    [_videoFileOutput startRecordingToOutputFileURL:[self setNewVideoFileURL:_snippetNumber] recordingDelegate:self];
+    [_videoFileOutput startRecordingToOutputFileURL:[self setNewVideoFileURL:_snippetNumber]
+                                  recordingDelegate:self];
 }
 
 - (void)startAttentionVideoRecording {
     // Stop video capture and make the capture session object nil
     _timerSeconds       =   0;
     
-    [_videoFileOutput stopRecording];
+    // Stop Video & Audio recording
+    [self stopVideoRecording];
 }
 
 - (void)startAudioRecording {
@@ -225,16 +246,33 @@
 }
 
 - (void)restartStreamVideoRecording {
+    _timerSeconds       =   0;
     _snippetNumber      =   1;
 
-    [_videoFileOutput stopRecording];
+    // Stop Video & Audio recording
+    [self stopVideoRecording];
 }
 
 - (void)stopVideoSession {
-//    [_captureSession stopRunning];
-    [_videoFileOutput stopRecording];
-    [self stopAudioRecording];
+    [_captureSession stopRunning];
+
+    // Stop Video & Audio recording
+    [self stopVideoRecording];
+    
+    // Stop Location service
     [_locationManager stopUpdatingLocation];
+    
+    // Stop Timer
+    [_timer invalidate];
+    
+    _videoPreviewLayer  =   nil;
+    _captureSession     =   nil;
+    _videoSessionMode   =   NSTimerVideoSessionModeDismissed;
+}
+
+- (void)stopVideoRecording {
+    [self stopAudioRecording];
+    [_videoFileOutput stopRecording];
 }
 
 - (void)stopAudioRecording {
@@ -279,8 +317,38 @@
     _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
     _videoConnection            =   _videoPreviewLayer.connection;
     
-//    if ([_videoConnection isVideoOrientationSupported])
-//        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
+    if ([_videoConnection isVideoOrientationSupported])
+        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
+}
+
+- (void)setVideoSessionOrientation {
+    AVCaptureVideoOrientation videoOrientation  =   AVCaptureVideoOrientationPortraitUpsideDown;
+    UIDeviceOrientation deviceOrientation       =   [[UIDevice currentDevice] orientation];
+    
+    switch (deviceOrientation) {
+        case UIInterfaceOrientationPortrait:
+            videoOrientation                    =   AVCaptureVideoOrientationPortrait;
+            break;
+            
+        case UIInterfaceOrientationPortraitUpsideDown:
+            videoOrientation                    =   AVCaptureVideoOrientationPortraitUpsideDown;
+            break;
+            
+        case UIInterfaceOrientationLandscapeLeft:
+            videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
+            break;
+            
+        case UIInterfaceOrientationLandscapeRight:
+            videoOrientation                    =   AVCaptureVideoOrientationLandscapeRight;
+            break;
+            
+        default:
+            videoOrientation                    =   AVCaptureVideoOrientationPortrait;
+            break;
+    }
+    
+    [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
+    [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
 }
 
 - (void)setPreviewLayerVideoOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -288,69 +356,96 @@
     AVCaptureConnection *previewLayerConnection         =   _videoPreviewLayer.connection;
     
     switch (interfaceOrientation) {
-        case UIInterfaceOrientationPortrait:
+        case UIInterfaceOrientationPortrait: {
             [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
+                                   setVideoOrientation:AVCaptureVideoOrientationPortrait];
+        }
             break;
             
-        case UIInterfaceOrientationPortraitUpsideDown:
+        case UIInterfaceOrientationPortraitUpsideDown: {
             [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
+
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
+                                   setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
+        }
             break;
-            
-        case UIInterfaceOrientationLandscapeLeft:
-            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-            break;
-            
-        case UIInterfaceOrientationLandscapeRight:
+    
+        case UIInterfaceOrientationLandscapeLeft: {
             [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
+                                   setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
+        }
             break;
             
-        default:
+        case UIInterfaceOrientationLandscapeRight: {
+            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
+                                   setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
+        }
+            break;
+            
+        default: {
             [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
+                                   setVideoOrientation:AVCaptureVideoOrientationPortrait];
+        }
             break;
     }
 }
 
+- (void)setNextSnippetNumber {
+    if (_videoSessionMode == NSTimerVideoSessionModeStream)
+        _snippetNumber      =   !_snippetNumber;
+    
+    else if (_videoSessionMode == NSTimerVideoSessionModeAttention)
+        ++_snippetNumber;
+}
+
 - (AVCaptureVideoOrientation)getVideoOrientation {
-    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationLandscapeLeft;
-    UIInterfaceOrientation cameraOrientation            =   [[UIApplication sharedApplication] statusBarOrientation];
-
-    switch (cameraOrientation) {
-        case UIInterfaceOrientationPortrait:
+    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationPortraitUpsideDown;
+    UIDeviceOrientation deviceOrientation               =   [[UIDevice currentDevice] orientation];
+    
+    switch (deviceOrientation) {
+        case UIInterfaceOrientationPortrait: {
             videoOrientation                            =   AVCaptureVideoOrientationPortrait;
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+        }
             break;
             
-        case UIInterfaceOrientationPortraitUpsideDown:
-            videoOrientation                            =   AVCaptureVideoOrientationPortraitUpsideDown;
-            break;
-            
-        case UIInterfaceOrientationLandscapeLeft:
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeRight;
-            break;
-            
-        case UIInterfaceOrientationLandscapeRight:
+        case UIInterfaceOrientationPortraitUpsideDown: {
             videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+        }
+            break;
+            
+        case UIInterfaceOrientationLandscapeLeft: {
+            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+        }
+            break;
+            
+        case UIInterfaceOrientationLandscapeRight: {
+            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+        }
             break;
 
-        default:
-            videoOrientation                            =   AVCaptureVideoOrientationPortrait;
+        default: {
+            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+            
+            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+        }
             break;
     }
-
-    /*
-    CGFloat width                                       =   CGRectGetWidth([[UIScreen mainScreen] bounds]);
-    CGFloat height                                      =   CGRectGetHeight([[UIScreen mainScreen] bounds]);
-    CGFloat maxSide                                     =   (width - height > 0) ? width : height;
-    CGFloat minSide                                     =   (width - height > 0) ? height : width;
-
-    NSLog(@"minSide = %2.f, maxSide = %2.f", minSide, maxSide);
-    
-    if (videoOrientation == AVCaptureVideoOrientationPortrait ||
-        videoOrientation == AVCaptureVideoOrientationPortraitUpsideDown)
-        _previewRect                                    =   CGRectMake(0.f, 0.f, minSide, maxSide);
-    
-    else
-        _previewRect                                    =   CGRectMake(0.f, 0.f, maxSide, minSide);
-*/
     
     return videoOrientation;
 }
@@ -403,6 +498,8 @@
 
 - (void)removeAllFolderMediaTempFiles {
     NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    _videoImageOriginal         =   nil;
+    _snippetNumber              =   0;
     
     for (NSString *fileName in allFolderFiles) {
         if ([fileName containsString:@"snippet_"] ||
@@ -419,13 +516,6 @@
             [fileName containsString:@"snippet_audio_1.caf"])
             [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
     }
-}
-
-- (void)setVideoSessionOrientation {
-    _videoOrientation                                   =   [self getVideoOrientation];
- 
-    _videoPreviewLayer.connection.videoOrientation      =   _videoOrientation;
-    _videoPreviewLayer.frame                            =   _previewRect;
 }
 
 - (NSInteger)countVideoSnippets {
@@ -621,10 +711,6 @@
 #pragma mark - AVCaptureFileOutputRecordingDelegate -
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL
       fromConnections:(NSArray *)connections {
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"didStartRecordingToOutputFileAtURL"
-//                                                        object:nil
-//                                                      userInfo:nil];
-    
     if (!_timerSeconds)
         _timerSeconds       =   0;
     
@@ -634,15 +720,10 @@
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
       fromConnections:(NSArray *)connections error:(NSError *)error {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"didFinishRecordingToOutputFileAtURL"
-                                                        object:nil
-                                                      userInfo:nil];
-    
-    // START Button taped
+    // Stream mode
     if (_videoSessionMode == NSTimerVideoSessionModeStream) {
-        _snippetNumber      =   (_snippetNumber == 0) ? 1 : 0;
+        [self setNextSnippetNumber];
         
-        [self stopAudioRecording];
         [self startStreamVideoRecording];
         
         // Delete media snippets_1
@@ -650,29 +731,27 @@
             [self removeMediaSnippets];
     }
     
-    // ATTENTION Button taped
+    // Attention mode
     else if (_videoSessionMode == NSTimerVideoSessionModeAttention) {
-        // Get first video frame image
-        if (_snippetNumber == 2) {
+        // Start Attention mode
+        if (_videoImageOriginal == nil) {
+            [self setNextSnippetNumber];
+            
+            _videoImageOriginal         =   [UIImage new];
+
+            [self startStreamVideoRecording];
+        }
+        
+        // Finish Attention mode
+        else {
             [[NSNotificationCenter defaultCenter] postNotificationName:@"showMergeAndSaveAlertMessage"
                                                                 object:nil
                                                               userInfo:nil];
-
-            _snippetNumber              =   0;
-
-            [self stopAudioRecording];
             
-            NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:_videoFilesNames[2]];
+            NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:_videoFilesNames[_snippetNumber]];
             NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
             
             [self extractFirstFrameFromVideoFilePath:videoFileURL];
-        }
-        
-        else {
-            _snippetNumber              =   2;
-            
-            [self stopAudioRecording];
-            [self startStreamVideoRecording];
         }
     }
 }

@@ -34,15 +34,10 @@
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    // Create model
-    _mainViewModel                          =   [[HRPMainViewModel alloc] init];
     
     // Set Scroll View constraints
     _contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
     _contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
-    
-    _versionLabel.text                      =   [_mainViewModel getAppVersion];
     
     // Set Logo text
     _logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
@@ -53,6 +48,10 @@
     
     [self hideNavigationBar];
     
+    // Create model
+    _mainViewModel                          =   [[HRPMainViewModel alloc] init];
+    _versionLabel.text                      =   [_mainViewModel getAppVersion];
+
     // Select Next Scene
     HRPBaseViewController *nextVC           =   [self.storyboard instantiateViewControllerWithIdentifier:
                                                     [_mainViewModel selectNextSceneStoryboardID]];

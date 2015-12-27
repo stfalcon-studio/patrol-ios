@@ -212,7 +212,7 @@
                         <subviews>
                             <collectionView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B1W-PM-jbV" userLabel="Photos Collection View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="xfD-Ca-Wh2">
                                     <size key="itemSize" width="158" height="158"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -285,14 +285,7 @@
                                     <outlet property="delegate" destination="aAn-fy-MeC" id="WNd-cS-JRl"/>
                                 </connections>
                             </collectionView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-video" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-f2-VNU" userLabel="Camera Image View">
-                                <rect key="frame" x="260" y="507" width="20" height="22"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="20" id="7Ym-sc-S1p"/>
-                                    <constraint firstAttribute="height" constant="22" id="y9l-Yb-yl5"/>
-                                </constraints>
-                            </imageView>
-                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oC-zk-fjR" userLabel="Camera Button" customClass="HRPButton">
+                            <button contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5oC-zk-fjR" userLabel="Camera Button" customClass="HRPButton">
                                 <rect key="frame" x="245" y="493" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="NL4-wm-DEC"/>
@@ -313,8 +306,15 @@
                                     <action selector="actionCameraButtonTap:" destination="aAn-fy-MeC" eventType="touchUpInside" id="h3y-3S-H1x"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-video" translatesAutoresizingMaskIntoConstraints="NO" id="Fjg-f2-VNU" userLabel="Camera Image View">
+                                <rect key="frame" x="260" y="507" width="20" height="22"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="7Ym-sc-S1p"/>
+                                    <constraint firstAttribute="height" constant="22" id="y9l-Yb-yl5"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="B1W-PM-jbV" firstAttribute="leading" secondItem="3GM-sC-wFF" secondAttribute="leading" id="Idn-1T-TWm"/>
                             <constraint firstAttribute="trailing" secondItem="5oC-zk-fjR" secondAttribute="trailing" constant="25" id="OZg-41-ywC"/>
@@ -362,14 +362,6 @@
                                     <constraint firstAttribute="height" constant="20" id="Brj-QW-4bV"/>
                                 </constraints>
                             </view>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="GEx-LE-PLc">
-                                <rect key="frame" x="135" y="259" width="50" height="50"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="0VN-76-Cje"/>
-                                    <constraint firstAttribute="width" constant="50" id="YN0-Q9-dfH"/>
-                                </constraints>
-                                <color key="color" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
-                            </activityIndicatorView>
                             <button autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RHF-Dg-70s" userLabel="Cancel Button">
                                 <rect key="frame" x="205" y="20" width="100" height="44"/>
                                 <constraints>
@@ -392,12 +384,10 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="L27-gU-LYV" secondAttribute="bottom" id="S2b-4s-q7e"/>
-                            <constraint firstAttribute="centerY" secondItem="GEx-LE-PLc" secondAttribute="centerY" id="S4K-X6-CND"/>
                             <constraint firstAttribute="trailing" secondItem="RHF-Dg-70s" secondAttribute="trailing" constant="15" id="Sc7-JR-n5n"/>
                             <constraint firstItem="RHF-Dg-70s" firstAttribute="top" secondItem="PSo-Qi-SSy" secondAttribute="bottom" id="Xah-LR-fQM"/>
                             <constraint firstItem="S7F-3N-rsg" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="dZU-kd-sM1"/>
                             <constraint firstItem="L27-gU-LYV" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="gHk-tS-zp4"/>
-                            <constraint firstAttribute="centerX" secondItem="GEx-LE-PLc" secondAttribute="centerX" id="iah-l8-7V6"/>
                             <constraint firstItem="L27-gU-LYV" firstAttribute="top" secondItem="PSo-Qi-SSy" secondAttribute="bottom" id="pya-H2-uVI"/>
                             <constraint firstItem="S7F-3N-rsg" firstAttribute="top" secondItem="o7y-bL-j3b" secondAttribute="top" id="qf8-dJ-w7S"/>
                             <constraint firstAttribute="trailing" secondItem="S7F-3N-rsg" secondAttribute="trailing" id="xQ1-lp-Kud"/>
@@ -413,7 +403,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="activityIndicator" destination="GEx-LE-PLc" id="7zl-dF-HGO"/>
                         <outlet property="cancelButton" destination="RHF-Dg-70s" id="4Qm-Bu-mql"/>
                         <outlet property="photoImageView" destination="L27-gU-LYV" id="iMN-3S-Wb7"/>
                     </connections>

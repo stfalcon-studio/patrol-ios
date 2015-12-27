@@ -11,7 +11,7 @@
 
 @interface HRPVideoPlayerViewController : UIViewController
 
-//@property (strong, nonatomic) NSURL *videoURL;
--(id)initWithContentURL:(NSURL *)contentURL;
+@property (strong, nonatomic) NSURL *videoURL;
+//- (id)initWithContentURL:(NSURL *)contentURL;
 
 @end
