@@ -208,21 +208,18 @@
         }
     }
     
-    //[_videoConnection setVideoOrientation:[self getVideoOrientation]];
-    
     if ([_captureSession canAddOutput:_videoFileOutput])
         [_captureSession addOutput:_videoFileOutput];
+    
+    // Create StillImageOutput
+    _stillImageOutput               =   [[AVCaptureStillImageOutput alloc] init];
+    NSDictionary *outputSettings    =   [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+    [_stillImageOutput setOutputSettings:outputSettings];
+        
+    [_captureSession addOutput:_stillImageOutput];
 }
 
-//- (void)createVideoPreviewLayer:(AVCaptureVideoPreviewLayer *)videoPreviewLayer {
-//    _videoPreviewLayer                                  =   videoPreviewLayer;
-//    _videoPreviewLayer.connection.videoOrientation      =   self.videoOrientation;
-//}
-
 - (void)startStreamVideoRecording {
-    if ([_videoConnection isVideoOrientationSupported])
-        [self setVideoSessionOrientation];
-
     [self startAudioRecording];
     
     [_videoFileOutput startRecordingToOutputFileURL:[self setNewVideoFileURL:_snippetNumber]
@@ -256,6 +253,8 @@
 - (void)stopVideoSession {
     [_captureSession stopRunning];
 
+    _videoSessionMode   =   NSTimerVideoSessionModeDismissed;
+
     // Stop Video & Audio recording
     [self stopVideoRecording];
     
@@ -265,9 +264,12 @@
     // Stop Timer
     [_timer invalidate];
     
-    _videoPreviewLayer  =   nil;
     _captureSession     =   nil;
-    _videoSessionMode   =   NSTimerVideoSessionModeDismissed;
+    _videoPreviewLayer  =   nil;
+    _videoConnection    =   nil;
+    _audioSession       =   nil;
+    _audioRecorder      =   nil;
+    _audioPlayer        =   nil;
 }
 
 - (void)stopVideoRecording {
@@ -298,7 +300,7 @@
     NSError *error              =   nil;
     _audioSession               =   [AVAudioSession sharedInstance];
     
-    [_audioSession setCategory:AVAudioSessionCategoryRecord error:nil];
+    [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [_audioSession setActive:YES withOptions:0 error:nil];
     
     _audioRecorder              =   [[AVAudioRecorder alloc] initWithURL:[self setNewAudioFileURL:_snippetNumber]
@@ -317,8 +319,8 @@
     _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
     _videoConnection            =   _videoPreviewLayer.connection;
     
-    if ([_videoConnection isVideoOrientationSupported])
-        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
+//    if ([_videoConnection isVideoOrientationSupported])
+//        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
 }
 
 - (void)setVideoSessionOrientation {
@@ -326,19 +328,19 @@
     UIDeviceOrientation deviceOrientation       =   [[UIDevice currentDevice] orientation];
     
     switch (deviceOrientation) {
-        case UIInterfaceOrientationPortrait:
-            videoOrientation                    =   AVCaptureVideoOrientationPortrait;
-            break;
-            
-        case UIInterfaceOrientationPortraitUpsideDown:
-            videoOrientation                    =   AVCaptureVideoOrientationPortraitUpsideDown;
-            break;
-            
-        case UIInterfaceOrientationLandscapeLeft:
+        case UIDeviceOrientationPortrait:
             videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
             break;
             
-        case UIInterfaceOrientationLandscapeRight:
+        case UIDeviceOrientationPortraitUpsideDown:
+            videoOrientation                    =   AVCaptureVideoOrientationPortraitUpsideDown;
+            break;
+            
+        case UIDeviceOrientationLandscapeLeft:
+            videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
+            break;
+            
+        case UIDeviceOrientationLandscapeRight:
             videoOrientation                    =   AVCaptureVideoOrientationLandscapeRight;
             break;
             
@@ -349,53 +351,6 @@
     
     [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
     [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-}
-
-- (void)setPreviewLayerVideoOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    //UIInterfaceOrientation cameraOrientation            =   [[UIApplication sharedApplication] statusBarOrientation];
-    AVCaptureConnection *previewLayerConnection         =   _videoPreviewLayer.connection;
-    
-    switch (interfaceOrientation) {
-        case UIInterfaceOrientationPortrait: {
-            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
-                                   setVideoOrientation:AVCaptureVideoOrientationPortrait];
-        }
-            break;
-            
-        case UIInterfaceOrientationPortraitUpsideDown: {
-            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
-
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
-                                   setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
-        }
-            break;
-    
-        case UIInterfaceOrientationLandscapeLeft: {
-            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
-                                   setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-        }
-            break;
-            
-        case UIInterfaceOrientationLandscapeRight: {
-            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
-                                   setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-        }
-            break;
-            
-        default: {
-            [previewLayerConnection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo]
-                                   setVideoOrientation:AVCaptureVideoOrientationPortrait];
-        }
-            break;
-    }
 }
 
 - (void)setNextSnippetNumber {
@@ -711,6 +666,8 @@
 #pragma mark - AVCaptureFileOutputRecordingDelegate -
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didStartRecordingToOutputFileAtURL:(NSURL *)fileURL
       fromConnections:(NSArray *)connections {
+    [self setVideoSessionOrientation];
+    
     if (!_timerSeconds)
         _timerSeconds       =   0;
     
@@ -753,6 +710,10 @@
             
             [self extractFirstFrameFromVideoFilePath:videoFileURL];
         }
+    }
+    
+    else if (_videoSessionMode == NSTimerVideoSessionModeDismissed) {
+        _videoFileOutput                =   nil;
     }
 }
 

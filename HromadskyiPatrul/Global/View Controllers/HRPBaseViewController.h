@@ -26,6 +26,6 @@ typedef NS_ENUM (NSInteger, BackgroundColorType) {
 - (void)hideLoader;
 - (BOOL)isInternetConnectionAvailable;
 
-- (void)hideNavigationBar;
+//- (void)hideNavigationBar;
 
 @end

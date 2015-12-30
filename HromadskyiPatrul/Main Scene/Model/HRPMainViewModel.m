@@ -37,6 +37,7 @@
 
 - (NSString *)selectNextSceneStoryboardID {
     NSString *selectedVC    =   @"VideoRecordVC";
+//    NSString *selectedVC    =   @"CollectionVC";
     
     if (![_userApp objectForKey:@"userAppEmail"])
         selectedVC          =   @"LoginVC";

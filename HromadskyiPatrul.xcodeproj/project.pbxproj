@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
+		B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1669E1C1BD657C500C4156D /* MediaPlayer.framework */; };
+		B11341831C3033CC000693B9 /* HRPVideoRecordViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B11341821C3033CC000693B9 /* HRPVideoRecordViewModel.m */; };
 		B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
 		B12805231C25781A0058BAC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
 		B12805261C2578E30058BAC8 /* HRPMainViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805251C2578E30058BAC8 /* HRPMainViewModel.m */; };
@@ -48,9 +50,10 @@
 		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
-		B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController123.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController123.m */; };
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
 		B1D9BA401C27072D00A98EEB /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */; };
+		B1E751341C340E040034FCC6 /* HRPVideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = B1E751331C340E040034FCC6 /* HRPVideoPreview.m */; };
+		B1E751361C3415B60034FCC6 /* VolvoXC90.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B1E751351C3415B60034FCC6 /* VolvoXC90.mp4 */; };
 		B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
@@ -69,6 +72,8 @@
 		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
+		B11341811C3033CC000693B9 /* HRPVideoRecordViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewModel.h; sourceTree = "<group>"; };
+		B11341821C3033CC000693B9 /* HRPVideoRecordViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewModel.m; sourceTree = "<group>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -143,12 +148,13 @@
 		B1AC89B51B879CE3009D12D6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B61B879CEC009D12D6 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
-		B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController123.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewController123.h; sourceTree = "<group>"; };
-		B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController123.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewController123.m; sourceTree = "<group>"; };
 		B1C07F031C21DD98002868F9 /* HRPVideoRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordView.h; sourceTree = "<group>"; };
 		B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordView.m; sourceTree = "<group>"; };
 		B1D9BA3E1C27072D00A98EEB /* HRPCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewController.h; sourceTree = "<group>"; };
 		B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
+		B1E751321C340E040034FCC6 /* HRPVideoPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoPreview.h; sourceTree = "<group>"; };
+		B1E751331C340E040034FCC6 /* HRPVideoPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPreview.m; sourceTree = "<group>"; };
+		B1E751351C3415B60034FCC6 /* VolvoXC90.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = VolvoXC90.mp4; sourceTree = "<group>"; };
 		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -158,6 +164,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */,
 				B18F75B01B95A3B600143338 /* SystemConfiguration.framework in Frameworks */,
 				B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */,
 				B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */,
@@ -200,6 +207,15 @@
 				789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		B11341801C3033A0000693B9 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B11341811C3033CC000693B9 /* HRPVideoRecordViewModel.h */,
+				B11341821C3033CC000693B9 /* HRPVideoRecordViewModel.m */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		B12804F71C25425B0058BAC8 /* Login Scene */ = {
@@ -258,6 +274,7 @@
 		B19C10361C1C41BF007BB9FE /* Record Video Scene  */ = {
 			isa = PBXGroup;
 			children = (
+				B11341801C3033A0000693B9 /* Model */,
 				B1C07EFF1C21DC4F002868F9 /* View */,
 				B19C10381C1C41CE007BB9FE /* Controller */,
 			);
@@ -270,8 +287,6 @@
 			children = (
 				B12805711C258B6A0058BAC8 /* HRPVideoRecordViewController.h */,
 				B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */,
-				B1C07F001C21DD6D002868F9 /* HRPVideoRecordViewController123.h */,
-				B1C07F011C21DD6D002868F9 /* HRPVideoRecordViewController123.m */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -298,6 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				B19C10441C1C4B7C007BB9FE /* Model */,
+				B1E751311C340DD80034FCC6 /* View */,
 				B19C10451C1C4B82007BB9FE /* Controller */,
 			);
 			path = "Media Preview Scene";
@@ -396,6 +412,7 @@
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
+				B1E751351C3415B60034FCC6 /* VolvoXC90.mp4 */,
 				B1AC89AD1B879A29009D12D6 /* Builds */,
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
@@ -520,6 +537,15 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		B1E751311C340DD80034FCC6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B1E751321C340E040034FCC6 /* HRPVideoPreview.h */,
+				B1E751331C340E040034FCC6 /* HRPVideoPreview.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		B1F007281C1C7E9F00944E74 /* Singletons */ = {
 			isa = PBXGroup;
 			children = (
@@ -624,6 +650,7 @@
 				B12805661C257C120058BAC8 /* 3.png in Resources */,
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
 				B12805691C257C120058BAC8 /* 6.png in Resources */,
+				B1E751361C3415B60034FCC6 /* VolvoXC90.mp4 in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
@@ -709,6 +736,7 @@
 			files = (
 				B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */,
 				B128052C1C25795C0058BAC8 /* HRPLoginViewController.m in Sources */,
+				B11341831C3033CC000693B9 /* HRPVideoRecordViewModel.m in Sources */,
 				B12805441C257A370058BAC8 /* UIImage+ChangeOriginalImage.m in Sources */,
 				B12805561C257B240058BAC8 /* HRPVideoPlayerViewController.m in Sources */,
 				B128054A1C257A620058BAC8 /* HRPNavigationController.m in Sources */,
@@ -716,12 +744,12 @@
 				B128059F1C25FC9D0058BAC8 /* HRPCollectionViewModel.m in Sources */,
 				B12805551C257B240058BAC8 /* HRPPhotoPreviewViewController.m in Sources */,
 				B12805701C2582950058BAC8 /* UIViewController+NavigationBar.m in Sources */,
-				B1C07F021C21DD6D002868F9 /* HRPVideoRecordViewController123.m in Sources */,
 				B128053C1C257A0F0058BAC8 /* HRPLocations.m in Sources */,
 				B12805761C2591F60058BAC8 /* HRPLabel.m in Sources */,
 				B1D9BA401C27072D00A98EEB /* HRPCollectionViewController.m in Sources */,
 				B128053E1C257A0F0058BAC8 /* HRPPhotoCell.m in Sources */,
 				B1AC89881B879A06009D12D6 /* HRPAppDelegate.m in Sources */,
+				B1E751341C340E040034FCC6 /* HRPVideoPreview.m in Sources */,
 				B12805731C258B6A0058BAC8 /* HRPVideoRecordViewController.m in Sources */,
 				B128053A1C257A0F0058BAC8 /* HRPButton.m in Sources */,
 				B12805491C257A620058BAC8 /* HRPBaseViewController.m in Sources */,

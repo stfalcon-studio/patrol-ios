@@ -7,11 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
+
+
+@class AVPlayer;
+@class HRPVideoPreview;
 
 
 @interface HRPVideoPlayerViewController : UIViewController
 
 @property (strong, nonatomic) NSURL *videoURL;
-//- (id)initWithContentURL:(NSURL *)contentURL;
+@property (strong, nonatomic) AVPlayer *player;
+@property (weak, nonatomic) IBOutlet HRPVideoPreview *playerView;
 
 @end

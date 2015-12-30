@@ -19,7 +19,6 @@
 #import "AFNetworking.h"
 #import <AFHTTPRequestOperation.h>
 #import "HRPPhotoPreviewViewController.h"
-#import "HRPVideoRecordViewController.h"
 #import "HRPVideoPlayerViewController.h"
 #import "UIViewController+NavigationBar.h"
 #import "HRPSettingsViewController.h"
@@ -100,21 +99,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     // Set network manager
     imagesIndexPath                             =   [NSMutableArray array];
 
-    // Set Status Bar
-//    UIView *statusBarView                       =  [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
-//    statusBarView.backgroundColor               =  [UIColor colorWithHexString:@"0477BD" alpha:1.f];
-//    [self.navigationController.navigationBar addSubview:statusBarView];
-    
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handleRepeatButtonTap:)
                                                  name:@"HRPPhotoCellStateButtonTap"
                                                object:nil];
-    
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(handleVideoRecord:)
-//                                                 name:@"HRPVideoRecordViewControllerDismiss"
-//                                               object:nil];
     
     // Set Reachability Observer
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -132,6 +121,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     if (photosNeedUploadCount > 0 && !isUploadInProcess)
         [self startUploadPhotos];
+    
+//    [self prepareDataSource];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
