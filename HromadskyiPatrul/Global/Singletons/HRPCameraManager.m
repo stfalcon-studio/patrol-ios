@@ -151,33 +151,30 @@
     NSError *error;
     
     // Initialize the Session object
-    _captureSession                                     =   [[AVCaptureSession alloc] init];
-    _captureSession.sessionPreset                       =   AVCaptureSessionPresetHigh;
+    _captureSession                             =   [[AVCaptureSession alloc] init];
+    _captureSession.sessionPreset               =   AVCaptureSessionPresetHigh;
     
     // Initialize a Camera object
-    AVCaptureDevice *videoDevice                        =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    AVCaptureDeviceInput *videoInput                    =   [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:&error];
-    _videoConnection                                    =   [_videoFileOutput connectionWithMediaType:AVMediaTypeVideo];
+    AVCaptureDevice *inputDevice                =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+
+    AVCaptureDeviceInput *deviceInput           =   [AVCaptureDeviceInput deviceInputWithDevice:inputDevice error:&error];
     
-    AVCaptureVideoStabilizationMode stabilizationMode   =   AVCaptureVideoStabilizationModeCinematic;
-    
-    if ([videoDevice.activeFormat isVideoStabilizationModeSupported:stabilizationMode])
-        [_videoConnection setPreferredVideoStabilizationMode:stabilizationMode];
-    
-    [_captureSession addInput:videoInput];
+    if ([_captureSession canAddInput:deviceInput])
+        [_captureSession addInput:deviceInput];
+
     
     // Configure the audio session
-    AVAudioSession *audioSession                        =   [AVAudioSession sharedInstance];
+    AVAudioSession *audioSession                =   [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [audioSession setActive:YES error:nil];
     
     // Find the desired input port
-    NSArray *inputs                                     =   [audioSession availableInputs];
-    AVAudioSessionPortDescription *builtInMic           =   nil;
+    NSArray *inputs                             =   [audioSession availableInputs];
+    AVAudioSessionPortDescription *builtInMic   =   nil;
     
     for (AVAudioSessionPortDescription *port in inputs) {
         if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
-            builtInMic                                  =   port;
+            builtInMic                          =   port;
            
             break;
         }
@@ -195,25 +192,27 @@
     
     // VIDEO
     // Add output file
-    _videoFileOutput                                    =   [[AVCaptureMovieFileOutput alloc] init];
-    _videoConnection                                    =   nil;
-    
-    for (AVCaptureConnection *connection in _videoFileOutput.connections) {
-        NSLog(@"%@", connection);
-        
-        for ( AVCaptureInputPort *port in connection.inputPorts) {
-            NSLog(@"%@", port);
-            if ([port.mediaType isEqual:AVMediaTypeVideo])
-                _videoConnection                        =   connection;
-        }
-    }
-    
+    _videoFileOutput                            =   [[AVCaptureMovieFileOutput alloc] init];
+
     if ([_captureSession canAddOutput:_videoFileOutput])
         [_captureSession addOutput:_videoFileOutput];
     
+    // Set Connection
+    _videoConnection                            =   nil;
+    
+    for (AVCaptureConnection *connection in _videoFileOutput.connections) {
+        for (AVCaptureInputPort *port in connection.inputPorts) {
+            if ([port.mediaType isEqual:AVMediaTypeVideo])
+                _videoConnection                =   connection;
+        }
+    }
+    
+    if ([_videoConnection isVideoOrientationSupported])
+        [self setVideoSessionOrientation];
+    
     // Create StillImageOutput
-    _stillImageOutput               =   [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings    =   [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+    _stillImageOutput                           =   [[AVCaptureStillImageOutput alloc] init];
+    NSDictionary *outputSettings                =   [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
     [_stillImageOutput setOutputSettings:outputSettings];
         
     [_captureSession addOutput:_stillImageOutput];
@@ -318,9 +317,6 @@
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
     _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
     _videoConnection            =   _videoPreviewLayer.connection;
-    
-//    if ([_videoConnection isVideoOrientationSupported])
-//        [_videoConnection setVideoOrientation:[self getVideoOrientation]];
 }
 
 - (void)setVideoSessionOrientation {
@@ -329,7 +325,7 @@
     
     switch (deviceOrientation) {
         case UIDeviceOrientationPortrait:
-            videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
+            videoOrientation                    =   AVCaptureVideoOrientationPortrait;
             break;
             
         case UIDeviceOrientationPortraitUpsideDown:
@@ -349,8 +345,9 @@
             break;
     }
     
-    [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
+//    [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
     [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+    [_videoConnection setVideoOrientation:videoOrientation];
 }
 
 - (void)setNextSnippetNumber {
@@ -549,15 +546,58 @@
     
     for (int i = 0; i < allAudioTempSnippets.count; i++) {
         NSString *videoSnippetFilePath                  =   [_mediaFolderPath stringByAppendingPathComponent:allVideoTempSnippets[i]];
-        AVURLAsset *videoSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoSnippetFilePath] options:nil];
+        
+        AVURLAsset *videoSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoSnippetFilePath]
+                                                                                    options:nil];
+        
         NSString *audioSnippetFilePath                  =   [_mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
-        AVURLAsset *audioSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath] options:nil];
+       
+        AVURLAsset *audioSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath]
+                                                                                    options:nil];
+        
+        AVAssetTrack *videoAssetTrack                   =   [[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        UIImageOrientation videoAssetOrientation        =   UIImageOrientationUp;
+        BOOL isVideoAssetPortrait                       =   NO;
+        CGAffineTransform videoTransform                =   videoAssetTrack.preferredTransform;
+        
+        if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
+            videoAssetOrientation                       =   UIImageOrientationRight;
+            isVideoAssetPortrait                        =   YES;
+        }
+        
+        if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
+            videoAssetOrientation                       =   UIImageOrientationLeft;
+            isVideoAssetPortrait                        =   YES;
+        }
+        
+        if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0)
+            videoAssetOrientation                       =   UIImageOrientationUp;
+        
+        if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0)
+            videoAssetOrientation                       =   UIImageOrientationDown;
+        
+        
         
         // Set the video snippet time ranges in composition
         [videoCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoSnippetAsset.duration)
                                        ofTrack:[[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
                                         atTime:kCMTimeZero
                                          error:nil];
+        
+        CGFloat FirstAssetScaleToFitRatio               =   320.0 / videoAssetTrack.naturalSize.width;
+        
+        if (isVideoAssetPortrait) {
+            FirstAssetScaleToFitRatio                   =   320.0 / videoAssetTrack.naturalSize.height;
+            CGAffineTransform FirstAssetScaleFactor     =   CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
+            
+            [videoCompositionTrack setPreferredTransform:CGAffineTransformConcat(videoAssetTrack.preferredTransform, FirstAssetScaleFactor)];
+        }
+        
+        else {
+            CGAffineTransform FirstAssetScaleFactor     =   CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
+           
+            [videoCompositionTrack setPreferredTransform:CGAffineTransformConcat(CGAffineTransformConcat(videoAssetTrack.preferredTransform, FirstAssetScaleFactor),CGAffineTransformMakeTranslation(0, 160))];
+        }
         
         if (audioSnippetAsset)
             [audioCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioSnippetAsset.duration)

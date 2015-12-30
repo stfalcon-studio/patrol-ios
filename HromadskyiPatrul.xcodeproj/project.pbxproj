@@ -53,7 +53,6 @@
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
 		B1D9BA401C27072D00A98EEB /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */; };
 		B1E751341C340E040034FCC6 /* HRPVideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = B1E751331C340E040034FCC6 /* HRPVideoPreview.m */; };
-		B1E751361C3415B60034FCC6 /* VolvoXC90.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = B1E751351C3415B60034FCC6 /* VolvoXC90.mp4 */; };
 		B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
 /* End PBXBuildFile section */
@@ -154,7 +153,6 @@
 		B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
 		B1E751321C340E040034FCC6 /* HRPVideoPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoPreview.h; sourceTree = "<group>"; };
 		B1E751331C340E040034FCC6 /* HRPVideoPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPreview.m; sourceTree = "<group>"; };
-		B1E751351C3415B60034FCC6 /* VolvoXC90.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = VolvoXC90.mp4; sourceTree = "<group>"; };
 		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -412,7 +410,6 @@
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
-				B1E751351C3415B60034FCC6 /* VolvoXC90.mp4 */,
 				B1AC89AD1B879A29009D12D6 /* Builds */,
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
@@ -650,7 +647,6 @@
 				B12805661C257C120058BAC8 /* 3.png in Resources */,
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
 				B12805691C257C120058BAC8 /* 6.png in Resources */,
-				B1E751361C3415B60034FCC6 /* VolvoXC90.mp4 in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,

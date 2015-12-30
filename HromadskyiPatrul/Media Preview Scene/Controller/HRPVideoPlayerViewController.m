@@ -32,9 +32,9 @@
     [_cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
                    forState:UIControlStateNormal];
     
-    NSURL *movieURL     =   [[NSBundle mainBundle] URLForResource:@"VolvoXC90" withExtension:@"mp4"];
-    _player             =   [AVPlayer playerWithURL:movieURL];
-//    _player                             =   [AVPlayer playerWithURL:_videoURL];
+//    NSURL *movieURL     =   [[NSBundle mainBundle] URLForResource:@"VolvoXC90" withExtension:@"mp4"];
+//    _player             =   [AVPlayer playerWithURL:movieURL];
+    _player                             =   [AVPlayer playerWithURL:_videoURL];
     
     [_playerView setMovieToPlayer:_player];
     [_player play];

@@ -71,14 +71,16 @@
     [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
     [_cameraManager.videoPreviewLayer setFrame:self.view.bounds];
     
-    _cameraManager.videoConnection      =   _cameraManager.videoPreviewLayer.connection;
-    
+    [self.view.layer setMasksToBounds:YES];
+    [self.view layoutIfNeeded];
+
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlLabel.layer];
     
     [self customizeViewStyle];
 
-    [_cameraManager.captureSession startRunning];
     _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
+
+    [_cameraManager.captureSession startRunning];
     [_cameraManager startStreamVideoRecording];
 }
 
