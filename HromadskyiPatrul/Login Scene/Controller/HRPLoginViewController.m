@@ -99,7 +99,7 @@
                                                CGRectGetHeight([[UIScreen mainScreen] bounds]));
     
     // Set Scroll View constraints
-    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+    if (_screenSize.width < _screenSize.height) {
         _contentViewWidthConstraint.constant    =   _screenSize.width;
         _statusBarTopConstarint.constant        =   0.f;
     }

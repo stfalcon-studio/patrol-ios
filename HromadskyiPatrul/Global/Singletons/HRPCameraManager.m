@@ -56,8 +56,7 @@
         _userApp                                        =   [NSUserDefaults standardUserDefaults];
         
         [self createStoreDataPath];
-        
-#warning DELETE IN RELEASE - READ ONLY FOR CHECK
+        [self readAllFolderFile];
         [self readPhotosCollectionFromFile];
         
         // Set Media session parameters
@@ -102,7 +101,7 @@
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
     _timerSeconds           =   0;
-    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 20 : 10;
+    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 3 : 3; // 20 : 11
     _timerLabel             =   label;
     _timerLabel.text        =   [self formattedTime:_timerSeconds];    
     
@@ -293,6 +292,8 @@
 
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
     _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
+    
+    [self setVideoSessionOrientation];
 }
 
 - (void)setVideoSessionOrientation {
@@ -309,11 +310,11 @@
             break;
             
         case UIDeviceOrientationLandscapeLeft:
-            videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
+            videoOrientation                    =   AVCaptureVideoOrientationLandscapeRight;
             break;
             
         case UIDeviceOrientationLandscapeRight:
-            videoOrientation                    =   AVCaptureVideoOrientationLandscapeRight;
+            videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
             break;
             
         default:
@@ -321,53 +322,9 @@
             break;
     }
     
-//    [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
+    [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
     [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
 }
-
-//- (AVCaptureVideoOrientation)getVideoOrientation {
-//    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationPortraitUpsideDown;
-//    UIDeviceOrientation deviceOrientation               =   [[UIDevice currentDevice] orientation];
-//    
-//    switch (deviceOrientation) {
-//        case UIInterfaceOrientationPortrait: {
-//            videoOrientation                            =   AVCaptureVideoOrientationPortrait;
-//            
-//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-//        }
-//            break;
-//            
-//        case UIInterfaceOrientationPortraitUpsideDown: {
-//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-//            
-//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-//        }
-//            break;
-//            
-//        case UIInterfaceOrientationLandscapeLeft: {
-//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-//
-//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-//        }
-//            break;
-//            
-//        case UIInterfaceOrientationLandscapeRight: {
-//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-//            
-//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-//        }
-//            break;
-//
-//        default: {
-//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-//            
-//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-//        }
-//            break;
-//    }
-//    
-//    return videoOrientation;
-//}
 
 - (void)createStoreDataPath {
     NSError *error;
@@ -396,7 +353,6 @@
     
     NSLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
 }
-
 
 - (void)readPhotosCollectionFromFile {
     NSArray *paths              =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -430,8 +386,7 @@
     NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     
     for (NSString *fileName in allFolderFiles) {
-        if ([fileName containsString:@"snippet_video_1.mp4"] ||
-            [fileName containsString:@"snippet_audio_1.caf"])
+        if ([fileName containsString:@"snippet_"])
             [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
     }
 }
@@ -503,7 +458,7 @@
     NSMutableArray *allAudioTempSnippets                =   [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
     
     // Sort arrays
-    NSSortDescriptor *sortDescription                   =   [[NSSortDescriptor alloc] initWithKey:nil ascending:NO];
+    NSSortDescriptor *sortDescription                   =   [[NSSortDescriptor alloc] initWithKey:nil ascending:YES];
     allVideoTempSnippets                                =   [NSMutableArray arrayWithArray:
                                                              [allVideoTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
     
@@ -542,7 +497,22 @@
         if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0)
             videoAssetOrientation                       =   UIImageOrientationDown;
         
-        
+//        // Extract Violation Photo from first video frame
+//        if (i == 1) {
+//            NSError *err                                =   NULL;
+//            AVAssetImageGenerator *imageGenerator       =   [[AVAssetImageGenerator alloc] initWithAsset:videoSnippetAsset];
+//            
+//            [imageGenerator setAppliesPreferredTrackTransform:YES];
+//            
+//            CMTime time                                 =   CMTimeMake(1, 2);
+//            CGImageRef oneRef                           =   [imageGenerator copyCGImageAtTime:time
+//                                                                                   actualTime:NULL
+//                                                                                        error:&err];
+//            
+//             _videoImageOriginal     =   [[UIImage alloc] initWithCGImage:oneRef
+//                                                                    scale:1.f
+//                                                              orientation:videoAssetOrientation];
+//        }
         
         // Set the video snippet time ranges in composition
         [videoCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoSnippetAsset.duration)
@@ -640,24 +610,31 @@
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL {
     NSError *err                                        =   NULL;
     
-    AVURLAsset *movieAsset                              =   [[AVURLAsset alloc] initWithURL:filePathURL options:nil];
+    AVURLAsset *movieAsset                              =   [[AVURLAsset alloc] initWithURL:filePathURL
+                                                                                    options:nil];
+    
     AVAssetImageGenerator *imageGenerator               =   [[AVAssetImageGenerator alloc] initWithAsset:movieAsset];
+    
     imageGenerator.appliesPreferredTrackTransform       =   YES;
     CMTime time                                         =   CMTimeMake(1, 2);
-    CGImageRef oneRef                                   =   [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&err];
     
-    UIImageOrientation imageOrientation;
+    CGImageRef oneRef                                   =   [imageGenerator copyCGImageAtTime:time
+                                                                                   actualTime:NULL error:&err];
     
-    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-        imageOrientation    =   UIImageOrientationUp;
+//    UIImageOrientation imageOrientation;
+//    
+//    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
+//        imageOrientation    =   UIImageOrientationUp;
+//    
+//    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeRight)
+//        imageOrientation    =   UIImageOrientationUp;
+//    
+//    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeLeft)
+//        imageOrientation    =   UIImageOrientationUp;
     
-    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeRight)
-        imageOrientation    =   UIImageOrientationRight;
-    
-    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeLeft)
-        imageOrientation    =   UIImageOrientationLeft;
-    
-    _videoImageOriginal     =   [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:imageOrientation];
+    _videoImageOriginal     =   [[UIImage alloc] initWithCGImage:oneRef
+                                                           scale:1.f
+                                                     orientation:UIImageOrientationUp];
     
     if (_videoImageOriginal)
         [self mergeAndSaveVideoFile];
@@ -693,7 +670,7 @@
         [self startStreamVideoRecording];
     }
     
-    // Attention mode
+    // Violation mode
     else if (_videoSessionMode == NSTimerVideoSessionModeViolation) {
         // Start Record Violation Video mode
         if (_videoImageOriginal == nil) {
@@ -710,7 +687,6 @@
             _videoSessionMode           =   NSTimerVideoSessionModeStream;
             _timerSeconds               =   0;
             _timer                      =   nil;
-            _isVideoSaving              =   NO;
             
             [[NSNotificationCenter defaultCenter] postNotificationName:@"showMergeAndSaveAlertMessage"
                                                                 object:nil

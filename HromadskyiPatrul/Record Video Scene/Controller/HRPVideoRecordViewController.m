@@ -111,7 +111,8 @@
 
 #pragma mark - NSNotification -
 - (void)handleUserLogout:(NSNotification *)notification {
-    [self.navigationController popToRootViewControllerAnimated:NO];
+//    [self.navigationController popToRootViewControllerAnimated:NO];
+    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)handlerStartVideoSession:(NSNotification *)notification {
@@ -119,6 +120,7 @@
         [self hideLoader];
         
     self.navigationItem.rightBarButtonItem.enabled          =   YES;
+    _cameraManager.isVideoSaving                            =   NO;
     
     [_cameraManager startStreamVideoRecording];
     [_cameraManager createTimerWithLabel:_timerLabel];    
@@ -136,7 +138,7 @@
 
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
-    if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream) {
+    if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
         _violationLabel.hidden                              =   NO;
         _violationLabel.text                                =   NSLocalizedString(@"Violation", nil);
         _cameraManager.isVideoSaving                        =   YES;
@@ -170,7 +172,7 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     // Restart Timer only in Stream Video mode
-    if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream) {
+    if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
         [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
               andBackgroundColor:BackgroundColorTypeBlue
                          forTime:2];
@@ -178,8 +180,9 @@
         [_cameraManager setVideoPreviewLayerOrientation:size];
         [_cameraManager.timer invalidate];
         
-        [_cameraManager createTimerWithLabel:_timerLabel];
         _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
+
+        [_cameraManager createTimerWithLabel:_timerLabel];
         [_cameraManager restartStreamVideoRecording];
     }
     

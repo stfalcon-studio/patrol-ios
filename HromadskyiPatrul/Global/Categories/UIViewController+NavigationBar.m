@@ -116,8 +116,6 @@
 }
 
 - (void)customizeLeftBarButtonWithText:(NSString *)text withActionEnabled:(BOOL)enabled {
-    text                =   @"test.stfalcon@gmail.com";
-    
     UILabel *label      =   [[UILabel alloc] init];
     label.font          =   [UIFont systemFontOfSize:14.f weight:UIFontWeightUltraLight];
     label.text          =   text;

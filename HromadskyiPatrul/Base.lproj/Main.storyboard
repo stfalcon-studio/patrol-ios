@@ -432,29 +432,7 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WhQ-QL-Yx8" userLabel="Preview View" customClass="HRPVideoPreview">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
-                                <subviews>
-                                    <button autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="phX-da-Z3Q" userLabel="Cancel Button">
-                                        <rect key="frame" x="212" y="8" width="100" height="44"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="100" id="9tf-wK-BKK"/>
-                                            <constraint firstAttribute="height" constant="44" id="S1a-gi-DDq"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                        <state key="normal" title="Button">
-                                            <color key="titleColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="actionCancelButtonTap:" destination="EF7-pG-ro8" eventType="touchUpInside" id="TS3-Wx-bHl"/>
-                                            <action selector="actionCancelButtonTap:" destination="tlt-8Y-UKs" eventType="touchUpInside" id="WYV-2d-9p0"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="phX-da-Z3Q" secondAttribute="trailing" constant="8" id="biH-Gr-Pnu"/>
-                                    <constraint firstItem="phX-da-Z3Q" firstAttribute="top" secondItem="WhQ-QL-Yx8" secondAttribute="top" constant="8" id="xdc-zW-gaU"/>
-                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -469,7 +447,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="cancelButton" destination="phX-da-Z3Q" id="7cv-kd-21b"/>
                         <outlet property="playerView" destination="WhQ-QL-Yx8" id="GG7-Qf-d0b"/>
                         <outlet property="statusViewTopConstraint" destination="Twi-WY-czd" id="es5-ku-4P2"/>
                     </connections>

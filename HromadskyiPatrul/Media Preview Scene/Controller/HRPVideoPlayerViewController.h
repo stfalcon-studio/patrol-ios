@@ -8,16 +8,16 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <AVKit/AVKit.h>
 
 
-@class AVPlayer;
-@class HRPVideoPreview;
+@class AVPlayer, HRPVideoPreview;
 
 
-@interface HRPVideoPlayerViewController : UIViewController
+@interface HRPVideoPlayerViewController : AVPlayerViewController
 
 @property (strong, nonatomic) NSURL *videoURL;
-@property (strong, nonatomic) AVPlayer *player;
+//@property (strong, nonatomic) AVPlayer *player;
 @property (weak, nonatomic) IBOutlet HRPVideoPreview *playerView;
 
 @end

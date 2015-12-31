@@ -12,7 +12,6 @@
 
 @interface HRPVideoPlayerViewController ()
 
-@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *statusViewTopConstraint;
 
 @end
@@ -29,15 +28,13 @@
     _statusViewTopConstraint.constant   =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
                                                     0.f : -20.f;
     
-    [_cancelButton setTitle:NSLocalizedString(@"Alert error button Cancel", nil)
-                   forState:UIControlStateNormal];
+    self.player                         =   [AVPlayer playerWithURL:_videoURL];
+    self.player.volume                  =   [[AVAudioSession sharedInstance] outputVolume];
     
-//    NSURL *movieURL     =   [[NSBundle mainBundle] URLForResource:@"VolvoXC90" withExtension:@"mp4"];
-//    _player             =   [AVPlayer playerWithURL:movieURL];
-    _player                             =   [AVPlayer playerWithURL:_videoURL];
+    [self setAudioVolume];
     
-    [_playerView setMovieToPlayer:_player];
-    [_player play];
+    [self.playerView setMovieToPlayer:self.player];
+    [self.player play];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,9 +42,22 @@
 }
 
 
-#pragma mark - Actions -
-- (IBAction)actionCancelButtonTap:(UIButton *)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+#pragma mark - Methods -
+- (void)setAudioVolume {
+    AVAsset *avAsset                    =   [[self.player currentItem] asset] ;
+    NSArray *audioTracks                =   [avAsset tracksWithMediaType:AVMediaTypeAudio] ;
+    NSMutableArray *allAudioParams      =   [NSMutableArray array] ;
+    
+    for(AVAssetTrack *track in audioTracks){
+        AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters] ;
+        [audioInputParams setVolume:2.f atTime:kCMTimeZero] ;
+        [audioInputParams setTrackID:[track trackID]] ;
+        [allAudioParams addObject:audioInputParams];
+    }
+    
+    AVMutableAudioMix *audioVolMix      =   [AVMutableAudioMix audioMix] ;
+    [audioVolMix setInputParameters:allAudioParams];
+    [[self.player currentItem] setAudioMix:audioVolMix];
 }
 
 
