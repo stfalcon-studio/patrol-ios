@@ -125,7 +125,7 @@
 #pragma mark - Actions -
 - (IBAction)actionLoginButtonTap:(HRPButton *)sender {
     // Email validation
-    if ([self.emailTextField.text isEmail]) {
+    if ([_emailTextField.text isEmail]) {
         // API
         if ([self isInternetConnectionAvailable]) {
             [sender setUserInteractionEnabled:NO];
@@ -134,14 +134,16 @@
                   andBackgroundColor:BackgroundColorTypeBlack
                              forTime:100];
             
-            [_loginViewModel userLoginParameters:self.emailTextField.text
+            [_loginViewModel userLoginParameters:_emailTextField.text
                                       onSuccess:^(NSDictionary *successResult) {
-                                          [self. emailTextField resignFirstResponder];
+                                          [_emailTextField resignFirstResponder];
                                           
+                                          /*
                                           // Set NSUserDefaults item
                                           [_loginViewModel.userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
                                           [_loginViewModel.userApp setObject:successResult[@"id"] forKey:@"userAppID"];
                                           [_loginViewModel.userApp synchronize];
+                                           */
 
                                           // Transition to VideoRecord scene
                                           HRPVideoRecordViewController *videoRecordVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];

@@ -42,8 +42,14 @@
     [requestOperationDomainManager POST:pathAPI
                              parameters:@{ @"email" : email }
                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    if (operation.response.statusCode == 200)
+                                    if (operation.response.statusCode == 200) {
+                                        // Set NSUserDefaults item
+                                        [_userApp setObject:email forKey:@"userAppEmail"];
+                                        [_userApp setObject:responseObject[@"id"] forKey:@"userAppID"];
+                                        [_userApp synchronize];
+
                                         success(responseObject);
+                                    }
                                 }
                                 failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                     if (operation.response.statusCode == 400)
