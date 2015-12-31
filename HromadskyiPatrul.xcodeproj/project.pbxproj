@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
 		B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1669E1C1BD657C500C4156D /* MediaPlayer.framework */; };
-		B11341831C3033CC000693B9 /* HRPVideoRecordViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B11341821C3033CC000693B9 /* HRPVideoRecordViewModel.m */; };
 		B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
 		B12805231C25781A0058BAC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
 		B12805261C2578E30058BAC8 /* HRPMainViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805251C2578E30058BAC8 /* HRPMainViewModel.m */; };
@@ -71,8 +70,6 @@
 		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
-		B11341811C3033CC000693B9 /* HRPVideoRecordViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewModel.h; sourceTree = "<group>"; };
-		B11341821C3033CC000693B9 /* HRPVideoRecordViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordViewModel.m; sourceTree = "<group>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -207,15 +204,6 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
-		B11341801C3033A0000693B9 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				B11341811C3033CC000693B9 /* HRPVideoRecordViewModel.h */,
-				B11341821C3033CC000693B9 /* HRPVideoRecordViewModel.m */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		B12804F71C25425B0058BAC8 /* Login Scene */ = {
 			isa = PBXGroup;
 			children = (
@@ -272,7 +260,6 @@
 		B19C10361C1C41BF007BB9FE /* Record Video Scene  */ = {
 			isa = PBXGroup;
 			children = (
-				B11341801C3033A0000693B9 /* Model */,
 				B1C07EFF1C21DC4F002868F9 /* View */,
 				B19C10381C1C41CE007BB9FE /* Controller */,
 			);
@@ -732,7 +719,6 @@
 			files = (
 				B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */,
 				B128052C1C25795C0058BAC8 /* HRPLoginViewController.m in Sources */,
-				B11341831C3033CC000693B9 /* HRPVideoRecordViewModel.m in Sources */,
 				B12805441C257A370058BAC8 /* UIImage+ChangeOriginalImage.m in Sources */,
 				B12805561C257B240058BAC8 /* HRPVideoPlayerViewController.m in Sources */,
 				B128054A1C257A620058BAC8 /* HRPNavigationController.m in Sources */,

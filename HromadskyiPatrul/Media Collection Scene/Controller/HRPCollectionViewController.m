@@ -403,13 +403,15 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     isPaginationRun                             =   NO;
     
-    //self.userNameBarButton.title                =   [userApp objectForKey:@"userAppEmail"];
+    self.userNameBarButton.title                =   [userApp objectForKey:@"userAppEmail"];
     //    [self createTestDataSource];
     
     
     [self createStoreDataPath];
+    
     //    [self savePhotosCollectionToFile];
     //    [self removePhotosCollectionFromFile];
+    
     [self readPhotosCollectionFromFile];
 }
 

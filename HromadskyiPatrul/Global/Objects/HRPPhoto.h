@@ -22,6 +22,7 @@ typedef NS_ENUM (NSInteger, HRPPhotoState) {
 @property (assign, nonatomic) HRPPhotoState state;
 @property (strong, nonatomic) NSString *assetsPhotoURL;
 @property (strong, nonatomic) NSString *assetsVideoURL;
+@property (strong, nonatomic) NSDate *date;
 @property (assign, nonatomic) CGFloat latitude;
 @property (assign, nonatomic) CGFloat longitude;
 @property (assign, nonatomic) BOOL isVideo;

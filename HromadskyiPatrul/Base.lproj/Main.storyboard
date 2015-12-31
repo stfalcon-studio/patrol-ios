@@ -490,7 +490,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DxB-Zj-qIu" userLabel="Control Label" customClass="HRPLabel">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="START" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DxB-Zj-qIu" userLabel="Violation Label" customClass="HRPLabel">
                                 <rect key="frame" x="132" y="486" width="55" height="21"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -525,8 +525,8 @@
                         </connections>
                     </view>
                     <connections>
-                        <outlet property="_controlLabel" destination="DxB-Zj-qIu" id="kvp-Am-MNR"/>
                         <outlet property="_timerLabel" destination="BzL-3N-W4p" id="oGy-jp-eCJ"/>
+                        <outlet property="_violationLabel" destination="DxB-Zj-qIu" id="W0H-4V-scT"/>
                         <outlet property="view" destination="Lh8-SN-AYI" id="ktR-Ng-rGf"/>
                     </connections>
                 </viewController>

@@ -20,7 +20,7 @@
 @implementation HRPVideoRecordViewController {
     HRPCameraManager *_cameraManager;
     
-    __weak IBOutlet HRPLabel *_controlLabel;
+    __weak IBOutlet HRPLabel *_violationLabel;
     __weak IBOutlet UILabel *_timerLabel;
 }
 
@@ -73,7 +73,7 @@
     [self.view.layer setMasksToBounds:YES];
     [self.view layoutIfNeeded];
 
-    [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_controlLabel.layer];
+    [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
     
     [self customizeViewStyle];
 
@@ -118,8 +118,6 @@
     if (self.HUD.alpha)
         [self hideLoader];
         
-    _cameraManager.videoSessionMode                         =   NSTimerVideoSessionModeStream;
-    _cameraManager.isVideoSaving                            =   NO;
     self.navigationItem.rightBarButtonItem.enabled          =   YES;
     
     [_cameraManager startStreamVideoRecording];
@@ -127,8 +125,8 @@
 }
 
 - (void)handlerMergeAndSaveVideo:(NSNotification *)notification {
-    _controlLabel.text                                      =   nil;
-    _controlLabel.isLabelFlashing                           =   NO;
+    _violationLabel.text                                    =   nil;
+    _violationLabel.isLabelFlashing                         =   NO;
     
     [self showLoaderWithText:NSLocalizedString(@"Merge & Save video", nil)
           andBackgroundColor:BackgroundColorTypeBlue
@@ -139,21 +137,21 @@
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream) {
-        _controlLabel.hidden                                =   NO;
-        _controlLabel.text                                  =   NSLocalizedString(@"Violation", nil);
+        _violationLabel.hidden                              =   NO;
+        _violationLabel.text                                =   NSLocalizedString(@"Violation", nil);
         _cameraManager.isVideoSaving                        =   YES;
+        _cameraManager.videoSessionMode                     =   NSTimerVideoSessionModeViolation;
+
         self.navigationItem.rightBarButtonItem.enabled      =   NO;
-        
-        [_controlLabel startFlashing];
-        _cameraManager.videoSessionMode                     =   NSTimerVideoSessionModeAttention;
-        [_cameraManager startAttentionVideoRecording];
+
+        [_violationLabel startFlashing];
     }
 }
 
 
 #pragma mark - Methods -
 - (void)customizeViewStyle {
-    _controlLabel.hidden                                    =   YES;
+    _violationLabel.hidden                                  =   YES;
     
     [_cameraManager createTimerWithLabel:_timerLabel];
 }

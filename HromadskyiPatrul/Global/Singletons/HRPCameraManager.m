@@ -13,18 +13,17 @@
 
 
 @implementation HRPCameraManager {
-//    AVCaptureVideoOrientation _videoOrientation;
     AVAudioRecorder *_audioRecorder;
     AVAudioPlayer *_audioPlayer;
     AVAudioSession *_audioSession;
     AVMutableComposition *_composition;
-    CLLocation *_location;
-    HRPCameraManagerSetupResult _setupResult;
     UILabel *_timerLabel;
+    CLLocation *_location;
+    CLLocationManager *_locationManager;
 
-    NSArray *_audioFilesNames;
     NSDictionary *_audioRecordSettings;
     NSString *_arrayPath;
+    NSString *_mediaFolderPath;
     NSMutableArray *_photosDataSource;
     NSURL *_videoAssetURL;
     UIImage *_videoImageOriginal;
@@ -32,7 +31,6 @@
     
     NSInteger _sessionDuration;
     NSInteger _timerSeconds;
-    NSInteger _snippetNumber;
 }
 
 #pragma mark - Constructors -
@@ -63,10 +61,7 @@
         [self readPhotosCollectionFromFile];
         
         // Set Media session parameters
-        _snippetNumber          =   0;
         _isVideoSaving          =   NO;
-        _videoFilesNames        =   @[@"snippet_video_0.mp4", @"snippet_video_1.mp4", @"snippet_video_2.mp4"];
-        _audioFilesNames        =   @[@"snippet_audio_0.caf", @"snippet_audio_1.caf", @"snippet_audio_2.caf"];
         
         _audioRecordSettings    =   [NSDictionary dictionaryWithObjectsAndKeys:
                                      [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
@@ -77,9 +72,9 @@
         
         // [self deleteFolder];
         
-        _locationManager                                    =   [[CLLocationManager alloc] init];
-        _locationManager.delegate                           =   self;
-        _locationManager.desiredAccuracy                    =   kCLLocationAccuracyBest;
+        _locationManager                    =   [[CLLocationManager alloc] init];
+        _locationManager.delegate           =   self;
+        _locationManager.desiredAccuracy    =   kCLLocationAccuracyBest;
         
         [_locationManager startUpdatingLocation];
         
@@ -107,7 +102,7 @@
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
     _timerSeconds           =   0;
-    _sessionDuration        =   5;
+    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 20 : 10;
     _timerLabel             =   label;
     _timerLabel.text        =   [self formattedTime:_timerSeconds];    
     
@@ -161,7 +156,6 @@
     
     if ([_captureSession canAddInput:deviceInput])
         [_captureSession addInput:deviceInput];
-
     
     // Configure the audio session
     AVAudioSession *audioSession                =   [AVAudioSession sharedInstance];
@@ -198,44 +192,62 @@
         [_captureSession addOutput:_videoFileOutput];
     
     // Set Connection
-    _videoConnection                            =   nil;
+    AVCaptureConnection *videoConnection        =   nil;
     
     for (AVCaptureConnection *connection in _videoFileOutput.connections) {
         for (AVCaptureInputPort *port in connection.inputPorts) {
             if ([port.mediaType isEqual:AVMediaTypeVideo])
-                _videoConnection                =   connection;
+                videoConnection                 =   connection;
         }
     }
     
-    if ([_videoConnection isVideoOrientationSupported])
+    if ([videoConnection isVideoOrientationSupported])
         [self setVideoSessionOrientation];
     
     // Create StillImageOutput
-    _stillImageOutput                           =   [[AVCaptureStillImageOutput alloc] init];
+    AVCaptureStillImageOutput *stillImageOutput =   [[AVCaptureStillImageOutput alloc] init];
     NSDictionary *outputSettings                =   [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
-    [_stillImageOutput setOutputSettings:outputSettings];
+    [stillImageOutput setOutputSettings:outputSettings];
         
-    [_captureSession addOutput:_stillImageOutput];
+    [_captureSession addOutput:stillImageOutput];
 }
 
 - (void)startStreamVideoRecording {
     [self startAudioRecording];
     
-    [_videoFileOutput startRecordingToOutputFileURL:[self setNewVideoFileURL:_snippetNumber]
-                                  recordingDelegate:self];
-}
-
-- (void)startAttentionVideoRecording {
-    // Stop video capture and make the capture session object nil
-    _timerSeconds       =   0;
+    NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:
+                                     (_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_video_0.mp4" :
+                                                                                            @"snippet_video_1.mp4"];
     
-    // Stop Video & Audio recording
-    [self stopVideoRecording];
+    NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
+
+    [_videoFileOutput startRecordingToOutputFileURL:videoFileURL recordingDelegate:self];
 }
 
 - (void)startAudioRecording {
     if (!_audioRecorder.recording) {
-        [self setNewAudioRecorder];
+        NSError *error          =   nil;
+        _audioSession           =   [AVAudioSession sharedInstance];
+        
+        [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+        [_audioSession setActive:YES withOptions:0 error:nil];
+        
+        NSString *audioFilePath =   [_mediaFolderPath stringByAppendingPathComponent:
+                                     (_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_audio_0.caf" :
+                                                                                            @"snippet_audio_1.caf"];
+
+        NSURL *audioFileURL     =   [NSURL fileURLWithPath:audioFilePath];
+        
+        _audioRecorder          =   [[AVAudioRecorder alloc] initWithURL:audioFileURL
+                                                                settings:_audioRecordSettings
+                                                                   error:&error];
+        
+        if (error)
+            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
+                              andMessage:[error localizedDescription]];
+        
+        else
+            [_audioRecorder prepareToRecord];
         
         [_audioRecorder record];
     }
@@ -243,7 +255,6 @@
 
 - (void)restartStreamVideoRecording {
     _timerSeconds       =   0;
-    _snippetNumber      =   1;
 
     // Stop Video & Audio recording
     [self stopVideoRecording];
@@ -265,7 +276,6 @@
     
     _captureSession     =   nil;
     _videoPreviewLayer  =   nil;
-    _videoConnection    =   nil;
     _audioSession       =   nil;
     _audioRecorder      =   nil;
     _audioPlayer        =   nil;
@@ -281,42 +291,8 @@
         [_audioRecorder stop];
 }
 
-- (NSURL *)setNewVideoFileURL:(NSInteger)count {
-    NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:_videoFilesNames[count]];
-    NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
-    
-    return videoFileURL;
-}
-
-- (NSURL *)setNewAudioFileURL:(NSInteger)count {
-    NSString *audioFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:_audioFilesNames[count]];
-    NSURL *audioFileURL         =   [NSURL fileURLWithPath:audioFilePath];
-    
-    return audioFileURL;
-}
-
-- (void)setNewAudioRecorder {
-    NSError *error              =   nil;
-    _audioSession               =   [AVAudioSession sharedInstance];
-    
-    [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-    [_audioSession setActive:YES withOptions:0 error:nil];
-    
-    _audioRecorder              =   [[AVAudioRecorder alloc] initWithURL:[self setNewAudioFileURL:_snippetNumber]
-                                                                settings:_audioRecordSettings
-                                                                   error:&error];
-    
-    if (error)
-        [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
-                          andMessage:[error localizedDescription]];
-    
-    else
-        [_audioRecorder prepareToRecord];
-}
-
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
     _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
-    _videoConnection            =   _videoPreviewLayer.connection;
 }
 
 - (void)setVideoSessionOrientation {
@@ -347,60 +323,51 @@
     
 //    [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
     [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-    [_videoConnection setVideoOrientation:videoOrientation];
 }
 
-- (void)setNextSnippetNumber {
-    if (_videoSessionMode == NSTimerVideoSessionModeStream)
-        _snippetNumber      =   !_snippetNumber;
-    
-    else if (_videoSessionMode == NSTimerVideoSessionModeAttention)
-        ++_snippetNumber;
-}
-
-- (AVCaptureVideoOrientation)getVideoOrientation {
-    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationPortraitUpsideDown;
-    UIDeviceOrientation deviceOrientation               =   [[UIDevice currentDevice] orientation];
-    
-    switch (deviceOrientation) {
-        case UIInterfaceOrientationPortrait: {
-            videoOrientation                            =   AVCaptureVideoOrientationPortrait;
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-        }
-            break;
-            
-        case UIInterfaceOrientationPortraitUpsideDown: {
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-        }
-            break;
-            
-        case UIInterfaceOrientationLandscapeLeft: {
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-        }
-            break;
-            
-        case UIInterfaceOrientationLandscapeRight: {
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-        }
-            break;
-
-        default: {
-            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
-            
-            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
-        }
-            break;
-    }
-    
-    return videoOrientation;
-}
+//- (AVCaptureVideoOrientation)getVideoOrientation {
+//    AVCaptureVideoOrientation videoOrientation          =   AVCaptureVideoOrientationPortraitUpsideDown;
+//    UIDeviceOrientation deviceOrientation               =   [[UIDevice currentDevice] orientation];
+//    
+//    switch (deviceOrientation) {
+//        case UIInterfaceOrientationPortrait: {
+//            videoOrientation                            =   AVCaptureVideoOrientationPortrait;
+//            
+//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+//        }
+//            break;
+//            
+//        case UIInterfaceOrientationPortraitUpsideDown: {
+//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+//            
+//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+//        }
+//            break;
+//            
+//        case UIInterfaceOrientationLandscapeLeft: {
+//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+//
+//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+//        }
+//            break;
+//            
+//        case UIInterfaceOrientationLandscapeRight: {
+//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+//            
+//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+//        }
+//            break;
+//
+//        default: {
+//            videoOrientation                            =   AVCaptureVideoOrientationLandscapeLeft;
+//            
+//            [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+//        }
+//            break;
+//    }
+//    
+//    return videoOrientation;
+//}
 
 - (void)createStoreDataPath {
     NSError *error;
@@ -451,11 +418,10 @@
 - (void)removeAllFolderMediaTempFiles {
     NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     _videoImageOriginal         =   nil;
-    _snippetNumber              =   0;
     
     for (NSString *fileName in allFolderFiles) {
         if ([fileName containsString:@"snippet_"] ||
-            [fileName containsString:@"attention_video"])
+            [fileName containsString:@"violation_video"])
             [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
     }    
 }
@@ -490,7 +456,7 @@
     AVAssetExportSession *videoExportSession            =   [[AVAssetExportSession alloc] initWithAsset:_composition
                                                                                              presetName:AVAssetExportPresetHighestQuality];
     
-    NSString *videoFileName                             =   @"attention_video.mov";
+    NSString *videoFileName                             =   @"violation_video.mov";
     
     NSURL *videoURL                                     =   [[NSURL alloc] initFileURLWithPath:
                                                              [_mediaFolderPath stringByAppendingPathComponent:videoFileName]];
@@ -643,12 +609,13 @@
                                 completionBlock:^(NSURL *assetURL, NSError *error) {
                                     photo.assetsVideoURL    =   [_videoAssetURL absoluteString];
                                     photo.assetsPhotoURL    =   [assetURL absoluteString];
-                                    
+                                    photo.date              =   [NSDate date];
                                     photo.latitude          =   _location.coordinate.latitude;
                                     photo.longitude         =   _location.coordinate.longitude;
                                     photo.isVideo           =   YES;
                                     
                                     [_photosDataSource replaceObjectAtIndex:0 withObject:photo];
+                                    
                                     [self savePhotosCollectionToFile];
                                 }];
 }
@@ -666,6 +633,8 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:@"startVideoSession"
                                                         object:nil
                                                       userInfo:nil];
+    
+    _videoImageOriginal =   nil;
 }
 
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL {
@@ -719,33 +688,35 @@
       fromConnections:(NSArray *)connections error:(NSError *)error {
     // Stream mode
     if (_videoSessionMode == NSTimerVideoSessionModeStream) {
-        [self setNextSnippetNumber];
+        [self removeMediaSnippets];
         
         [self startStreamVideoRecording];
-        
-        // Delete media snippets_1
-        if (_snippetNumber == 0)
-            [self removeMediaSnippets];
     }
     
     // Attention mode
-    else if (_videoSessionMode == NSTimerVideoSessionModeAttention) {
-        // Start Attention mode
+    else if (_videoSessionMode == NSTimerVideoSessionModeViolation) {
+        // Start Record Violation Video mode
         if (_videoImageOriginal == nil) {
-            [self setNextSnippetNumber];
-            
+            _timerSeconds               =   0;
+            _timer                      =   nil;
             _videoImageOriginal         =   [UIImage new];
+            _isVideoSaving              =   YES;
 
             [self startStreamVideoRecording];
         }
         
-        // Finish Attention mode
+        // Finish Record Violation Video
         else {
+            _videoSessionMode           =   NSTimerVideoSessionModeStream;
+            _timerSeconds               =   0;
+            _timer                      =   nil;
+            _isVideoSaving              =   NO;
+            
             [[NSNotificationCenter defaultCenter] postNotificationName:@"showMergeAndSaveAlertMessage"
                                                                 object:nil
                                                               userInfo:nil];
             
-            NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:_videoFilesNames[_snippetNumber]];
+            NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:@"snippet_video_1.mp4"];
             NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
             
             [self extractFirstFrameFromVideoFilePath:videoFileURL];

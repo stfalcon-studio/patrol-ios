@@ -16,6 +16,7 @@
     
     if (self) {
         self.state              =   [[aDecoder decodeObjectForKey:@"stateKey"] integerValue];
+        self.date               =   [aDecoder decodeObjectForKey:@"dateKey"];
         self.assetsPhotoURL     =   [aDecoder decodeObjectForKey:@"assetsPhotoURLKey"];
         self.assetsVideoURL     =   [aDecoder decodeObjectForKey:@"assetsVideoURLKey"];
         self.latitude           =   [[aDecoder decodeObjectForKey:@"latitudeKey"] floatValue];
@@ -38,6 +39,7 @@
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:@(self.state) forKey:@"stateKey"];
+    [aCoder encodeObject:self.date forKey:@"dateKey"];
     [aCoder encodeObject:self.assetsPhotoURL forKey:@"assetsPhotoURLKey"];
     [aCoder encodeObject:self.assetsVideoURL forKey:@"assetsVideoURLKey"];
     [aCoder encodeObject:@(self.latitude) forKey:@"latitudeKey"];
