@@ -49,9 +49,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _screenSize         =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
-                                       CGRectGetHeight([[UIScreen mainScreen] bounds]));
-
     [self hideNavigationBar];
     
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
@@ -91,6 +88,16 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
+        _emailTextField.text    =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    _screenSize                 =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
+                                               CGRectGetHeight([[UIScreen mainScreen] bounds]));
+    
     // Set Scroll View constraints
     if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
         _contentViewWidthConstraint.constant    =   _screenSize.width;
@@ -99,13 +106,11 @@
     
     else {
         _contentViewWidthConstraint.constant    =   _screenSize.width;
+        _contentViewHeightConstraint.constant   =   _screenSize.height;
         _statusBarTopConstarint.constant        =   -20.f;
     }
     
     [self.view layoutIfNeeded];
-    
-    if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
-        _emailTextField.text    =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -8,7 +8,6 @@
 
 #import "HRPVideoRecordViewController.h"
 #import "HRPCollectionViewController.h"
-//#import "HRPVideoRecordView.h"
 #import "HRPCameraManager.h"
 #import "HRPLabel.h"
 
@@ -168,37 +167,6 @@
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskAll;
 }
-
-/*
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
-    switch (orientation) {
-        case UIInterfaceOrientationPortrait:
-            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortrait];
-            break;
-        
-        case UIInterfaceOrientationPortraitUpsideDown:
-            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationPortraitUpsideDown];
-            break;
-       
-        case UIInterfaceOrientationLandscapeLeft:
-            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationLandscapeLeft];
-            break;
-        
-        case UIInterfaceOrientationLandscapeRight:
-            [_cameraManager.videoPreviewLayer.connection setVideoOrientation:AVCaptureVideoOrientationLandscapeRight];
-            break;
-            
-        default:
-            
-            break;
-    }
-}
-*/
-
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];

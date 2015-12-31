@@ -35,10 +35,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Set Scroll View constraints
-    _contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
-    _contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
-    
     // Set Logo text
     _logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
 }
@@ -48,6 +44,12 @@
     
     [self hideNavigationBar];
     
+    // Set Scroll View constraints
+    _contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
+    _contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
+    
+    [self.view layoutIfNeeded];
+
     // Create model
     _mainViewModel                          =   [[HRPMainViewModel alloc] init];
     _versionLabel.text                      =   [_mainViewModel getAppVersion];
@@ -56,11 +58,11 @@
     HRPBaseViewController *nextVC           =   [self.storyboard instantiateViewControllerWithIdentifier:
                                                     [_mainViewModel selectNextSceneStoryboardID]];
     
-//    HRPNavigationController *navBar         =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
-//    
-//    [self.navigationController presentViewController:navBar animated:YES completion:nil];
+    HRPNavigationController *navBar         =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
     
-    [self.navigationController pushViewController:nextVC animated:YES];
+    [self.navigationController presentViewController:navBar animated:YES completion:nil];
+    
+//    [self.navigationController pushViewController:nextVC animated:YES];
 }
 
 - (void)didReceiveMemoryWarning {
