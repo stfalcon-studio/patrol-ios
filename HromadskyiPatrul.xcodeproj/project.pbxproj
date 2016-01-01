@@ -51,6 +51,7 @@
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
 		B1D9BA401C27072D00A98EEB /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */; };
+		B1DFDBB51C36B9A000883D90 /* HRPSettingsViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B1DFDBB41C36B9A000883D90 /* HRPSettingsViewModel.m */; };
 		B1E751341C340E040034FCC6 /* HRPVideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = B1E751331C340E040034FCC6 /* HRPVideoPreview.m */; };
 		B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
@@ -148,6 +149,8 @@
 		B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordView.m; sourceTree = "<group>"; };
 		B1D9BA3E1C27072D00A98EEB /* HRPCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewController.h; sourceTree = "<group>"; };
 		B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
+		B1DFDBB31C36B9A000883D90 /* HRPSettingsViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HRPSettingsViewModel.h; path = "HromadskyiPatrul/Record Video Scene/Model/HRPSettingsViewModel.h"; sourceTree = SOURCE_ROOT; };
+		B1DFDBB41C36B9A000883D90 /* HRPSettingsViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HRPSettingsViewModel.m; path = "HromadskyiPatrul/Record Video Scene/Model/HRPSettingsViewModel.m"; sourceTree = SOURCE_ROOT; };
 		B1E751321C340E040034FCC6 /* HRPVideoPreview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoPreview.h; sourceTree = "<group>"; };
 		B1E751331C340E040034FCC6 /* HRPVideoPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPreview.m; sourceTree = "<group>"; };
 		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -390,6 +393,8 @@
 		B19C10501C1C4C59007BB9FE /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				B1DFDBB31C36B9A000883D90 /* HRPSettingsViewModel.h */,
+				B1DFDBB41C36B9A000883D90 /* HRPSettingsViewModel.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -741,6 +746,7 @@
 				B1AC89851B879A06009D12D6 /* main.m in Sources */,
 				B128052F1C2579B00058BAC8 /* HRPCameraManager.m in Sources */,
 				B12805431C257A370058BAC8 /* UIColor+HexColor.m in Sources */,
+				B1DFDBB51C36B9A000883D90 /* HRPSettingsViewModel.m in Sources */,
 				B128053B1C257A0F0058BAC8 /* HRPImage.m in Sources */,
 				B128054D1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld in Sources */,
 				B128053D1C257A0F0058BAC8 /* HRPPhoto.m in Sources */,

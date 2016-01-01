@@ -8,6 +8,7 @@
 
 #import "HRPSettingsViewController.h"
 #import "UIViewController+NavigationBar.h"
+#import "HRPSettingsViewModel.h"
 
 
 @interface HRPSettingsViewController () 
@@ -22,14 +23,14 @@
 
 
 @implementation HRPSettingsViewController {
-    NSUserDefaults *_userApp;
+    HRPSettingsViewModel *_settingsViewModel;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _userApp    =   [NSUserDefaults standardUserDefaults];
+    _settingsViewModel          =   [[HRPSettingsViewModel alloc] init];
     
     [self customizeNavigationBarWithTitle:NSLocalizedString(@"Settings", nil)
                     andLeftBarButtonImage:[UIImage imageNamed:@"icon-arrow-left"]
@@ -38,12 +39,12 @@
                         withActionEnabled:NO];
     
     // Set titles
-    self.sendingSwitch.on       =   [_userApp boolForKey:@"sendingTypeStatus"];
-    self.sendingTypeLabel.text  =   NSLocalizedString(@"Switch sending title", nil);
-    self.networkSwitch.on       =   [_userApp boolForKey:@"networkStatus"];
-    self.networkLabel.text      =   NSLocalizedString(@"Switch network title", nil);
+    _sendingSwitch.on           =   [_settingsViewModel.userApp boolForKey:@"sendingTypeStatus"];
+    _sendingTypeLabel.text      =   NSLocalizedString(@"Switch sending title", nil);
+    _networkSwitch.on           =   [_settingsViewModel.userApp boolForKey:@"networkStatus"];
+    _networkLabel.text          =   NSLocalizedString(@"Switch network title", nil);
     
-    [self.logoutButton setTitle:NSLocalizedString(@"Logout", nil) forState:UIControlStateNormal];
+    [_logoutButton setTitle:NSLocalizedString(@"Logout", nil) forState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -61,9 +62,7 @@
 }
 
 - (IBAction)actionLogoutButtonTap:(UIButton *)sender {
-    [_userApp removeObjectForKey:@"userAppEmail"];
-    [_userApp removeObjectForKey:@"sendingTypeStatus"];
-    [_userApp removeObjectForKey:@"networkStatus"];
+    [_settingsViewModel logout];
 
     [self.navigationController popToRootViewControllerAnimated:YES];
     [self hideNavigationBar];
@@ -74,11 +73,11 @@
 }
 
 - (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {
-    [_userApp setBool:sender.on forKey:@"sendingTypeStatus"];
+    [_settingsViewModel changeSendingType:sender.on];
 }
 
 - (IBAction)actionNetworkSwitchChangeValue:(UISwitch *)sender {
-    [_userApp setBool:sender.on forKey:@"networkStatus"];
+    [_settingsViewModel changeNetworkType:sender.on];
 }
 
 
