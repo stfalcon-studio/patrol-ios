@@ -22,6 +22,9 @@
     
     __weak IBOutlet HRPLabel *_violationLabel;
     __weak IBOutlet UILabel *_timerLabel;
+    __weak IBOutlet UIView *_statusView;
+    
+    __weak IBOutlet NSLayoutConstraint *_statusViewTopConstraint;
 }
 
 #pragma mark - Constructors -
@@ -62,6 +65,7 @@
     
     _cameraManager                      =   [HRPCameraManager sharedManager];
     
+    [_cameraManager readPhotosCollectionFromFile];
     [_cameraManager createCaptureSession];
 
     //Preview Layer
@@ -81,6 +85,13 @@
 
     [_cameraManager.captureSession startRunning];
     [_cameraManager startStreamVideoRecording];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    if (_cameraManager.captureSession)
+        [_cameraManager stopVideoSession];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -156,6 +167,7 @@
     _violationLabel.hidden                                  =   YES;
     
     [_cameraManager createTimerWithLabel:_timerLabel];
+    [self.view bringSubviewToFront:_statusView];
 }
 
 

@@ -56,8 +56,8 @@
         _userApp                                        =   [NSUserDefaults standardUserDefaults];
         
         [self createStoreDataPath];
-        [self readAllFolderFile];
-        [self readPhotosCollectionFromFile];
+//        [self readAllFolderFile];
+//        [self readPhotosCollectionFromFile];
         
         // Set Media session parameters
         _isVideoSaving          =   NO;
@@ -355,6 +355,7 @@
 }
 
 - (void)readPhotosCollectionFromFile {
+    _photosDataSource           =   [NSMutableArray array];
     NSArray *paths              =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     _arrayPath                  =   paths[0];
     // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
@@ -362,7 +363,6 @@
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:_arrayPath]) {
         NSData *arrayData       =   [[NSData alloc] initWithContentsOfFile:_arrayPath];
-        _photosDataSource       =   [NSMutableArray array];
         
         if (arrayData)
             _photosDataSource   =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];

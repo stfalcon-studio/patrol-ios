@@ -29,12 +29,15 @@
 
 @implementation HRPMainViewController {
     HRPMainViewModel *_mainViewModel;
+    UIView *_statusView;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _statusView                             =   [self customizeStatusBar];
+
     // Set Logo text
     _logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
     
@@ -64,9 +67,7 @@
     
     HRPNavigationController *navBar         =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
     
-    [self.navigationController presentViewController:navBar animated:YES completion:nil];
-    
-    //    [self.navigationController pushViewController:nextVC animated:YES];
+ //   [self.navigationController presentViewController:navBar animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,7 +78,8 @@
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     _contentViewWidthConstraint.constant    =   size.width;
-    
+    _statusView.frame                       =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
+
     [self.view layoutIfNeeded];
 }
 

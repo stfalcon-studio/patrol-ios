@@ -33,12 +33,12 @@
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewWidthConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *statusBarTopConstarint;
 
 @end
 
 @implementation HRPLoginViewController {
     HRPLoginViewModel *_loginViewModel;
+    UIView *_statusView;
     
     CGSize _keyboardSize;
     CGSize _screenSize;
@@ -54,6 +54,8 @@
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
           andBackgroundColor:BackgroundColorTypeBlack
                      forTime:3];
+    
+    _statusView         =   [self customizeStatusBar];
 
     // Create model
     _loginViewModel     =   [[HRPLoginViewModel alloc] init];
@@ -99,16 +101,9 @@
                                                CGRectGetHeight([[UIScreen mainScreen] bounds]));
     
     // Set Scroll View constraints
-    if (_screenSize.width < _screenSize.height) {
-        _contentViewWidthConstraint.constant    =   _screenSize.width;
-        _statusBarTopConstarint.constant        =   0.f;
-    }
-    
-    else {
-        _contentViewWidthConstraint.constant    =   _screenSize.width;
-        _contentViewHeightConstraint.constant   =   _screenSize.height;
-        _statusBarTopConstarint.constant        =   -20.f;
-    }
+    _contentViewWidthConstraint.constant    =   _screenSize.width;
+    _contentViewHeightConstraint.constant   =   _screenSize.height;
+//    _statusBarTopConstarint.constant        =   (_screenSize.width < _screenSize.height) ? 0.f : -20.f;
     
     [self.view layoutIfNeeded];
 }
@@ -137,13 +132,6 @@
             [_loginViewModel userLoginParameters:_emailTextField.text
                                       onSuccess:^(NSDictionary *successResult) {
                                           [_emailTextField resignFirstResponder];
-                                          
-                                          /*
-                                          // Set NSUserDefaults item
-                                          [_loginViewModel.userApp setObject:self.emailTextField.text forKey:@"userAppEmail"];
-                                          [_loginViewModel.userApp setObject:successResult[@"id"] forKey:@"userAppID"];
-                                          [_loginViewModel.userApp synchronize];
-                                           */
 
                                           // Transition to VideoRecord scene
                                           HRPVideoRecordViewController *videoRecordVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
@@ -213,7 +201,7 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     _screenSize                             =   size;
     _contentViewWidthConstraint.constant    =   size.width;
-    _statusBarTopConstarint.constant        =   (size.width < size.height) ? 0.f : -20.f;
+    _statusView.frame                       =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
     
     [self.view layoutIfNeeded];
     [self moveContentViewAboveKeyboard];

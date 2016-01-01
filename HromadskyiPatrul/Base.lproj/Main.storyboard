@@ -145,23 +145,13 @@
                                     <constraint firstItem="HC8-Qy-0lc" firstAttribute="top" secondItem="Ia1-ZJ-FsX" secondAttribute="top" id="bFG-gr-JtA"/>
                                 </constraints>
                             </scrollView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zBI-7A-rCh" userLabel="Status Bar View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
-                                <color key="backgroundColor" red="0.015686274509803921" green="0.46666666666666667" blue="0.74117647058823533" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="hcM-es-Jfc"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Ia1-ZJ-FsX" secondAttribute="bottom" id="A4n-tg-FZs"/>
-                            <constraint firstItem="zBI-7A-rCh" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="KwV-bx-AnT"/>
                             <constraint firstItem="Ia1-ZJ-FsX" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="LEF-tS-CsV"/>
                             <constraint firstAttribute="trailing" secondItem="Ia1-ZJ-FsX" secondAttribute="trailing" id="SSS-eR-xcu"/>
-                            <constraint firstItem="zBI-7A-rCh" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="jIX-nh-Wla"/>
                             <constraint firstItem="Ia1-ZJ-FsX" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="top" id="vvx-2R-fMO"/>
-                            <constraint firstAttribute="trailing" secondItem="zBI-7A-rCh" secondAttribute="trailing" id="yfK-yO-dHk"/>
                         </constraints>
                         <connections>
                             <outletCollection property="gestureRecognizers" destination="gvf-nx-oBi" appends="YES" id="hF0-qV-hnj"/>
@@ -169,8 +159,8 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" id="KUt-PH-FUo"/>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
-                        <outlet property="_statusBarTopConstarint" destination="KwV-bx-AnT" id="8hV-wp-8lD"/>
                         <outlet property="aboutLabel1" destination="fio-45-fjL" id="KIg-CT-0St"/>
                         <outlet property="aboutLabel2" destination="jWR-dE-gKC" id="6mG-9X-Dwi"/>
                         <outlet property="aboutLabel3" destination="X2f-Jn-IBB" id="Xa0-7D-CNj"/>
@@ -183,7 +173,6 @@
                         <outlet property="logoLabel" destination="VsS-C1-4dJ" id="tkm-2l-pVD"/>
                         <outlet property="madeByLabel" destination="ghQ-OR-u9t" id="mHh-xJ-H7f"/>
                         <outlet property="scrollView" destination="Ia1-ZJ-FsX" id="VMG-xq-Z2l"/>
-                        <outlet property="statusBarTopConstarint" destination="KwV-bx-AnT" id="erD-3r-MoX"/>
                         <outlet property="stfalconLogoImageView" destination="zed-E7-hXh" id="MEu-9M-Eim"/>
                         <outlet property="versionLabel" destination="VkU-Dc-vJw" id="8Wl-69-I1W"/>
                     </connections>
@@ -211,7 +200,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B1W-PM-jbV" userLabel="Photos Collection View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="xfD-Ca-Wh2">
                                     <size key="itemSize" width="158" height="158"/>
@@ -322,7 +311,7 @@
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerY" secondItem="5oC-zk-fjR" secondAttribute="centerY" id="c3t-Pd-2ck"/>
                             <constraint firstAttribute="bottom" secondItem="B1W-PM-jbV" secondAttribute="bottom" id="f7S-W7-57h"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerX" secondItem="5oC-zk-fjR" secondAttribute="centerX" id="g1S-cf-rAX"/>
-                            <constraint firstItem="B1W-PM-jbV" firstAttribute="top" secondItem="3GM-sC-wFF" secondAttribute="top" id="kce-MC-Qe1"/>
+                            <constraint firstItem="B1W-PM-jbV" firstAttribute="top" secondItem="Eb7-dr-APT" secondAttribute="bottom" id="j5H-G3-4Sj"/>
                             <constraint firstAttribute="trailing" secondItem="B1W-PM-jbV" secondAttribute="trailing" id="yIz-sj-qgR"/>
                         </constraints>
                     </view>
@@ -355,13 +344,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S7F-3N-rsg" userLabel="Status View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
-                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="Brj-QW-4bV"/>
-                                </constraints>
-                            </view>
                             <button autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RHF-Dg-70s" userLabel="Cancel Button">
                                 <rect key="frame" x="205" y="20" width="100" height="44"/>
                                 <constraints>
@@ -386,11 +368,8 @@
                             <constraint firstAttribute="bottom" secondItem="L27-gU-LYV" secondAttribute="bottom" id="S2b-4s-q7e"/>
                             <constraint firstAttribute="trailing" secondItem="RHF-Dg-70s" secondAttribute="trailing" constant="15" id="Sc7-JR-n5n"/>
                             <constraint firstItem="RHF-Dg-70s" firstAttribute="top" secondItem="PSo-Qi-SSy" secondAttribute="bottom" id="Xah-LR-fQM"/>
-                            <constraint firstItem="S7F-3N-rsg" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="dZU-kd-sM1"/>
                             <constraint firstItem="L27-gU-LYV" firstAttribute="leading" secondItem="o7y-bL-j3b" secondAttribute="leading" id="gHk-tS-zp4"/>
                             <constraint firstItem="L27-gU-LYV" firstAttribute="top" secondItem="PSo-Qi-SSy" secondAttribute="bottom" id="pya-H2-uVI"/>
-                            <constraint firstItem="S7F-3N-rsg" firstAttribute="top" secondItem="o7y-bL-j3b" secondAttribute="top" id="qf8-dJ-w7S"/>
-                            <constraint firstAttribute="trailing" secondItem="S7F-3N-rsg" secondAttribute="trailing" id="xQ1-lp-Kud"/>
                             <constraint firstAttribute="trailing" secondItem="L27-gU-LYV" secondAttribute="trailing" id="zMb-Tk-77M"/>
                         </constraints>
                     </view>
@@ -423,13 +402,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="68S-uR-YoM" userLabel="Status View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
-                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="zEL-LJ-yMI"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WhQ-QL-Yx8" userLabel="Preview View" customClass="HRPVideoPreview">
                                 <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -438,17 +410,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="WhQ-QL-Yx8" firstAttribute="top" secondItem="JhO-jS-dV3" secondAttribute="bottom" id="BT0-Eg-ASc"/>
-                            <constraint firstItem="68S-uR-YoM" firstAttribute="top" secondItem="2he-xr-SRl" secondAttribute="top" id="Twi-WY-czd"/>
                             <constraint firstItem="WhQ-QL-Yx8" firstAttribute="leading" secondItem="2he-xr-SRl" secondAttribute="leading" id="aGc-6X-4RT"/>
                             <constraint firstAttribute="trailing" secondItem="WhQ-QL-Yx8" secondAttribute="trailing" id="eXt-vM-2zv"/>
-                            <constraint firstItem="68S-uR-YoM" firstAttribute="leading" secondItem="2he-xr-SRl" secondAttribute="leading" id="ko7-uT-HaE"/>
-                            <constraint firstAttribute="trailing" secondItem="68S-uR-YoM" secondAttribute="trailing" id="mAf-1i-SCm"/>
                             <constraint firstItem="Nmk-X6-Pct" firstAttribute="top" secondItem="WhQ-QL-Yx8" secondAttribute="bottom" id="v08-fN-OP6"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="playerView" destination="WhQ-QL-Yx8" id="GG7-Qf-d0b"/>
-                        <outlet property="statusViewTopConstraint" destination="Twi-WY-czd" id="es5-ku-4P2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7bK-QL-ckZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -479,21 +447,11 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <view autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5Ip-33-TZr" userLabel="Status View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
-                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="HYm-yD-oVl"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.019607843137254902" green="0.66274509803921566" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="5Ip-33-TZr" firstAttribute="leading" secondItem="Lh8-SN-AYI" secondAttribute="leading" id="6bd-Jv-zj2"/>
                             <constraint firstAttribute="bottom" secondItem="BzL-3N-W4p" secondAttribute="bottom" constant="20" id="KZd-eL-p7P"/>
                             <constraint firstItem="BzL-3N-W4p" firstAttribute="top" secondItem="DxB-Zj-qIu" secondAttribute="bottom" constant="20" id="SxB-T0-dGt"/>
-                            <constraint firstAttribute="trailing" secondItem="5Ip-33-TZr" secondAttribute="trailing" id="cTt-E9-CJx"/>
-                            <constraint firstItem="5Ip-33-TZr" firstAttribute="top" secondItem="Lh8-SN-AYI" secondAttribute="top" id="heK-bg-gkv"/>
                             <constraint firstItem="DxB-Zj-qIu" firstAttribute="centerX" secondItem="Lh8-SN-AYI" secondAttribute="centerX" id="vQT-Pm-m5r"/>
                             <constraint firstAttribute="trailing" secondItem="BzL-3N-W4p" secondAttribute="trailing" constant="10" id="wA1-vS-36D"/>
                         </constraints>
@@ -501,6 +459,7 @@
                             <outletCollection property="gestureRecognizers" destination="jAl-Is-mnm" appends="YES" id="3tU-gl-JBy"/>
                         </connections>
                     </view>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="_timerLabel" destination="BzL-3N-W4p" id="oGy-jp-eCJ"/>
                         <outlet property="_violationLabel" destination="DxB-Zj-qIu" id="W0H-4V-scT"/>
@@ -722,19 +681,9 @@
                                     <constraint firstItem="gle-KX-Soy" firstAttribute="centerY" secondItem="0ge-To-spI" secondAttribute="centerY" id="mRX-2V-lV9"/>
                                 </constraints>
                             </scrollView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="56s-5E-uoN" userLabel="Status Bar View">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="20"/>
-                                <color key="backgroundColor" red="0.015686274510000001" green="0.46666666670000001" blue="0.74117647060000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="20" id="DVr-cn-f2k"/>
-                                </constraints>
-                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.019607843140000001" green="0.66274509800000003" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="56s-5E-uoN" secondAttribute="trailing" id="KDf-zE-Ifh"/>
-                            <constraint firstItem="56s-5E-uoN" firstAttribute="leading" secondItem="JL0-jz-pzl" secondAttribute="leading" id="OGF-jH-SrW"/>
-                            <constraint firstItem="56s-5E-uoN" firstAttribute="top" secondItem="JL0-jz-pzl" secondAttribute="top" id="PbU-VA-Oea"/>
                             <constraint firstAttribute="trailing" secondItem="0ge-To-spI" secondAttribute="trailing" id="WJY-oG-wyU"/>
                             <constraint firstItem="0ge-To-spI" firstAttribute="top" secondItem="JL0-jz-pzl" secondAttribute="top" id="fi9-Oa-vv5"/>
                             <constraint firstItem="0ge-To-spI" firstAttribute="leading" secondItem="JL0-jz-pzl" secondAttribute="leading" id="gBY-hQ-h97"/>

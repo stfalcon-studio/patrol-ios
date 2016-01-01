@@ -39,6 +39,7 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 - (void)createCaptureSession;
 - (void)startStreamVideoRecording;
 - (void)stopVideoSession;
+- (void)readPhotosCollectionFromFile;
 
 // Orientation
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize;

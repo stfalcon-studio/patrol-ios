@@ -13,6 +13,8 @@
 
 - (void)hideNavigationBar;
 
+- (UIView *)customizeStatusBar;
+
 - (void)customizeNavigationBarWithTitle:(NSString *)title
                   andLeftBarButtonImage:(UIImage *)imageLeftBarButton
                       withActionEnabled:(BOOL)leftButtonEnabled

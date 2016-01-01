@@ -32,6 +32,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *photosCollectionView;
+@property (weak, nonatomic) IBOutlet UIView *statusView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *statusViewTopConstraint;
 
 @end
 
@@ -77,27 +79,28 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                         withActionEnabled:YES];
 
     // HSPLocations
-    locationsService                            =   [[HRPLocations alloc] init];
+    locationsService                        =   [[HRPLocations alloc] init];
     
     if ([locationsService isEnabled]) {
-        locationsService.manager.delegate       =   self;
-        isLocationServiceEnabled                =   YES;
+        locationsService.manager.delegate   =   self;
+        isLocationServiceEnabled            =   YES;
     }
     
     if (CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame))
-        cellSide                                =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
+        cellSide                            =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
     else
-        cellSide                                =   (CGRectGetWidth(self.view.frame) - 8.f) / 3;
+        cellSide                            =   (CGRectGetWidth(self.view.frame) - 8.f) / 3;
 
-    photoSize                                   =   CGSizeMake(cellSide, cellSide);
-    missingPhotosCount                          =   0;
-    photosNeedUploadCount                       =   0;
-    videosNeedUploadCount                       =   0;
+    photoSize                               =   CGSizeMake(cellSide, cellSide);
+    missingPhotosCount                      =   0;
+    photosNeedUploadCount                   =   0;
+    videosNeedUploadCount                   =   0;
+    
     self.navigationItem.rightBarButtonItem.enabled      =   YES;
-    self.photosCollectionView.userInteractionEnabled    =   NO;
+    _photosCollectionView.userInteractionEnabled        =   NO;
 
     // Set network manager
-    imagesIndexPath                             =   [NSMutableArray array];
+    imagesIndexPath                         =   [NSMutableArray array];
 
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -115,10 +118,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    isUploadPhotosUsingWiFiAllowed              =   [userApp boolForKey:@"networkStatus"];
-    isUploadAutomaticallyAllowed                =   [userApp boolForKey:@"sendingTypeStatus"];
-    isVideoPreviewStart                         =   NO;
+    isUploadPhotosUsingWiFiAllowed          =   [userApp boolForKey:@"networkStatus"];
+    isUploadAutomaticallyAllowed            =   [userApp boolForKey:@"sendingTypeStatus"];
+    isVideoPreviewStart                     =   NO;
     
+    _statusViewTopConstraint.constant       =   (CGRectGetWidth(self.view.frame) < CGRectGetHeight(self.view.frame)) ? 0.f : -20.f;
+
     if (photosNeedUploadCount > 0 && !isUploadInProcess)
         [self startUploadPhotos];
     
@@ -516,11 +521,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                     [self getVideoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsVideoURL]
                                        onSuccess:^(NSData *videoData) {
                                            currentImage.imageData   =   videoData;
+                                           NSDateFormatter *formatter   =   [[NSDateFormatter alloc] init];
+                                           [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                                            
                                            parameters               =   @{
                                                                                 @"video"        :   videoData,
                                                                                 @"latitude"     :   @(currentPhoto.latitude),
-                                                                                @"longitude"    :   @(currentPhoto.longitude)
+                                                                                @"longitude"    :   @(currentPhoto.longitude),
+                                                                                @"date"         :   [formatter stringFromDate:currentPhoto.date]
                                                                         };
                                            
                                            // API
@@ -1024,12 +1032,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    _statusViewTopConstraint.constant   =   (size.width < size.height) ? 0.f : -20.f;
+
     if (size.height > size.width)
-        cellSide                                    =   (size.width - 4.f) / 2;
+        cellSide                        =   (size.width - 4.f) / 2;
     else
-        cellSide                                    =   (size.width - 8.f) / 3;
+        cellSide                        =   (size.width - 8.f) / 3;
     
-    photoSize                                       =   CGSizeMake(cellSide, cellSide);
+    photoSize                           =   CGSizeMake(cellSide, cellSide);
     
     [self.photosCollectionView reloadData];
 }
@@ -1042,18 +1052,18 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                           atScrollPosition:UICollectionViewScrollPositionTop
                                                   animated:YES];
     
-    UIImage *chosenImage                            =   [info objectForKey:UIImagePickerControllerOriginalImage];
-    ALAssetsLibrary *assetsLibrary                  =   [[ALAssetsLibrary alloc] init];
+    UIImage *chosenImage                        =   [info objectForKey:UIImagePickerControllerOriginalImage];
+    ALAssetsLibrary *assetsLibrary              =   [[ALAssetsLibrary alloc] init];
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    picker                                          =   nil;
-    self.imagePickerController                      =   nil;
+    picker                                      =   nil;
+    self.imagePickerController                  =   nil;
     
-    HRPPhoto *photo                                 =   [[HRPPhoto alloc] init];
-    HRPImage *image                                 =   [[HRPImage alloc] init];
-    image.imageAvatar                               =   [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
+    HRPPhoto *photo                             =   [[HRPPhoto alloc] init];
+    HRPImage *image                             =   [[HRPImage alloc] init];
+    image.imageAvatar                           =   [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
 
     [self.photosCollectionView performBatchUpdates:^{
-        NSMutableArray *arrayWithIndexPaths         =   [NSMutableArray array];
+        NSMutableArray *arrayWithIndexPaths     =   [NSMutableArray array];
 
         for (int i = 0; i <= imagesDataSource.count; i++) {
             [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
@@ -1069,8 +1079,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     if  (imagesDataSource.count == 1)
         [self.photosCollectionView reloadData];
     
-    currentCell                                     =   [[HRPPhotoCell alloc] initWithFrame:CGRectMake(0.f, 0.f, photoSize.width, photoSize.height)];
-    currentCell                                     =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    currentCell                                 =   [[HRPPhotoCell alloc] initWithFrame:CGRectMake(0.f, 0.f, photoSize.width, photoSize.height)];
+    currentCell                                 =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
     [currentCell showLoaderWithText:nil
                  andBackgroundColor:CellBackgroundColorTypeBlue
@@ -1082,11 +1092,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                     ALAssetsLibrary *libraryAssets = [[ALAssetsLibrary alloc] init];
                                     [libraryAssets assetForURL:assetURL
                                                    resultBlock:^(ALAsset *asset) {
-                                                       photo.assetsPhotoURL                                 =   [assetURL absoluteString];
-                                                       image.imageOriginalURL                               =   [assetURL absoluteString];
-                                                       image.imageAvatar                                    =   [image resizeImage:chosenImage
-                                                                                                                            toSize:photoSize
-                                                                                                                   andCropInCenter:YES];
+                                                       photo.assetsPhotoURL     =   [assetURL absoluteString];
+                                                       image.imageOriginalURL   =   [assetURL absoluteString];
+                                                       image.imageAvatar        =   [image resizeImage:chosenImage
+                                                                                                toSize:photoSize
+                                                                                       andCropInCenter:YES];
                                                        
                                                        [UIView transitionWithView:currentCell.photoImageView
                                                                          duration:0.5f
@@ -1095,13 +1105,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                            currentCell.photoImageView.image =   image.imageAvatar;
                                                                        }
                                                                        completion:^(BOOL finished) {
-                                                                           photo.latitude                   =   locationNew.coordinate.latitude;
-                                                                           photo.longitude                  =   locationNew.coordinate.longitude;
-                                                                           photo.isVideo                    =   NO;
+                                                                           photo.latitude   =   locationNew.coordinate.latitude;
+                                                                           photo.longitude  =   locationNew.coordinate.longitude;
+                                                                           photo.isVideo    =   NO;
                                                                            
                                                                            // API
-                                                                           currentPhoto                     =   photo;
-                                                                           currentImage                     =   image;
+                                                                           currentPhoto     =   photo;
+                                                                           currentImage     =   image;
                                                                            
                                                                            [photosDataSource replaceObjectAtIndex:0 withObject:photo];
                                                                            [imagesDataSource replaceObjectAtIndex:0 withObject:image];
