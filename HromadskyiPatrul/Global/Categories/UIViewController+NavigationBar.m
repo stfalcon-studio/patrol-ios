@@ -32,7 +32,7 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     [self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
-    [self.navigationController.navigationBar setBarTintColor:[UIColor whiteColor]];
+    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
     [self.navigationController.navigationBar setTranslucent:YES];
 }
 

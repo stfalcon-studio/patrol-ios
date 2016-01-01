@@ -32,8 +32,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *photosCollectionView;
-@property (weak, nonatomic) IBOutlet UIView *statusView;
-@property (weak, nonatomic) IBOutlet NSLayoutConstraint *statusViewTopConstraint;
 
 @end
 
@@ -47,6 +45,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     NSUserDefaults *userApp;
     CLLocation *locationNew;
     ALAsset *myAsset;
+    UIView *_statusView;
     
     NSMutableArray *photosDataSource;
     NSMutableArray *imagesDataSource;
@@ -71,6 +70,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    _statusView                             =   [self customizeStatusBar];
 
     [self customizeNavigationBarWithTitle:nil
                      andLeftBarButtonText:_userNameBarButton.title
@@ -122,8 +123,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     isUploadAutomaticallyAllowed            =   [userApp boolForKey:@"sendingTypeStatus"];
     isVideoPreviewStart                     =   NO;
     
-    _statusViewTopConstraint.constant       =   (CGRectGetWidth(self.view.frame) < CGRectGetHeight(self.view.frame)) ? 0.f : -20.f;
-
     if (photosNeedUploadCount > 0 && !isUploadInProcess)
         [self startUploadPhotos];
     
@@ -512,7 +511,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 // Save to device
                 [self savePhotosCollectionToFile];
-                isUploadInProcess                                   =   YES;
+                isUploadInProcess                       =   YES;
                 __block UIImage *imageOriginal;
                 __block NSDictionary *parameters;
 
@@ -524,12 +523,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                            NSDateFormatter *formatter   =   [[NSDateFormatter alloc] init];
                                            [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                                            
-                                           parameters               =   @{
-                                                                                @"video"        :   videoData,
-                                                                                @"latitude"     :   @(currentPhoto.latitude),
-                                                                                @"longitude"    :   @(currentPhoto.longitude),
-                                                                                @"date"         :   [formatter stringFromDate:currentPhoto.date]
-                                                                        };
+                                           parameters   =   @{
+                                                                    @"video"        :   videoData,
+                                                                    @"latitude"     :   @(currentPhoto.latitude),
+                                                                    @"longitude"    :   @(currentPhoto.longitude),
+                                                                    @"date"         :   [formatter stringFromDate:currentPhoto.date]
+                                                            };
                                            
                                            // API
                                            [self uploadVideoWithParameters:parameters
@@ -1032,7 +1031,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _statusViewTopConstraint.constant   =   (size.width < size.height) ? 0.f : -20.f;
+    _statusView.frame                   =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
 
     if (size.height > size.width)
         cellSide                        =   (size.width - 4.f) / 2;

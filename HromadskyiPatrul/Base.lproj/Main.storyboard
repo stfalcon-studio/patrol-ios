@@ -200,7 +200,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="B1W-PM-jbV" userLabel="Photos Collection View">
-                                <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="4" minimumInteritemSpacing="4" id="xfD-Ca-Wh2">
                                     <size key="itemSize" width="158" height="158"/>
@@ -308,10 +308,10 @@
                             <constraint firstItem="B1W-PM-jbV" firstAttribute="leading" secondItem="3GM-sC-wFF" secondAttribute="leading" id="Idn-1T-TWm"/>
                             <constraint firstAttribute="trailing" secondItem="5oC-zk-fjR" secondAttribute="trailing" constant="25" id="OZg-41-ywC"/>
                             <constraint firstItem="B4b-m9-uhb" firstAttribute="top" secondItem="5oC-zk-fjR" secondAttribute="bottom" constant="25" id="TG1-kU-ryj"/>
+                            <constraint firstItem="B1W-PM-jbV" firstAttribute="top" secondItem="3GM-sC-wFF" secondAttribute="top" id="Wo2-6o-jKG"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerY" secondItem="5oC-zk-fjR" secondAttribute="centerY" id="c3t-Pd-2ck"/>
                             <constraint firstAttribute="bottom" secondItem="B1W-PM-jbV" secondAttribute="bottom" id="f7S-W7-57h"/>
                             <constraint firstItem="Fjg-f2-VNU" firstAttribute="centerX" secondItem="5oC-zk-fjR" secondAttribute="centerX" id="g1S-cf-rAX"/>
-                            <constraint firstItem="B1W-PM-jbV" firstAttribute="top" secondItem="Eb7-dr-APT" secondAttribute="bottom" id="j5H-G3-4Sj"/>
                             <constraint firstAttribute="trailing" secondItem="B1W-PM-jbV" secondAttribute="trailing" id="yIz-sj-qgR"/>
                         </constraints>
                     </view>

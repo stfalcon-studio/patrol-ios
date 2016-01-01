@@ -19,19 +19,15 @@
 
 @implementation HRPVideoRecordViewController {
     HRPCameraManager *_cameraManager;
+    UIView *_statusView;
     
     __weak IBOutlet HRPLabel *_violationLabel;
     __weak IBOutlet UILabel *_timerLabel;
-    __weak IBOutlet UIView *_statusView;
-    
-    __weak IBOutlet NSLayoutConstraint *_statusViewTopConstraint;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    [UIViewController attemptRotationToDeviceOrientation];
 
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -79,6 +75,7 @@
 
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
     
+    _statusView                         =   [self customizeStatusBar];
     [self customizeViewStyle];
 
     _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
@@ -167,7 +164,6 @@
     _violationLabel.hidden                                  =   YES;
     
     [_cameraManager createTimerWithLabel:_timerLabel];
-    [self.view bringSubviewToFront:_statusView];
 }
 
 
@@ -183,23 +179,23 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
+    _statusView.frame                       =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f,
+                                                           size.width, 20.f);
+    
+    [_cameraManager setVideoPreviewLayerOrientation:size];
+    
     // Restart Timer only in Stream Video mode
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
+        _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
+
         [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
               andBackgroundColor:BackgroundColorTypeBlue
                          forTime:2];
 
-        [_cameraManager setVideoPreviewLayerOrientation:size];
         [_cameraManager.timer invalidate];
-        
-        _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
-
         [_cameraManager createTimerWithLabel:_timerLabel];
         [_cameraManager restartStreamVideoRecording];
     }
-    
-    else
-        [_cameraManager setVideoPreviewLayerOrientation:size];
 }
 
 @end
