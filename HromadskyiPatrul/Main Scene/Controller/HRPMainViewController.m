@@ -13,7 +13,6 @@
 
 @interface HRPMainViewController ()
 
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) IBOutlet UIView *contentView;
 
 @property (strong, nonatomic) IBOutlet UIImageView *logoImageView;
@@ -21,9 +20,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *madeByLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *stfalconLogoImageView;
 @property (strong, nonatomic) IBOutlet UILabel *versionLabel;
-
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewWidthConstraint;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *contentViewHeightConstraint;
 
 @end
 
@@ -36,16 +32,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _statusView                             =   [self customizeStatusBar];
+    _statusView                     =   [self customizeStatusBar];
 
     // Set Logo text
-    _logoLabel.text                         =   NSLocalizedString(@"Public patrol", nil);
-    
-    // Set Scroll View constraints
-    _contentViewWidthConstraint.constant    =   CGRectGetWidth(self.view.frame);
-    _contentViewHeightConstraint.constant   =   CGRectGetHeight(self.view.frame);
-    
-    [self.view layoutIfNeeded];
+    _logoLabel.text                 =   NSLocalizedString(@"Public patrol", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -54,20 +44,20 @@
     [self hideNavigationBar];
     
     // Create model
-    _mainViewModel                          =   [[HRPMainViewModel alloc] init];
-    _versionLabel.text                      =   [_mainViewModel getAppVersion];
+    _mainViewModel                  =   [[HRPMainViewModel alloc] init];
+    _versionLabel.text              =   [_mainViewModel getAppVersion];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     // Select Next Scene
-    HRPBaseViewController *nextVC           =   [self.storyboard instantiateViewControllerWithIdentifier:
-                                                 [_mainViewModel selectNextSceneStoryboardID]];
+    HRPBaseViewController *nextVC   =   [self.storyboard instantiateViewControllerWithIdentifier:
+                                        [_mainViewModel selectNextSceneStoryboardID]];
     
-    HRPNavigationController *navBar         =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
+    HRPNavigationController *navBar =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
     
- //   [self.navigationController presentViewController:navBar animated:YES completion:nil];
+    [self.navigationController presentViewController:navBar animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -77,8 +67,7 @@
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _contentViewWidthConstraint.constant    =   size.width;
-    _statusView.frame                       =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
+    _statusView.frame               =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
 
     [self.view layoutIfNeeded];
 }

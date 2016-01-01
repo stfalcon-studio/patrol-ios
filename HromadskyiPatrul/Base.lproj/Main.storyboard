@@ -55,7 +55,7 @@
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="UtF-qY-cYQ" userLabel="Email Text Field">
-                                                <rect key="frame" x="50" y="332" width="220" height="34"/>
+                                                <rect key="frame" x="50" y="322" width="220" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34" id="NDW-nu-avO"/>
                                                 </constraints>
@@ -66,7 +66,7 @@
                                                 </connections>
                                             </textField>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vtA-en-wcx" userLabel="Log In Button" customClass="HRPButton">
-                                                <rect key="frame" x="50" y="386" width="220" height="40"/>
+                                                <rect key="frame" x="50" y="376" width="220" height="40"/>
                                                 <color key="backgroundColor" red="0.83921568627450982" green="0.84313725490196079" blue="0.84313725490196079" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="40" id="L7g-MN-V4M"/>
@@ -110,7 +110,7 @@
                                         <constraints>
                                             <constraint firstAttribute="centerX" secondItem="X2f-Jn-IBB" secondAttribute="centerX" id="0ov-9o-0cA"/>
                                             <constraint firstAttribute="bottom" secondItem="VkU-Dc-vJw" secondAttribute="bottom" constant="10" id="5QW-Mv-vap"/>
-                                            <constraint firstItem="UtF-qY-cYQ" firstAttribute="top" secondItem="X2f-Jn-IBB" secondAttribute="bottom" constant="50" id="74c-fK-DMX"/>
+                                            <constraint firstItem="UtF-qY-cYQ" firstAttribute="top" secondItem="X2f-Jn-IBB" secondAttribute="bottom" constant="40" id="74c-fK-DMX"/>
                                             <constraint firstAttribute="trailing" secondItem="UtF-qY-cYQ" secondAttribute="trailing" constant="50" id="7OB-f7-DIH"/>
                                             <constraint firstAttribute="centerX" secondItem="VkU-Dc-vJw" secondAttribute="centerX" id="89g-TT-oXP"/>
                                             <constraint firstItem="jWR-dE-gKC" firstAttribute="top" secondItem="fio-45-fjL" secondAttribute="bottom" constant="5" id="8wm-qE-PBc"/>
@@ -616,78 +616,62 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView autoresizesSubviews="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0ge-To-spI">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gle-KX-Soy" userLabel="Content View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gle-KX-Soy" userLabel="Content View">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                        <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-logo" translatesAutoresizingMaskIntoConstraints="NO" id="mTM-ip-K0U" userLabel="Logo Image View">
-                                                <rect key="frame" x="75" y="0.0" width="170" height="170"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="170" id="6jG-gh-4xZ"/>
-                                                    <constraint firstAttribute="width" constant="170" id="jb3-Bo-ot2"/>
-                                                </constraints>
-                                            </imageView>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logo Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdC-Xt-5yw" userLabel="Logo Label">
-                                                <rect key="frame" x="97" y="180" width="125" height="29"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
-                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="78n-rC-ZBw" userLabel="Version Label">
-                                                <rect key="frame" x="141" y="545" width="37" height="13"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made by           stfalcon.com" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="gcp-qy-tC3" userLabel="Made by Label">
-                                                <rect key="frame" x="89" y="545" width="141" height="13"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
-                                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-stfalcon" translatesAutoresizingMaskIntoConstraints="NO" id="onq-7I-oxO" userLabel="STFalcon Logo Image View">
-                                                <rect key="frame" x="138" y="540" width="20" height="20"/>
-                                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="height" constant="20" id="AS0-6k-Mog"/>
-                                                    <constraint firstAttribute="width" constant="20" id="YmS-OE-JRK"/>
-                                                </constraints>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.019607843140000001" green="0.66274509800000003" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-logo" translatesAutoresizingMaskIntoConstraints="NO" id="mTM-ip-K0U" userLabel="Logo Image View">
+                                        <rect key="frame" x="75" y="0.0" width="170" height="170"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="568" id="1Om-i4-Ueq"/>
-                                            <constraint firstItem="onq-7I-oxO" firstAttribute="centerX" secondItem="gcp-qy-tC3" secondAttribute="centerX" constant="-11.5" id="64D-Ed-hke"/>
-                                            <constraint firstAttribute="centerX" secondItem="gcp-qy-tC3" secondAttribute="centerX" id="BlX-vV-N2O"/>
-                                            <constraint firstAttribute="centerX" secondItem="78n-rC-ZBw" secondAttribute="centerX" id="Lyp-OV-gEr"/>
-                                            <constraint firstItem="pdC-Xt-5yw" firstAttribute="top" secondItem="mTM-ip-K0U" secondAttribute="bottom" constant="10" id="Y2R-jF-XbE"/>
-                                            <constraint firstAttribute="centerX" secondItem="pdC-Xt-5yw" secondAttribute="centerX" id="jRF-A0-7T4"/>
-                                            <constraint firstAttribute="width" constant="320" id="l4V-JV-Nxy"/>
-                                            <constraint firstItem="onq-7I-oxO" firstAttribute="centerY" secondItem="gcp-qy-tC3" secondAttribute="centerY" constant="-1.5" id="lKD-SY-G5j"/>
-                                            <constraint firstAttribute="bottom" secondItem="78n-rC-ZBw" secondAttribute="bottom" constant="10" id="nxG-hD-3gt"/>
-                                            <constraint firstAttribute="centerX" secondItem="mTM-ip-K0U" secondAttribute="centerX" id="tNP-eU-lKA"/>
-                                            <constraint firstAttribute="bottom" secondItem="gcp-qy-tC3" secondAttribute="bottom" constant="10" id="ufm-2v-N8Z"/>
-                                            <constraint firstItem="mTM-ip-K0U" firstAttribute="top" secondItem="gle-KX-Soy" secondAttribute="top" id="x8l-bs-Der"/>
+                                            <constraint firstAttribute="height" constant="170" id="6jG-gh-4xZ"/>
+                                            <constraint firstAttribute="width" constant="170" id="jb3-Bo-ot2"/>
                                         </constraints>
-                                    </view>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Logo Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pdC-Xt-5yw" userLabel="Logo Label">
+                                        <rect key="frame" x="97" y="180" width="125" height="29"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="24"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Version" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="78n-rC-ZBw" userLabel="Version Label">
+                                        <rect key="frame" x="141" y="545" width="37" height="13"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Made by           stfalcon.com" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="gcp-qy-tC3" userLabel="Made by Label">
+                                        <rect key="frame" x="89" y="545" width="141" height="13"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="11"/>
+                                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-stfalcon" translatesAutoresizingMaskIntoConstraints="NO" id="onq-7I-oxO" userLabel="STFalcon Logo Image View">
+                                        <rect key="frame" x="138" y="540" width="20" height="20"/>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="20" id="AS0-6k-Mog"/>
+                                            <constraint firstAttribute="width" constant="20" id="YmS-OE-JRK"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.019607843140000001" green="0.66274509800000003" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="gle-KX-Soy" firstAttribute="leading" secondItem="0ge-To-spI" secondAttribute="leading" id="6AJ-8C-XUV"/>
-                                    <constraint firstAttribute="bottom" secondItem="gle-KX-Soy" secondAttribute="bottom" id="Kh9-Kf-htO"/>
-                                    <constraint firstAttribute="trailing" secondItem="gle-KX-Soy" secondAttribute="trailing" id="jJQ-Mo-wQF"/>
-                                    <constraint firstItem="gle-KX-Soy" firstAttribute="centerY" secondItem="0ge-To-spI" secondAttribute="centerY" id="mRX-2V-lV9"/>
+                                    <constraint firstItem="pdC-Xt-5yw" firstAttribute="centerX" secondItem="gle-KX-Soy" secondAttribute="centerX" id="420-vD-gxh"/>
+                                    <constraint firstItem="onq-7I-oxO" firstAttribute="centerX" secondItem="gcp-qy-tC3" secondAttribute="centerX" constant="-11.5" id="64D-Ed-hke"/>
+                                    <constraint firstAttribute="bottom" secondItem="gcp-qy-tC3" secondAttribute="bottom" constant="10" id="8sC-3P-UFc"/>
+                                    <constraint firstItem="mTM-ip-K0U" firstAttribute="centerX" secondItem="gle-KX-Soy" secondAttribute="centerX" id="VFm-xx-u15"/>
+                                    <constraint firstItem="mTM-ip-K0U" firstAttribute="top" secondItem="gle-KX-Soy" secondAttribute="top" id="Xrz-Cx-0ab"/>
+                                    <constraint firstItem="pdC-Xt-5yw" firstAttribute="top" secondItem="mTM-ip-K0U" secondAttribute="bottom" constant="10" id="Y2R-jF-XbE"/>
+                                    <constraint firstItem="onq-7I-oxO" firstAttribute="centerY" secondItem="gcp-qy-tC3" secondAttribute="centerY" constant="-1.5" id="lKD-SY-G5j"/>
+                                    <constraint firstItem="gcp-qy-tC3" firstAttribute="centerX" secondItem="gle-KX-Soy" secondAttribute="centerX" id="wLQ-9X-7El"/>
                                 </constraints>
-                            </scrollView>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.019607843140000001" green="0.66274509800000003" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="0ge-To-spI" secondAttribute="trailing" id="WJY-oG-wyU"/>
-                            <constraint firstItem="0ge-To-spI" firstAttribute="top" secondItem="JL0-jz-pzl" secondAttribute="top" id="fi9-Oa-vv5"/>
-                            <constraint firstItem="0ge-To-spI" firstAttribute="leading" secondItem="JL0-jz-pzl" secondAttribute="leading" id="gBY-hQ-h97"/>
-                            <constraint firstAttribute="bottom" secondItem="0ge-To-spI" secondAttribute="bottom" id="v9q-S1-YeA"/>
+                            <constraint firstItem="gle-KX-Soy" firstAttribute="leading" secondItem="JL0-jz-pzl" secondAttribute="leading" id="3TJ-yM-p3U"/>
+                            <constraint firstAttribute="trailing" secondItem="gle-KX-Soy" secondAttribute="trailing" id="JaK-sm-XHX"/>
+                            <constraint firstAttribute="bottom" secondItem="gle-KX-Soy" secondAttribute="bottom" id="PZJ-YU-fNT"/>
+                            <constraint firstItem="gle-KX-Soy" firstAttribute="top" secondItem="JL0-jz-pzl" secondAttribute="top" id="psl-EY-xNd"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
@@ -695,12 +679,9 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="contentView" destination="gle-KX-Soy" id="oZC-uc-nxF"/>
-                        <outlet property="contentViewHeightConstraint" destination="1Om-i4-Ueq" id="hYM-sJ-nwF"/>
-                        <outlet property="contentViewWidthConstraint" destination="l4V-JV-Nxy" id="eJ0-WE-cHt"/>
                         <outlet property="logoImageView" destination="mTM-ip-K0U" id="OP1-Pn-XnU"/>
                         <outlet property="logoLabel" destination="pdC-Xt-5yw" id="nNv-Bk-wuz"/>
                         <outlet property="madeByLabel" destination="gcp-qy-tC3" id="YTE-dl-O9l"/>
-                        <outlet property="scrollView" destination="0ge-To-spI" id="FtQ-YJ-d4i"/>
                         <outlet property="stfalconLogoImageView" destination="onq-7I-oxO" id="oBk-wx-Li6"/>
                         <outlet property="versionLabel" destination="78n-rC-ZBw" id="hFf-XL-lq9"/>
                     </connections>
