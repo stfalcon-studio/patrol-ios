@@ -91,21 +91,21 @@
     [super viewWillAppear:animated];
     
     if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
-        _emailTextField.text    =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
+        _emailTextField.text                =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
+    
+    _screenSize                             =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
+                                                           CGRectGetHeight([[UIScreen mainScreen] bounds]));
+    
+    // Set Scroll View constraints
+    _contentViewWidthConstraint.constant    =   _screenSize.width;
+    _contentViewHeightConstraint.constant   =   _screenSize.height;
+    
+    [self.view layoutIfNeeded];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    _screenSize                 =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
-                                               CGRectGetHeight([[UIScreen mainScreen] bounds]));
-    
-    // Set Scroll View constraints
-    _contentViewWidthConstraint.constant    =   _screenSize.width;
-    _contentViewHeightConstraint.constant   =   _screenSize.height;
-//    _statusBarTopConstarint.constant        =   (_screenSize.width < _screenSize.height) ? 0.f : -20.f;
-    
-    [self.view layoutIfNeeded];
 }
 
 - (void)didReceiveMemoryWarning {
