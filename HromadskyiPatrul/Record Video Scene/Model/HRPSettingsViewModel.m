@@ -27,8 +27,6 @@
     [_userApp removeObjectForKey:@"userAppEmail"];
     [_userApp removeObjectForKey:@"sendingTypeStatus"];
     [_userApp removeObjectForKey:@"networkStatus"];
-    
-    [_userApp synchronize];
 }
 
 - (void)changeSendingType:(BOOL)type {

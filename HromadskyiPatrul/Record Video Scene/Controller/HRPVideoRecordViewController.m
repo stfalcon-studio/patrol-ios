@@ -119,7 +119,6 @@
 
 #pragma mark - NSNotification -
 - (void)handleUserLogout:(NSNotification *)notification {
-//    [self.navigationController popToRootViewControllerAnimated:NO];
     [self.navigationController dismissViewControllerAnimated:YES completion:nil];
 }
 

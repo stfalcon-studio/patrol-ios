@@ -101,7 +101,7 @@
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
     _timerSeconds           =   0;
-    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 3 : 3; // 20 : 11
+    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 11; // 20 : 11
     _timerLabel             =   label;
     _timerLabel.text        =   [self formattedTime:_timerSeconds];    
     

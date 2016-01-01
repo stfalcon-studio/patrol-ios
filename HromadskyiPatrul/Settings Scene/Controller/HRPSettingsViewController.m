@@ -58,7 +58,6 @@
 }
 
 - (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender {
-    
 }
 
 - (IBAction)actionLogoutButtonTap:(UIButton *)sender {
