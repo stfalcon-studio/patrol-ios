@@ -150,7 +150,6 @@
         _violationLabel.text                                =   NSLocalizedString(@"Violation", nil);
         _cameraManager.isVideoSaving                        =   YES;
         _cameraManager.videoSessionMode                     =   NSTimerVideoSessionModeViolation;
-
         self.navigationItem.rightBarButtonItem.enabled      =   NO;
 
         [_violationLabel startFlashing];

@@ -29,7 +29,6 @@
     UIImage *_videoImageOriginal;
     CGRect _previewRect;
     
-    NSInteger _sessionDuration;
     NSInteger _timerSeconds;
 }
 
@@ -100,8 +99,8 @@
 
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
-    _timerSeconds           =   0;
-    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 11; // 20 : 11
+    //_timerSeconds           =   0;
+    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 30;
     _timerLabel             =   label;
     _timerLabel.text        =   [self formattedTime:_timerSeconds];    
     
@@ -121,7 +120,7 @@
         
         else {
             [_timer invalidate];
-            _timerSeconds   =   0;
+            //_timerSeconds   =   0;
         }
 
         // Stop Video & Audio recording
@@ -371,6 +370,15 @@
     }
 }
 
+- (void)removeOldVideoFile {
+    NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    
+    for (NSString *fileName in allFolderFiles) {
+        if ([fileName containsString:@"violation_video"])
+            [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
+    }
+}
+
 - (void)removeAllFolderMediaTempFiles {
     NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     _videoImageOriginal         =   nil;
@@ -405,6 +413,7 @@
     _composition                =   [AVMutableComposition composition];
     
     // Create the mutable composition track with video media type
+    [self removeOldVideoFile];
     [self mergeAudioAndVideoFiles];
     
     // Create the export session to merge and save the video
@@ -674,7 +683,7 @@
     else if (_videoSessionMode == NSTimerVideoSessionModeViolation) {
         // Start Record Violation Video mode
         if (_videoImageOriginal == nil) {
-            _timerSeconds               =   0;
+            //_timerSeconds               =   0;
             _timer                      =   nil;
             _videoImageOriginal         =   [UIImage new];
             _isVideoSaving              =   YES;

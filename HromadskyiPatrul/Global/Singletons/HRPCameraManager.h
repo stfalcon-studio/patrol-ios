@@ -33,6 +33,7 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 
 @property (assign, nonatomic) BOOL isVideoSaving;
+@property (assign, nonatomic) int sessionDuration;
 
 + (HRPCameraManager *)sharedManager;
 
