@@ -152,6 +152,15 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    UICollectionViewFlowLayout *flowLayout = (id)_photosCollectionView.collectionViewLayout;
+    flowLayout.itemSize = photoSize;
+    
+    [flowLayout invalidateLayout]; //force the elements to get laid out again with the new size
+}
+
 
 #pragma mark - API -
 - (void)uploadPhotoWithParameters:(NSDictionary *)parameters
@@ -292,7 +301,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [alertController addAction:actionTakePhoto];
     [alertController addAction:actionCancel];
     
-    [self presentViewController:alertController animated:YES completion:nil];
+    if (!isUploadInProcess)
+        [self presentViewController:alertController animated:YES completion:nil];
 }
 
 
@@ -1039,8 +1049,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         cellSide                        =   (size.width - 8.f) / 3;
     
     photoSize                           =   CGSizeMake(cellSide, cellSide);
-    
-    [self.photosCollectionView reloadData];
+//    
+//    if (!isUploadInProcess)
+//        [self.photosCollectionView reloadData];
 }
 
 
