@@ -185,8 +185,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)uploadVideoWithParameters:(NSDictionary *)parameters
                         onSuccess:(void(^)(NSDictionary *successResult))success
                         orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
-    NSString *urlString =   (0) ? @"http://192.168.0.29/app_dev.php/" : @"http://xn--80awkfjh8d.com/";
-
+    NSString *urlString     =   ([self isServerURLLocal]) ? @"http://192.168.0.29/app_dev.php/" : @"http://patrol.stfalcon.com/";
+    
     AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
                                                                          initWithBaseURL:[NSURL URLWithString:urlString]];
     

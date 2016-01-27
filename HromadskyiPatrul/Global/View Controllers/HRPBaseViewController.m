@@ -78,4 +78,8 @@
     return NO;
 }
 
+- (BOOL)isServerURLLocal {
+    return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"isLocalServerURL"] boolValue];
+}
+
 @end

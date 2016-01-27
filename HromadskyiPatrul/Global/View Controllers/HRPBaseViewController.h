@@ -25,6 +25,7 @@ typedef NS_ENUM (NSInteger, BackgroundColorType) {
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType forTime:(unsigned int)duration;
 - (void)hideLoader;
 - (BOOL)isInternetConnectionAvailable;
+- (BOOL)isServerURLLocal;
 
 //- (void)hideNavigationBar;
 
