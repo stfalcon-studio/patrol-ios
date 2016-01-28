@@ -15,10 +15,10 @@
 
 #pragma mark - Constructors -
 - (instancetype)init {
-    self            =   [super init];
+    self = [super init];
     
     if (self) {
-        _userApp    =   [NSUserDefaults standardUserDefaults];
+        _userApp = [NSUserDefaults standardUserDefaults];
     }
     
     return self;
@@ -29,20 +29,16 @@
 - (void)userLoginParameters:(NSString *)email
                   onSuccess:(void(^)(NSDictionary *successResult))success
                   orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
-    NSString *urlString     =   ([self isServerURLLocal]) ? @"http://192.168.0.29/app_dev.php/" : @"http://patrol.stfalcon.com/";
-    
-    AFHTTPRequestOperationManager *requestOperationDomainManager    =   [[AFHTTPRequestOperationManager alloc]
-                                                                         initWithBaseURL:[NSURL URLWithString:urlString]];
-    
-    NSString *pathAPI                                               =   @"api/register";
-    AFHTTPRequestSerializer *userRequestSerializer                  =   [AFHTTPRequestSerializer serializer];
-    
+    NSString *urlString = ([self isServerURLLocal]) ? @"http://192.168.0.29/app_dev.php/" : @"http://patrol.stfalcon.com/";
+    AFHTTPRequestOperationManager *requestOperationDomainManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:urlString]];
+    NSString *pathAPI = @"api/register";
+    AFHTTPRequestSerializer *userRequestSerializer = [AFHTTPRequestSerializer serializer];
     [userRequestSerializer setValue:@"application/json" forHTTPHeaderField:@"CONTENT_TYPE"];
     
     [requestOperationDomainManager POST:pathAPI
                              parameters:@{ @"email" : email }
                                 success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    if (operation.response.statusCode == 200) {
+                                    if (operation.response.statusCode == 200 || operation.response.statusCode == 201) {
                                         // Set NSUserDefaults item
                                         [_userApp setObject:email forKey:@"userAppEmail"];
                                         [_userApp setObject:responseObject[@"id"] forKey:@"userAppID"];

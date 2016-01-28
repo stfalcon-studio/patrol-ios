@@ -30,7 +30,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    _settingsViewModel          =   [[HRPSettingsViewModel alloc] init];
+    _settingsViewModel = [[HRPSettingsViewModel alloc] init];
     
     [self customizeNavigationBarWithTitle:NSLocalizedString(@"Settings", nil)
                     andLeftBarButtonImage:[UIImage imageNamed:@"icon-arrow-left"]
@@ -39,10 +39,10 @@
                         withActionEnabled:NO];
     
     // Set titles
-    _sendingSwitch.on           =   [_settingsViewModel.userApp boolForKey:@"sendingTypeStatus"];
-    _sendingTypeLabel.text      =   NSLocalizedString(@"Switch sending title", nil);
-    _networkSwitch.on           =   [_settingsViewModel.userApp boolForKey:@"networkStatus"];
-    _networkLabel.text          =   NSLocalizedString(@"Switch network title", nil);
+    _sendingSwitch.on = [_settingsViewModel.userApp boolForKey:@"sendingTypeStatus"];
+    _sendingTypeLabel.text = NSLocalizedString(@"Switch sending title", nil);
+    _networkSwitch.on = [_settingsViewModel.userApp boolForKey:@"networkStatus"];
+    _networkLabel.text = NSLocalizedString(@"Switch network title", nil);
     
     [_logoutButton setTitle:NSLocalizedString(@"Logout", nil) forState:UIControlStateNormal];
 }
@@ -63,12 +63,7 @@
 - (IBAction)actionLogoutButtonTap:(UIButton *)sender {
     [_settingsViewModel logout];
 
-    //[self.navigationController popToRootViewControllerAnimated:YES];
     [self hideNavigationBar];
-    
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
-//                                                        object:nil
-//                                                      userInfo:nil];
 }
 
 - (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {

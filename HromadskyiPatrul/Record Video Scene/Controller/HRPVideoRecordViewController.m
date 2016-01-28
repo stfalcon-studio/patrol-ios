@@ -30,11 +30,6 @@
     [super viewDidLoad];
 
     // Set Notification Observers
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(handleUserLogout:)
-//                                                 name:@"HRPSettingsViewControllerUserLogout"
-//                                               object:nil];
-//    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerStartVideoSession:)
                                                  name:@"startVideoSession"
@@ -116,16 +111,8 @@
     [self.navigationController pushViewController:collectionVC animated:YES];
 }
 
-//-(IBAction)prepareForUnwind:(UIStoryboardSegue *)segue {
-//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-//}
-
 
 #pragma mark - NSNotification -
-//- (void)handleUserLogout:(NSNotification *)notification {
-//    [self.navigationController dismissViewControllerAnimated:YES completion:nil];
-//}
-//
 - (void)handlerStartVideoSession:(NSNotification *)notification {
     if (self.HUD.alpha)
         [self hideLoader];
