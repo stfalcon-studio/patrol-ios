@@ -37,13 +37,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 @implementation HRPCollectionViewController {
-    HRPLocations *locationsService;
+//    HRPLocations *locationsService;
     HRPPhoto *currentPhoto;
+    HRPPhoto *_uploadingPhoto;
     HRPImage *currentImage;
     HRPPhotoCell *currentCell;
     NSIndexPath *currentIndexPath;
     NSUserDefaults *userApp;
-    CLLocation *locationNew;
+//    CLLocation *locationNew;
     ALAsset *myAsset;
     UIView *_statusView;
     
@@ -61,7 +62,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     BOOL isUploadPhotosUsingWiFiAllowed;
     BOOL isUploadAutomaticallyAllowed;
-    BOOL isLocationServiceEnabled;
+//    BOOL isLocationServiceEnabled;
     BOOL isUploadInProcess;
     BOOL isPaginationRun;
     BOOL isVideoPreviewStart;
@@ -79,6 +80,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-settings"]
                         withActionEnabled:YES];
 
+/*
     // HSPLocations
     locationsService                        =   [[HRPLocations alloc] init];
     
@@ -86,6 +88,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         locationsService.manager.delegate   =   self;
         isLocationServiceEnabled            =   YES;
     }
+*/
     
     if (CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame))
         cellSide                            =   (CGRectGetWidth(self.view.frame) - 4.f) / 2;
@@ -132,7 +135,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
     
-    [locationsService.manager stopUpdatingLocation];
+//    [locationsService.manager stopUpdatingLocation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -248,6 +251,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                          style:UIAlertActionStyleCancel
                                                                        handler:nil];
     
+/*
     UIAlertAction *actionTakePhoto          =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Photo", nil)
                                                                          style:UIAlertActionStyleDefault
                                                                        handler:^(UIAlertAction *action) {
@@ -282,7 +286,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                                                  otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
                                                                                             });
                                                                                         }
-                                                                                   
+                                                                           
                                                                                         else if ([locationsService isEnabled]) {
                                                                                             locationsService.manager.delegate   =   self;
                                                                                             isLocationServiceEnabled            =   YES;
@@ -290,6 +294,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                             [self actionCameraButtonTap:self.cameraButton];
                                                                                         }
                                                                                     }];
+*/
     
     UIAlertAction *actionTakeVideo          =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
                                                                          style:UIAlertActionStyleDefault
@@ -298,7 +303,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                        }];
     
     [alertController addAction:actionTakeVideo];
-    [alertController addAction:actionTakePhoto];
+//    [alertController addAction:actionTakePhoto];
     [alertController addAction:actionCancel];
     
     if (!isUploadInProcess)
@@ -527,43 +532,47 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
                 // Upload Video
                 if (currentPhoto.isVideo) {
+                    _uploadingPhoto = currentPhoto;
+
                     [self getVideoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsVideoURL]
                                        onSuccess:^(NSData *videoData) {
-                                           currentImage.imageData   =   videoData;
-                                           NSDateFormatter *formatter   =   [[NSDateFormatter alloc] init];
+                                           currentImage.imageData = videoData;
+                                           NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                                            [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                                            
-                                           parameters   =   @{
-                                                                    @"video"        :   videoData,
-                                                                    @"latitude"     :   @(currentPhoto.latitude),
-                                                                    @"longitude"    :   @(currentPhoto.longitude),
-                                                                    @"date"         :   [formatter stringFromDate:currentPhoto.date]
-                                                            };
+                                           parameters = @{
+                                                            @"video" : videoData,
+                                                            @"latitude" : @(currentPhoto.latitude),
+                                                            @"longitude" : @(currentPhoto.longitude),
+                                                            @"date" : [formatter stringFromDate:currentPhoto.date]
+                                                        };
                                            
                                            // API
                                            [self uploadVideoWithParameters:parameters
                                                                  onSuccess:^(NSDictionary *successResult) {
-                                                                     currentPhoto.state     =   HRPPhotoStateDone;
+                                                                     _uploadingPhoto = nil;
+                                                                     currentPhoto.state = HRPPhotoStateDone;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
                                                                      [currentCell hideLoader];
                                                                      
-                                                                     isUploadInProcess      =   NO;
+                                                                     isUploadInProcess = NO;
                                                                      photosNeedUploadCount--;
                                                                      
                                                                      if (photosNeedUploadCount && inLoop)
                                                                          [self startUploadPhotos];
                                                                  }
                                                                  orFailure:^(AFHTTPRequestOperation *failureOperation) {
-                                                                     currentPhoto.state     =   HRPPhotoStateRepeat;
+                                                                     _uploadingPhoto = nil;
+                                                                     currentPhoto.state = HRPPhotoStateRepeat;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
                                                                      [currentCell hideLoader];
                                                                      [self hideLoader];
                                                                      
-                                                                     isUploadInProcess      =   NO;
+                                                                     isUploadInProcess = NO;
                                                                      
                                                                      [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
                                                                                        andMessage:NSLocalizedString(@"Alert API Upload error message", nil)];
@@ -575,23 +584,23 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                 else {
                     [self getPhotoFromAlbumAtURL:[NSURL URLWithString:currentPhoto.assetsPhotoURL]
                                        onSuccess:^(UIImage *image) {
-                                           imageOriginal                                    =   image;
+                                           imageOriginal = image;
                                            
                                            if ([currentPhoto.assetsPhotoURL hasSuffix:@"JPG"])
-                                               currentImage.imageData                       =   [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
+                                               currentImage.imageData = [[NSData alloc] initWithData:UIImageJPEGRepresentation(imageOriginal, 1.f)];
                                            else
-                                               currentImage.imageData                       =   [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
+                                               currentImage.imageData = [[NSData alloc] initWithData:UIImagePNGRepresentation(imageOriginal)];
                                            
-                                           parameters                                       =   @{
-                                                                                                        @"photo"        :   currentImage.imageData,
-                                                                                                        @"latitude"     :   @(currentPhoto.latitude),
-                                                                                                        @"longitude"    :   @(currentPhoto.longitude)
-                                                                                                };
+                                           parameters = @{
+                                                            @"photo" : currentImage.imageData,
+                                                            @"latitude" : @(currentPhoto.latitude),
+                                                            @"longitude" : @(currentPhoto.longitude)
+                                                        };
                                            
                                            // API
                                            [self uploadPhotoWithParameters:parameters
                                                                  onSuccess:^(NSDictionary *successResult) {
-                                                                     currentPhoto.state     =   HRPPhotoStateDone;
+                                                                     currentPhoto.state = HRPPhotoStateDone;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
                                                                      
                                                                      [self savePhotosCollectionToFile];
@@ -827,17 +836,17 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (void)readPhotosCollectionFromFile {
-    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    arrayPath = [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
-        NSData *arrayData                           =   [[NSData alloc] initWithContentsOfFile:arrayPath];
-        photosDataSource                            =   [NSMutableArray array];
-        imagesDataSource                            =   [NSMutableArray array];
+        NSData *arrayData = [[NSData alloc] initWithContentsOfFile:arrayPath];
+        photosDataSource = [NSMutableArray array];
+        imagesDataSource = [NSMutableArray array];
 
         if (arrayData) {
-            photosDataSource                        =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
+            photosDataSource = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         
             if (photosDataSource.count == 0) {
                 [self.navigationItem.rightBarButtonItem setEnabled:YES];
@@ -849,75 +858,69 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         } else
             NSLog(@"File does not exist");
     } else {
-        photosDataSource                            =   [NSMutableArray array];
-        imagesDataSource                            =   [NSMutableArray array];
+        photosDataSource = [NSMutableArray array];
+        imagesDataSource = [NSMutableArray array];
         
         [self hideLoader];
     }
 }
 
 - (void)showAlertController {
-    UIAlertController *alertController              =   [UIAlertController alertControllerWithTitle:nil
-                                                                                            message:nil
-                                                                                     preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                             message:nil
+                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
     
-    UIAlertAction *actionCancel                     =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
-                                                                                 style:UIAlertActionStyleCancel
-                                                                               handler:^(UIAlertAction *action) {
-                                                                               }];
+    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
+                                                           style:UIAlertActionStyleCancel
+                                                         handler:nil];
     
-    UIAlertAction *actionOpenPhoto                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
-                                                                                 style:UIAlertActionStyleDefault
-                                                                               handler:^(UIAlertAction *action) {
-                                                                                   HRPPhotoPreviewViewController *photoPreviewVC    =   [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
+    UIAlertAction *actionOpenPhoto = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction *action) {
+                                                                HRPPhotoPreviewViewController *photoPreviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
                                                                                    
-                                                                                   photoPreviewVC.photo                             =   currentPhoto;
+                                                                photoPreviewVC.photo = currentPhoto;
                                                                                    
-                                                                                   [self presentViewController:photoPreviewVC animated:YES completion:nil];
-                                                                               }];
+                                                                [self presentViewController:photoPreviewVC animated:YES completion:nil];
+                                                            }];
     
-    UIAlertAction *actionOpenVideo                  =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
-                                                                                 style:UIAlertActionStyleDefault
-                                                                               handler:^(UIAlertAction *action) {
-                                                                                   if (!isVideoPreviewStart) {
-                                                                                       //HRPVideoPlayerViewController *videoPlayerVC  =   [[HRPVideoPlayerViewController alloc] initWithContentURL:[NSURL URLWithString:currentPhoto.assetsVideoURL]];
-                                                                                       
-                                                                                       HRPVideoPlayerViewController *videoPlayerVC  =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
+    UIAlertAction *actionOpenVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
+                                                              style:UIAlertActionStyleDefault
+                                                            handler:^(UIAlertAction *action) {
+                                                                if (!isVideoPreviewStart) {
+                                                                    HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
 
-                                                                                       videoPlayerVC.videoURL                       =   [NSURL URLWithString:currentPhoto.assetsVideoURL];
+                                                                    videoPlayerVC.videoURL = [NSURL URLWithString:currentPhoto.assetsVideoURL];
                                                                                        
-                                                                                       [self presentViewController:videoPlayerVC animated:YES completion:^{
-                                                                                           isVideoPreviewStart                      =   YES;
-                                                                                       }];
-                                                                                   }
-                                                                               }];
+                                                                    [self presentViewController:videoPlayerVC animated:YES completion:^{
+                                                                        isVideoPreviewStart = YES;
+                                                                    }];
+                                                                }
+                                                            }];
     
-    UIAlertAction *actionRemoveItem                 =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?   @"Remove a Video" :
-                                                                                                                                    @"Remove a Photo", nil)
-                                                                                 style:UIAlertActionStyleDestructive
-                                                                               handler:^(UIAlertAction *action) {
-                                                                                   [self removeItemFromCollection];
-                                                                               }];
+    UIAlertAction *actionRemoveItem = [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ? @"Remove a Video" : @"Remove a Photo", nil)
+                                                               style:UIAlertActionStyleDestructive
+                                                             handler:^(UIAlertAction *action) {
+                                                                 [self removeItemFromCollection];
+                                                             }];
 
-    UIAlertAction *actionUploadData                =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?    @"Upload a Video" :
-                                                                                                                                    @"Upload a Photo", nil)
-                                                                                 style:UIAlertActionStyleDefault
-                                                                               handler:^(UIAlertAction *action) {
-                                                                                   if (currentPhoto.state != HRPPhotoStateDone) {
-                                                                                       [currentCell showLoaderWithText:nil
-                                                                                                    andBackgroundColor:CellBackgroundColorTypeBlue
-                                                                                                               forTime:300];
+    UIAlertAction *actionUploadData = [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ? @"Upload a Video" : @"Upload a Photo", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                                 if (currentPhoto.state != HRPPhotoStateDone) {
+                                                                     [currentCell showLoaderWithText:nil
+                                                                                  andBackgroundColor:CellBackgroundColorTypeBlue
+                                                                                             forTime:300];
                                                                                        
-                                                                                       [self uploadDataFromLoop:NO];
-                                                                                   }
-                                                                               }];
+                                                                     [self uploadDataFromLoop:NO];
+                                                                 }
+                                                             }];
     
-    UIAlertAction *actionUploadDatas               =   [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ?    @"Upload Videos" :
-                                                                                                                                    @"Upload Photos", nil)
-                                                                                 style:UIAlertActionStyleDefault
-                                                                               handler:^(UIAlertAction *action) {
-                                                                                   [self startUploadPhotos];
-                                                                               }];
+    UIAlertAction *actionUploadDatas = [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ? @"Upload Videos" : @"Upload Photos", nil)
+                                                                style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction *action) {
+                                                                  [self startUploadPhotos];
+                                                              }];
     
     if (currentPhoto.isVideo)
         [alertController addAction:actionOpenVideo];
@@ -934,7 +937,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [alertController addAction:actionCancel];
     
-    [self presentViewController:alertController animated:YES completion:nil];
+    if (!isUploadInProcess || currentPhoto != _uploadingPhoto) {
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
 
@@ -948,58 +953,53 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier                 =   @"PhotoCell";
-    HRPPhotoCell *cell                              =   [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier
-                                                                                                  forIndexPath:indexPath];
+    static NSString *cellIdentifier = @"PhotoCell";
+    HRPPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     
     [cell hideLoader];
     
-    HRPPhoto *photo                                 =   [photosDataSource objectAtIndex:indexPath.row];
-    HRPImage *image                                 =   [imagesDataSource objectAtIndex:indexPath.row];
+    HRPPhoto *photo = [photosDataSource objectAtIndex:indexPath.row];
+    HRPImage *image = [imagesDataSource objectAtIndex:indexPath.row];
     
     switch (photo.state) {
         // HRPPhotoStateDone
         case 0: {
             [cell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
-            cell.photoStateButton.tag               =   0;
+            cell.photoStateButton.tag = 0;
         }
             break;
             
         // HRPPhotoStateRepeat
         case 1: {
             [cell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
-            cell.photoStateButton.tag               =   1;
+            cell.photoStateButton.tag = 1;
         }
             break;
 
         // HRPPhotoStateUpload
         case 2: {
             [cell.photoStateButton setImage:[UIImage imageNamed:@"icon-upload"] forState:UIControlStateNormal];
-            cell.photoStateButton.tag               =   2;
+            cell.photoStateButton.tag = 2;
         }
             break;
     }
-    
-//    PHImageRequestOptions *imageRequestOptions      =   [[PHImageRequestOptions alloc] init];
-//    imageRequestOptions.resizeMode                  =   PHImageRequestOptionsResizeModeFast;
-//    imageRequestOptions.normalizedCropRect          =   CGRectMake(0.f, 0.f, photoSize.width, photoSize.height);
     
     [UIView transitionWithView:cell
                       duration:0.7f
                        options:UIViewAnimationOptionTransitionCrossDissolve
                     animations:^{
-                        cell.photoImageView.image       =   image.imageAvatar;
-                        cell.playVideoImageView.alpha   =   (photo.isVideo) ? 1.f : 0.f;
+                        cell.photoImageView.image = image.imageAvatar;
+                        cell.playVideoImageView.alpha = (photo.isVideo) ? 1.f : 0.f;
                     }
                     completion:^(BOOL finished) {
-                        cell.photo                  =   photo;
-                        cell.image                  =   image;
+                        cell.photo = photo;
+                        cell.image = image;
                     }];
     
     // Set pagination
     if (indexPath.row == imagesDataSource.count - 2 &&
         indexPath.row != photosDataSource.count - 2) {
-        isPaginationRun                             =   YES;
+        isPaginationRun = YES;
         
         [self showLoaderWithText:NSLocalizedString(@"Upload title", nil)
               andBackgroundColor:BackgroundColorTypeBlue
@@ -1016,10 +1016,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UICollectionViewDelegate -
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    currentCell                                     =   (HRPPhotoCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    currentPhoto                                    =   currentCell.photo;
-    currentImage                                    =   currentCell.image;
-    currentIndexPath                                =   indexPath;
+    currentCell = (HRPPhotoCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    currentPhoto = currentCell.photo;
+    currentImage = currentCell.image;
+    currentIndexPath = indexPath;
     
     [self showAlertController];
 }
@@ -1041,17 +1041,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _statusView.frame                   =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
+    _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
 
     if (size.height > size.width)
-        cellSide                        =   (size.width - 4.f) / 2;
+        cellSide = (size.width - 4.f) / 2;
     else
-        cellSide                        =   (size.width - 8.f) / 3;
+        cellSide = (size.width - 8.f) / 3;
     
-    photoSize                           =   CGSizeMake(cellSide, cellSide);
-//    
-//    if (!isUploadInProcess)
-//        [self.photosCollectionView reloadData];
+    photoSize = CGSizeMake(cellSide, cellSide);
 }
 
 
@@ -1115,8 +1112,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                            currentCell.photoImageView.image =   image.imageAvatar;
                                                                        }
                                                                        completion:^(BOOL finished) {
-                                                                           photo.latitude   =   locationNew.coordinate.latitude;
-                                                                           photo.longitude  =   locationNew.coordinate.longitude;
+                                                                           //photo.latitude   =   locationNew.coordinate.latitude;
+                                                                           //photo.longitude  =   locationNew.coordinate.longitude;
                                                                            photo.isVideo    =   NO;
                                                                            
                                                                            // API
@@ -1145,6 +1142,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 
+/*
 #pragma mark - CLLocationManagerDelegate -
 - (void)locationManager:(CLLocationManager *)manager
     didUpdateToLocation:(CLLocation *)newLocation
@@ -1152,12 +1150,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     currentPhoto.latitude           =   newLocation.coordinate.latitude;
     currentPhoto.longitude          =   newLocation.coordinate.longitude;
     
-    locationNew                     =   newLocation;
-    isLocationServiceEnabled        =   YES;
+//    locationNew                     =   newLocation;
+//    isLocationServiceEnabled        =   YES;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    isLocationServiceEnabled        =   NO;
+//    isLocationServiceEnabled        =   NO;
 }
 
 - (void)requestAlwaysAuthorization {
@@ -1182,5 +1180,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         [locationsService.manager requestAlwaysAuthorization];
     }
 }
+*/
 
 @end
