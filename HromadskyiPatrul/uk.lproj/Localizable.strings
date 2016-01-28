@@ -21,19 +21,19 @@
 "About text 3"                                  =   "Країна має знати своїх «героїв»!";
 "Alert error email title"                       =   "Помилка";
 "Alert info title"                              =   "Інфо";
-"Alert error email message"                     =   "Будь ласка, \n введіть коректну поштову адресу";
+"Alert error email message"                     =   "Будь ласка, введіть коректну поштову адресу";
 "Alert error API title"                         =   "Помилка";
 "Alert error API message"                       =   "Вказана поштова адреса не є дійсною";
-"Alert error video message"                     =   "Будь ласка, \n оберіть режим фотографування";
+"Alert error video message"                     =   "Будь ласка, оберіть режим фотографування";
 "Alert error button Ok"                         =   "Ок";
 "Alert error button Cancel"                     =   "Скасувати";
-"Alert error internet message"                  =   "Будь ласка, \n перевірте підключення до Інтернету";
-"Switch network title"                          =   "Завантажувати \nтільки по WiFi";
+"Alert error internet message"                  =   "Будь ласка, перевірте підключення до Інтернету";
+"Switch network title"                          =   "Завантажувати тільки по WiFi";
 "Switch sending title"                          =   "Завантажувати автоматично";
-"Camera is not available"                       =   "Камера недоступна";
-"Photo is missing"                              =   "Фотографія відсутня";
-"Photos 2-4 are missing"                        =   "фотографії відсутні";
-"Photos >5 are missing"                         =   "фотографій відсутні";
+"Camera is not available"                       =   "Камера недоступна.";
+"Photo is missing"                              =   "Фотографія відсутня.";
+"Photos 2-4 are missing"                        =   "фотографії відсутні.";
+"Photos >5 are missing"                         =   "фотографій відсутні.";
 
 "Alert error location title"                    =   "Помилка";
 "Alert error location message off"              =   "Сервіс визначення місця розташування вимкнено";
