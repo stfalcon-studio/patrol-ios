@@ -55,16 +55,16 @@
           andBackgroundColor:BackgroundColorTypeBlack
                      forTime:3];
     
-    _statusView         =   [self customizeStatusBar];
+    _statusView = [self customizeStatusBar];
 
     // Create model
-    _loginViewModel     =   [[HRPLoginViewModel alloc] init];
+    _loginViewModel = [[HRPLoginViewModel alloc] init];
     
     // Set Logo text
-    _logoLabel.text     =   NSLocalizedString(@"Public patrol", nil);
-    _aboutLabel1.text   =   NSLocalizedString(@"About text 1", nil);
-    _aboutLabel2.text   =   NSLocalizedString(@"About text 2", nil);
-    _aboutLabel3.text   =   NSLocalizedString(@"About text 3", nil);
+    _logoLabel.text = NSLocalizedString(@"Public patrol", nil);
+    _aboutLabel1.text = NSLocalizedString(@"About text 1", nil);
+    _aboutLabel2.text = NSLocalizedString(@"About text 2", nil);
+    _aboutLabel3.text = NSLocalizedString(@"About text 3", nil);
     
     // Set button title
     [_loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
@@ -85,14 +85,20 @@
     [super viewWillAppear:animated];
     
     if ([_loginViewModel.userApp objectForKey:@"userAppEmail"])
-        _emailTextField.text                =   [_loginViewModel.userApp objectForKey:@"userAppEmail"];
+        _emailTextField.text = [_loginViewModel.userApp objectForKey:@"userAppEmail"];
     
-    _screenSize                             =   CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]),
-                                                           CGRectGetHeight([[UIScreen mainScreen] bounds]));
-    
+    _screenSize = CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]), CGRectGetHeight([[UIScreen mainScreen] bounds]));
+
     // Set Scroll View constraints
-    _contentViewWidthConstraint.constant    =   _screenSize.width;
-    _contentViewHeightConstraint.constant   =   _screenSize.height;
+    _contentViewWidthConstraint.constant = _screenSize.width;
+    _contentViewHeightConstraint.constant = _screenSize.height;
+
+    if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
+        _contentViewHeightConstraint.constant = _screenSize.width;
+        _statusView.frame = CGRectMake(0.f, -20.f, _screenSize.width, 20.f);
+        
+        [self.view layoutIfNeeded];
+    }
     
     [self.view layoutIfNeeded];
 }
@@ -128,7 +134,7 @@
                                           [_emailTextField resignFirstResponder];
 
                                           // Transition to VideoRecord scene
-                                          HRPVideoRecordViewController *videoRecordVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+                                          HRPVideoRecordViewController *videoRecordVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
                                           
                                           [self.navigationController pushViewController:videoRecordVC animated:YES];
                                           [sender setUserInteractionEnabled:YES];
@@ -152,15 +158,15 @@
 
 #pragma mark - NSNotification -
 - (void)keyboardDidShow:(NSNotification *)notification {
-    NSDictionary *info      =   [notification userInfo];
-    _keyboardSize           =   [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-    _isKeyboardShow         =   YES;
+    NSDictionary *info = [notification userInfo];
+    _keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    _isKeyboardShow = YES;
     
     [self moveContentViewAboveKeyboard];
 }
 
 - (void)keyboardDidHide:(NSNotification *)notification {
-    _isKeyboardShow         =   NO;
+    _isKeyboardShow = NO;
     
     [self.scrollView setContentOffset:CGPointZero animated:YES];
 }
@@ -175,8 +181,8 @@
 #pragma mark - Methods -
 - (void)moveContentViewAboveKeyboard {
     if (_isKeyboardShow) {
-        CGFloat emailPositionY              =   CGRectGetMaxY(_emailTextField.frame);
-        CGFloat keyboardPositionTop         =   _screenSize.height - _keyboardSize.height - 10.f;
+        CGFloat emailPositionY = CGRectGetMaxY(_emailTextField.frame);
+        CGFloat keyboardPositionTop = _screenSize.height - _keyboardSize.height - 10.f;
         
         if (emailPositionY > keyboardPositionTop)
             [_scrollView setContentOffset:CGPointMake(0.f, emailPositionY - keyboardPositionTop) animated:YES];
@@ -189,9 +195,9 @@
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _screenSize                             =   size;
-    _contentViewWidthConstraint.constant    =   size.width;
-    _statusView.frame                       =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
+    _screenSize = size;
+    _contentViewWidthConstraint.constant = size.width;
+    _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
     
     [self.view layoutIfNeeded];
     [self moveContentViewAboveKeyboard];
