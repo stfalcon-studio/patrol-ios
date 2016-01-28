@@ -63,12 +63,12 @@
 - (IBAction)actionLogoutButtonTap:(UIButton *)sender {
     [_settingsViewModel logout];
 
-    [self.navigationController popToRootViewControllerAnimated:YES];
+    //[self.navigationController popToRootViewControllerAnimated:YES];
     [self hideNavigationBar];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
-                                                        object:nil
-                                                      userInfo:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:@"HRPSettingsViewControllerUserLogout"
+//                                                        object:nil
+//                                                      userInfo:nil];
 }
 
 - (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {

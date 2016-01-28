@@ -70,11 +70,11 @@
     [_loginButton setTitle:NSLocalizedString(@"Login", nil) forState:UIControlStateNormal];
     
     // Set Notification Observers
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleUserLogout:)
-                                                 name:@"HRPSettingsViewControllerUserLogout"
-                                               object:nil];
-
+//    [[NSNotificationCenter defaultCenter] addObserver:self
+//                                             selector:@selector(handleUserLogout:)
+//                                                 name:@"HRPSettingsViewControllerUserLogout"
+//                                               object:nil];
+//
     // Keyboard notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardDidShow:)
@@ -157,10 +157,10 @@
 
 
 #pragma mark - NSNotification -
-- (void)handleUserLogout:(NSNotification *)notification {
-    [self dismissViewControllerAnimated:NO completion:nil];
-}
-
+//- (void)handleUserLogout:(NSNotification *)notification {
+//    [self dismissViewControllerAnimated:NO completion:nil];
+//}
+//
 - (void)keyboardDidShow:(NSNotification *)notification {
     NSDictionary *info      =   [notification userInfo];
     _keyboardSize           =   [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;

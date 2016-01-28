@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mUf-Sv-mee">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="mUf-Sv-mee">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -562,6 +562,7 @@
                                                     </state>
                                                     <connections>
                                                         <action selector="actionLogoutButtonTap:" destination="JJw-Ua-K2j" eventType="touchUpInside" id="pjl-Jm-0zX"/>
+                                                        <segue destination="mi9-c4-XfA" kind="unwind" identifier="LogoutSegue" unwindAction="prepareForUnwind:" id="C4a-xo-o50"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -601,6 +602,7 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H4p-4y-a8J" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="mi9-c4-XfA" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2855" y="1153"/>
         </scene>
