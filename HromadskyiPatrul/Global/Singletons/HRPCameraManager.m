@@ -34,45 +34,45 @@
 
 #pragma mark - Constructors -
 + (HRPCameraManager *)sharedManager {
-    static HRPCameraManager *singletonManager           =   nil;
+    static HRPCameraManager *singletonManager = nil;
     static dispatch_once_t onceToken;
     
     dispatch_once(&onceToken, ^{
-        singletonManager                                =   [[HRPCameraManager alloc] init];
+        singletonManager = [[HRPCameraManager alloc] init];
     });
     
     return singletonManager;
 }
 
 - (instancetype)init {
-    self                                                =   [super init];
+    self = [super init];
     
     if (self) {
         // App Folder
-        _mediaFolderPath                                =   [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        _mediaFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
         
         // Saved user data
-        _userApp                                        =   [NSUserDefaults standardUserDefaults];
+        _userApp = [NSUserDefaults standardUserDefaults];
         
         [self createStoreDataPath];
 //        [self readAllFolderFile];
 //        [self readPhotosCollectionFromFile];
         
         // Set Media session parameters
-        _isVideoSaving          =   NO;
+        _isVideoSaving = NO;
         
-        _audioRecordSettings    =   [NSDictionary dictionaryWithObjectsAndKeys:
-                                     [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
-                                     [NSNumber numberWithInt:AVAudioQualityMax],         AVEncoderAudioQualityKey,
-                                     [NSNumber numberWithInt:32],                        AVEncoderBitRateKey,
-                                     [NSNumber numberWithInt:2],                         AVNumberOfChannelsKey,
-                                     [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
+        _audioRecordSettings = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
+                                    [NSNumber numberWithInt:AVAudioQualityMax],         AVEncoderAudioQualityKey,
+                                    [NSNumber numberWithInt:32],                        AVEncoderBitRateKey,
+                                    [NSNumber numberWithInt:2],                         AVNumberOfChannelsKey,
+                                    [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
         
         // [self deleteFolder];
         
-        _locationManager                    =   [[CLLocationManager alloc] init];
-        _locationManager.delegate           =   self;
-        _locationManager.desiredAccuracy    =   kCLLocationAccuracyBest;
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         
         [_locationManager startUpdatingLocation];
         
@@ -99,16 +99,15 @@
 
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
-    //_timerSeconds           =   0;
-    _sessionDuration        =   (_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 30;
-    _timerLabel             =   label;
-    _timerLabel.text        =   [self formattedTime:_timerSeconds];    
+    _sessionDuration = (_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 30;
+    _timerLabel = label;
+    _timerLabel.text = [self formattedTime:_timerSeconds];
     
-    _timer                  =   [NSTimer scheduledTimerWithTimeInterval:1.f
-                                                                 target:self
-                                                               selector:@selector(timerTicked:)
-                                                               userInfo:nil
-                                                                repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1.f
+                                              target:self
+                                            selector:@selector(timerTicked:)
+                                            userInfo:nil
+                                             repeats:YES];
 }
 
 - (void)timerTicked:(NSTimer *)timer {
@@ -116,24 +115,23 @@
     
     if (_timerSeconds == _sessionDuration) {
         if (_videoSessionMode == NSTimerVideoSessionModeStream)
-            _timerSeconds   =   0;
+            _timerSeconds = 0;
         
         else {
             [_timer invalidate];
-            //_timerSeconds   =   0;
         }
 
         // Stop Video & Audio recording
         [self stopVideoRecording];
     }
     
-    _timerLabel.text        =   [self formattedTime:_timerSeconds];
+    _timerLabel.text = [self formattedTime:_timerSeconds];
 }
 
 - (NSString *)formattedTime:(NSInteger)secondsTotal {
-    NSInteger seconds       =   secondsTotal % 60;
-    NSInteger minutes       =   (secondsTotal / 60) % 60;
-    NSInteger hours         =   secondsTotal / 3600;
+    NSInteger seconds = secondsTotal % 60;
+    NSInteger minutes = (secondsTotal / 60) % 60;
+    NSInteger hours = secondsTotal / 3600;
     
     return [NSString stringWithFormat:@"%02ld:%02ld:%02ld", (long)hours, (long)minutes, (long)seconds];
 }
@@ -144,29 +142,28 @@
     NSError *error;
     
     // Initialize the Session object
-    _captureSession                             =   [[AVCaptureSession alloc] init];
-    _captureSession.sessionPreset               =   AVCaptureSessionPresetHigh;
+    _captureSession = [[AVCaptureSession alloc] init];
+    _captureSession.sessionPreset = AVCaptureSessionPresetHigh;
     
     // Initialize a Camera object
-    AVCaptureDevice *inputDevice                =   [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-
-    AVCaptureDeviceInput *deviceInput           =   [AVCaptureDeviceInput deviceInputWithDevice:inputDevice error:&error];
+    AVCaptureDevice *inputDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    AVCaptureDeviceInput *deviceInput = [AVCaptureDeviceInput deviceInputWithDevice:inputDevice error:&error];
     
     if ([_captureSession canAddInput:deviceInput])
         [_captureSession addInput:deviceInput];
     
     // Configure the audio session
-    AVAudioSession *audioSession                =   [AVAudioSession sharedInstance];
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
     [audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
     [audioSession setActive:YES error:nil];
     
     // Find the desired input port
-    NSArray *inputs                             =   [audioSession availableInputs];
-    AVAudioSessionPortDescription *builtInMic   =   nil;
+    NSArray *inputs = [audioSession availableInputs];
+    AVAudioSessionPortDescription *builtInMic = nil;
     
     for (AVAudioSessionPortDescription *port in inputs) {
         if ([port.portType isEqualToString:AVAudioSessionPortBuiltInMic]) {
-            builtInMic                          =   port;
+            builtInMic = port;
            
             break;
         }
@@ -184,18 +181,18 @@
     
     // VIDEO
     // Add output file
-    _videoFileOutput                            =   [[AVCaptureMovieFileOutput alloc] init];
+    _videoFileOutput = [[AVCaptureMovieFileOutput alloc] init];
 
     if ([_captureSession canAddOutput:_videoFileOutput])
         [_captureSession addOutput:_videoFileOutput];
     
     // Set Connection
-    AVCaptureConnection *videoConnection        =   nil;
+    AVCaptureConnection *videoConnection = nil;
     
     for (AVCaptureConnection *connection in _videoFileOutput.connections) {
         for (AVCaptureInputPort *port in connection.inputPorts) {
             if ([port.mediaType isEqual:AVMediaTypeVideo])
-                videoConnection                 =   connection;
+                videoConnection = connection;
         }
     }
     
@@ -203,8 +200,8 @@
         [self setVideoSessionOrientation];
     
     // Create StillImageOutput
-    AVCaptureStillImageOutput *stillImageOutput =   [[AVCaptureStillImageOutput alloc] init];
-    NSDictionary *outputSettings                =   [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
+    AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+    NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
     [stillImageOutput setOutputSettings:outputSettings];
         
     [_captureSession addOutput:stillImageOutput];
@@ -213,32 +210,28 @@
 - (void)startStreamVideoRecording {
     [self startAudioRecording];
     
-    NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:
-                                     (_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_video_0.mp4" :
-                                                                                            @"snippet_video_1.mp4"];
+    NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent: (_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_video_0.mp4" : @"snippet_video_1.mp4"];
     
-    NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
+    NSURL *videoFileURL = [NSURL fileURLWithPath:videoFilePath];
 
     [_videoFileOutput startRecordingToOutputFileURL:videoFileURL recordingDelegate:self];
 }
 
 - (void)startAudioRecording {
     if (!_audioRecorder.recording) {
-        NSError *error          =   nil;
-        _audioSession           =   [AVAudioSession sharedInstance];
+        NSError *error = nil;
+        _audioSession = [AVAudioSession sharedInstance];
         
         [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
         [_audioSession setActive:YES withOptions:0 error:nil];
         
-        NSString *audioFilePath =   [_mediaFolderPath stringByAppendingPathComponent:
-                                     (_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_audio_0.caf" :
-                                                                                            @"snippet_audio_1.caf"];
+        NSString *audioFilePath = [_mediaFolderPath stringByAppendingPathComponent:(_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_audio_0.caf" : @"snippet_audio_1.caf"];
 
-        NSURL *audioFileURL     =   [NSURL fileURLWithPath:audioFilePath];
+        NSURL *audioFileURL = [NSURL fileURLWithPath:audioFilePath];
         
-        _audioRecorder          =   [[AVAudioRecorder alloc] initWithURL:audioFileURL
-                                                                settings:_audioRecordSettings
-                                                                   error:&error];
+        _audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioFileURL
+                                                     settings:_audioRecordSettings
+                                                        error:&error];
         
         if (error)
             [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
@@ -252,7 +245,7 @@
 }
 
 - (void)restartStreamVideoRecording {
-    _timerSeconds       =   0;
+    _timerSeconds = 0;
 
     // Stop Video & Audio recording
     [self stopVideoRecording];
@@ -261,7 +254,7 @@
 - (void)stopVideoSession {
     [_captureSession stopRunning];
 
-    _videoSessionMode   =   NSTimerVideoSessionModeDismissed;
+    _videoSessionMode = NSTimerVideoSessionModeDismissed;
 
     // Stop Video & Audio recording
     [self stopVideoRecording];
@@ -272,11 +265,11 @@
     // Stop Timer
     [_timer invalidate];
     
-    _captureSession     =   nil;
-    _videoPreviewLayer  =   nil;
-    _audioSession       =   nil;
-    _audioRecorder      =   nil;
-    _audioPlayer        =   nil;
+    _captureSession = nil;
+    _videoPreviewLayer = nil;
+    _audioSession = nil;
+    _audioRecorder = nil;
+    _audioPlayer = nil;
 }
 
 - (void)stopVideoRecording {
@@ -290,34 +283,34 @@
 }
 
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
-    _videoPreviewLayer.frame    =   CGRectMake(0.f, 0.f, newSize.width, newSize.height);
+    _videoPreviewLayer.frame = CGRectMake(0.f, 0.f, newSize.width, newSize.height);
     
     [self setVideoSessionOrientation];
 }
 
 - (void)setVideoSessionOrientation {
     AVCaptureVideoOrientation videoOrientation  =   AVCaptureVideoOrientationPortraitUpsideDown;
-    UIDeviceOrientation deviceOrientation       =   [[UIDevice currentDevice] orientation];
+    UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
     
     switch (deviceOrientation) {
         case UIDeviceOrientationPortrait:
-            videoOrientation                    =   AVCaptureVideoOrientationPortrait;
+            videoOrientation = AVCaptureVideoOrientationPortrait;
             break;
             
         case UIDeviceOrientationPortraitUpsideDown:
-            videoOrientation                    =   AVCaptureVideoOrientationPortraitUpsideDown;
+            videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
             break;
             
         case UIDeviceOrientationLandscapeLeft:
-            videoOrientation                    =   AVCaptureVideoOrientationLandscapeRight;
+            videoOrientation = AVCaptureVideoOrientationLandscapeRight;
             break;
             
         case UIDeviceOrientationLandscapeRight:
-            videoOrientation                    =   AVCaptureVideoOrientationLandscapeLeft;
+            videoOrientation = AVCaptureVideoOrientationLandscapeLeft;
             break;
             
         default:
-            videoOrientation                    =   AVCaptureVideoOrientationPortrait;
+            videoOrientation = AVCaptureVideoOrientationPortrait;
             break;
     }
     
@@ -327,8 +320,8 @@
 
 - (void)createStoreDataPath {
     NSError *error;
-    NSArray *paths              =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    _arrayPath                  =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    _arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     
     if (![[NSFileManager defaultManager] fileExistsAtPath:_arrayPath]) {
         if (![[NSFileManager defaultManager] createDirectoryAtPath:_arrayPath
@@ -348,30 +341,29 @@
 }
 
 - (void)readAllFolderFile {
-    NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     
     NSLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
 }
 
 - (void)readPhotosCollectionFromFile {
-    _photosDataSource           =   [NSMutableArray array];
-    NSArray *paths              =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    _arrayPath                  =   paths[0];
-    // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    _arrayPath                  =   [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
+    _photosDataSource = [NSMutableArray array];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    _arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
     
     if ([[NSFileManager defaultManager] fileExistsAtPath:_arrayPath]) {
-        NSData *arrayData       =   [[NSData alloc] initWithContentsOfFile:_arrayPath];
+        NSData *arrayData = [[NSData alloc] initWithContentsOfFile:_arrayPath];
         
         if (arrayData)
-            _photosDataSource   =   [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
+            _photosDataSource = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         else
             NSLog(@"File does not exist");
     }
 }
 
 - (void)removeOldVideoFile {
-    NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     
     for (NSString *fileName in allFolderFiles) {
         if ([fileName containsString:@"violation_video"])
@@ -380,8 +372,8 @@
 }
 
 - (void)removeAllFolderMediaTempFiles {
-    NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
-    _videoImageOriginal         =   nil;
+    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    _videoImageOriginal = nil;
     
     for (NSString *fileName in allFolderFiles) {
         if ([fileName containsString:@"snippet_"] ||

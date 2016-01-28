@@ -44,6 +44,9 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    // Set View frame
+    self.view.frame = [UIScreen mainScreen].bounds;
+    
     [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:2];
@@ -54,26 +57,26 @@
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-action-close"]
                         withActionEnabled:YES];
     
-    _cameraManager                      =   [HRPCameraManager sharedManager];
+    _cameraManager = [HRPCameraManager sharedManager];
     
     [_cameraManager readPhotosCollectionFromFile];
     [_cameraManager createCaptureSession];
 
     //Preview Layer
-    _cameraManager.videoPreviewLayer    =   [[AVCaptureVideoPreviewLayer alloc] initWithSession:_cameraManager.captureSession];
-    
+    _cameraManager.videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_cameraManager.captureSession];
     [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [_cameraManager.videoPreviewLayer setFrame:self.view.bounds];
+//    [_cameraManager.videoPreviewLayer setFrame:self.view.frame];
+    [_cameraManager setVideoPreviewLayerOrientation:self.view.frame.size];
     
     [self.view.layer setMasksToBounds:YES];
     [self.view layoutIfNeeded];
 
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
     
-    _statusView                         =   [self customizeStatusBar];
+    _statusView = [self customizeStatusBar];
     [self customizeViewStyle];
 
-    _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
+    _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
 
     [_cameraManager.captureSession startRunning];
     [_cameraManager startStreamVideoRecording];
@@ -102,7 +105,7 @@
     [_cameraManager.videoPreviewLayer removeFromSuperlayer];
    
     // Transition to Collection Scene
-    HRPCollectionViewController *collectionVC   =   [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+    HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
     
     // Prepare DataSource
     [collectionVC.userNameBarButton setTitle:[_cameraManager.userApp objectForKey:@"userAppEmail"]];
@@ -117,16 +120,16 @@
     if (self.HUD.alpha)
         [self hideLoader];
         
-    self.navigationItem.rightBarButtonItem.enabled          =   YES;
-    _cameraManager.isVideoSaving                            =   NO;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    _cameraManager.isVideoSaving = NO;
     
     [_cameraManager startStreamVideoRecording];
     [_cameraManager createTimerWithLabel:_timerLabel];    
 }
 
 - (void)handlerMergeAndSaveVideo:(NSNotification *)notification {
-    _violationLabel.text                                    =   nil;
-    _violationLabel.isLabelFlashing                         =   NO;
+    _violationLabel.text = nil;
+    _violationLabel.isLabelFlashing = NO;
     
     [self showLoaderWithText:NSLocalizedString(@"Merge & Save video", nil)
           andBackgroundColor:BackgroundColorTypeBlue
@@ -137,11 +140,11 @@
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
-        _violationLabel.hidden                              =   NO;
-        _violationLabel.text                                =   NSLocalizedString(@"Violation", nil);
-        _cameraManager.isVideoSaving                        =   YES;
-        _cameraManager.videoSessionMode                     =   NSTimerVideoSessionModeViolation;
-        self.navigationItem.rightBarButtonItem.enabled      =   NO;
+        _violationLabel.hidden = NO;
+        _violationLabel.text = NSLocalizedString(@"Violation", nil);
+        _cameraManager.isVideoSaving = YES;
+        _cameraManager.videoSessionMode = NSTimerVideoSessionModeViolation;
+        self.navigationItem.rightBarButtonItem.enabled = NO;
 
         [_violationLabel startFlashing];
     }
@@ -150,7 +153,7 @@
 
 #pragma mark - Methods -
 - (void)customizeViewStyle {
-    _violationLabel.hidden                                  =   YES;
+    _violationLabel.hidden = YES;
     
     [_cameraManager createTimerWithLabel:_timerLabel];
 }
@@ -168,14 +171,13 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    _statusView.frame                       =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f,
-                                                           size.width, 20.f);
+    _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
     
     [_cameraManager setVideoPreviewLayerOrientation:size];
     
     // Restart Timer only in Stream Video mode
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
-        _cameraManager.videoSessionMode     =   NSTimerVideoSessionModeStream;
+        _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
 
         [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
               andBackgroundColor:BackgroundColorTypeBlue
