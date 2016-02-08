@@ -16,10 +16,10 @@
 
 #pragma mark - Constructors -
 - (instancetype)init {
-    self                    =   [super init];
+    self = [super init];
     
     if (self) {
-        _userApp            =   [NSUserDefaults standardUserDefaults];
+        _userApp = [NSUserDefaults standardUserDefaults];
     }
     
     return self;
@@ -36,10 +36,10 @@
 }
 
 - (NSString *)selectNextSceneStoryboardID {
-    NSString *selectedVC    =   @"VideoRecordVC";
+    NSString *selectedVC = @"VideoRecordVC";
     
     if (![_userApp objectForKey:@"userAppEmail"])
-        selectedVC          =   @"LoginVC";
+        selectedVC = @"LoginVC";
     
     return selectedVC;
 }

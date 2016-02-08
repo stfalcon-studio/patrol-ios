@@ -13,9 +13,9 @@
 
 
 #if TARGET_IPHONE_SIMULATOR
-NSString const *DeviceMode                                  =   @"Simulator";
+NSString const *DeviceMode = @"Simulator";
 #else
-NSString const *DeviceMode                                  =   @"Device";
+NSString const *DeviceMode = @"Device";
 #endif
 
 
@@ -31,8 +31,10 @@ NSString const *DeviceMode                                  =   @"Device";
     // Start Monitoring Network
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     
+    [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+    
     // Sleep mode
-    [UIApplication sharedApplication].idleTimerDisabled     =   YES;
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];

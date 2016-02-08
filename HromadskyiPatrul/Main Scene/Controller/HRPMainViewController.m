@@ -32,10 +32,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _statusView                     =   [self customizeStatusBar];
+    _statusView = [self customizeStatusBar];
 
     // Set Logo text
-    _logoLabel.text                 =   NSLocalizedString(@"Public patrol", nil);
+    _logoLabel.text = NSLocalizedString(@"Public patrol", nil);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -44,18 +44,18 @@
     [self hideNavigationBar];
     
     // Create model
-    _mainViewModel                  =   [[HRPMainViewModel alloc] init];
-    _versionLabel.text              =   [_mainViewModel getAppVersion];
+    _mainViewModel = [[HRPMainViewModel alloc] init];
+    _versionLabel.text = [_mainViewModel getAppVersion];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     // Select Next Scene
-    HRPBaseViewController *nextVC   =   [self.storyboard instantiateViewControllerWithIdentifier:
-                                        [_mainViewModel selectNextSceneStoryboardID]];
+    HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:
+                                    [_mainViewModel selectNextSceneStoryboardID]];
     
-    HRPNavigationController *navBar =   [[HRPNavigationController alloc] initWithRootViewController:nextVC];
+    HRPNavigationController *navBar = [[HRPNavigationController alloc] initWithRootViewController:nextVC];
     
     [self.navigationController presentViewController:navBar animated:YES completion:nil];
 }
@@ -73,7 +73,7 @@
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _statusView.frame               =   CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
+    _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
 
     [self.view layoutIfNeeded];
 }

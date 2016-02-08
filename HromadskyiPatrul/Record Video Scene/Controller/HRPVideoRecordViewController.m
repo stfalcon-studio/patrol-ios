@@ -178,14 +178,6 @@
     // Restart Timer only in Stream Video mode
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
         _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
-
-        [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
-              andBackgroundColor:BackgroundColorTypeBlue
-                         forTime:2];
-
-        [_cameraManager.timer invalidate];
-        [_cameraManager createTimerWithLabel:_timerLabel];
-        [_cameraManager restartStreamVideoRecording];
     }
 }
 
