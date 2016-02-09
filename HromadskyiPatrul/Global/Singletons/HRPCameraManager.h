@@ -34,13 +34,16 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 
 @property (assign, nonatomic) BOOL isVideoSaving;
 @property (assign, nonatomic) int sessionDuration;
+@property (assign, nonatomic) int violationTime;
 
 + (HRPCameraManager *)sharedManager;
 
 - (void)createCaptureSession;
 - (void)startStreamVideoRecording;
 - (void)stopVideoSession;
+- (void)removeMediaSnippets;
 - (void)readPhotosCollectionFromFile;
+- (int)getCurrentTimerValue;
 
 // Orientation
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize;

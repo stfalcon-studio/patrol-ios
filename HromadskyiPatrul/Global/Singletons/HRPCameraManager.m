@@ -29,7 +29,9 @@
     UIImage *_videoImageOriginal;
     CGRect _previewRect;
     
-    NSInteger _timerSeconds;
+    int _currentTimerValue;
+    NSString *_snippetVideoFileName;
+    NSString *_snippetAudioFileName;
 }
 
 #pragma mark - Constructors -
@@ -50,6 +52,9 @@
     if (self) {
         // App Folder
         _mediaFolderPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+        
+        _snippetVideoFileName = nil;
+        _snippetAudioFileName = nil;
         
         // Saved user data
         _userApp = [NSUserDefaults standardUserDefaults];
@@ -99,9 +104,10 @@
 
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
-    _sessionDuration = (_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 30;
+    _sessionDuration = 120; //(_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 30;
+    _violationTime = 0;
     _timerLabel = label;
-    _timerLabel.text = [self formattedTime:_timerSeconds];
+    _timerLabel.text = [self formattedTime:_currentTimerValue];
     
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.f
                                               target:self
@@ -111,11 +117,11 @@
 }
 
 - (void)timerTicked:(NSTimer *)timer {
-    _timerSeconds++;
+    _currentTimerValue++;
     
-    if (_timerSeconds == _sessionDuration) {
+    if (_currentTimerValue == _sessionDuration) {
         if (_videoSessionMode == NSTimerVideoSessionModeStream)
-            _timerSeconds = 0;
+            _currentTimerValue = 0;
         
         else {
             [_timer invalidate];
@@ -125,7 +131,7 @@
         [self stopVideoRecording];
     }
     
-    _timerLabel.text = [self formattedTime:_timerSeconds];
+    _timerLabel.text = [self formattedTime:_currentTimerValue];
 }
 
 - (NSString *)formattedTime:(NSInteger)secondsTotal {
@@ -210,7 +216,8 @@
 - (void)startStreamVideoRecording {
     [self startAudioRecording];
     
-    NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent: (_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_video_0.mp4" : @"snippet_video_1.mp4"];
+    _snippetVideoFileName = ([_snippetVideoFileName isEqualToString:@"snippet_video_1.mp4"] || _snippetVideoFileName == nil) ? @"snippet_video_0.mp4" : @"snippet_video_1.mp4";
+    NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetVideoFileName];
     
     NSURL *videoFileURL = [NSURL fileURLWithPath:videoFilePath];
 
@@ -225,7 +232,8 @@
         [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
         [_audioSession setActive:YES withOptions:0 error:nil];
         
-        NSString *audioFilePath = [_mediaFolderPath stringByAppendingPathComponent:(_videoSessionMode == NSTimerVideoSessionModeStream) ? @"snippet_audio_0.caf" : @"snippet_audio_1.caf"];
+        _snippetAudioFileName = ([_snippetAudioFileName isEqualToString:@"snippet_audio_1.caf"] || _snippetAudioFileName == nil) ? @"snippet_audio_0.caf" : @"snippet_audio_1.caf";
+        NSString *audioFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetAudioFileName];
 
         NSURL *audioFileURL = [NSURL fileURLWithPath:audioFilePath];
         
@@ -245,7 +253,7 @@
 }
 
 - (void)restartStreamVideoRecording {
-    _timerSeconds = 0;
+    _currentTimerValue = 0;
 
     // Stop Video & Audio recording
     [self stopVideoRecording];
@@ -270,6 +278,8 @@
     _audioSession = nil;
     _audioRecorder = nil;
     _audioPlayer = nil;
+    _violationTime = 0;
+    _currentTimerValue = 0;
 }
 
 - (void)stopVideoRecording {
@@ -316,6 +326,10 @@
     
     [_videoPreviewLayer.connection setVideoOrientation:videoOrientation];
     [[_videoFileOutput connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:videoOrientation];
+}
+
+- (int)getCurrentTimerValue {
+    return _currentTimerValue;
 }
 
 - (void)createStoreDataPath {
@@ -379,11 +393,15 @@
         if ([fileName containsString:@"snippet_"] ||
             [fileName containsString:@"violation_video"])
             [[NSFileManager defaultManager] removeItemAtPath:[_mediaFolderPath stringByAppendingPathComponent:fileName] error:nil];
-    }    
+    }
+    
+    _snippetVideoFileName = nil;
+    _snippetAudioFileName = nil;
+    _violationTime = 0;
 }
 
 - (void)removeMediaSnippets {
-    NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     
     for (NSString *fileName in allFolderFiles) {
         if ([fileName containsString:@"snippet_"])
@@ -392,34 +410,30 @@
 }
 
 - (NSInteger)countVideoSnippets {
-    NSArray *allFolderFiles     =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
-    NSPredicate *predicate      =   [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet"];
-    
+    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet"];
     NSLog(@"HRPVideoRecordViewController (323): COUNT = %ld", (long)[[allFolderFiles filteredArrayUsingPredicate:predicate] count]);
     
     return [[allFolderFiles filteredArrayUsingPredicate:predicate] count];
 }
 
-- (void)mergeAndSaveVideoFile {
+- (void)handlerVideoSession {
     // Create the AVMutable composition to add tracks
-    _composition                =   [AVMutableComposition composition];
+    _composition = [AVMutableComposition composition];
     
     // Create the mutable composition track with video media type
     [self removeOldVideoFile];
-    [self mergeAudioAndVideoFiles];
+    [self mergeAudioAndVideoSnippets];
     
     // Create the export session to merge and save the video
-    AVAssetExportSession *videoExportSession            =   [[AVAssetExportSession alloc] initWithAsset:_composition
-                                                                                             presetName:AVAssetExportPresetHighestQuality];
+    AVAssetExportSession *videoExportSession = [[AVAssetExportSession alloc] initWithAsset:_composition
+                                                                                presetName:AVAssetExportPresetHighestQuality];
     
-    NSString *videoFileName                             =   @"violation_video.mov";
-    
-    NSURL *videoURL                                     =   [[NSURL alloc] initFileURLWithPath:
-                                                             [_mediaFolderPath stringByAppendingPathComponent:videoFileName]];
-    
-    videoExportSession.outputURL                        =   videoURL;
-    videoExportSession.outputFileType                   =   @"com.apple.quicktime-movie";
-    videoExportSession.shouldOptimizeForNetworkUse      =   YES;
+    NSString *videoFileName = @"violation_video.mov";
+    NSURL *videoURL = [[NSURL alloc] initFileURLWithPath:[_mediaFolderPath stringByAppendingPathComponent:videoFileName]];
+    videoExportSession.outputURL = videoURL;
+    videoExportSession.outputFileType = @"com.apple.quicktime-movie";
+    videoExportSession.shouldOptimizeForNetworkUse = YES;
     
     [videoExportSession exportAsynchronouslyWithCompletionHandler:^{
         switch (videoExportSession.status) {
@@ -444,100 +458,111 @@
     }];
 }
 
-- (void)mergeAudioAndVideoFiles {
-    AVMutableCompositionTrack *videoCompositionTrack    =   [_composition addMutableTrackWithMediaType:AVMediaTypeVideo
-                                                                                      preferredTrackID:kCMPersistentTrackID_Invalid];
+- (void)mergeAudioAndVideoSnippets {
+    AVMutableCompositionTrack *videoCompositionTrack = [_composition addMutableTrackWithMediaType:AVMediaTypeVideo
+                                                                                 preferredTrackID:kCMPersistentTrackID_Invalid];
     
-    AVMutableCompositionTrack *audioCompositionTrack    =   [_composition addMutableTrackWithMediaType:AVMediaTypeAudio
-                                                                                      preferredTrackID:kCMPersistentTrackID_Invalid];
+    AVMutableCompositionTrack *audioCompositionTrack = [_composition addMutableTrackWithMediaType:AVMediaTypeAudio
+                                                                                 preferredTrackID:kCMPersistentTrackID_Invalid];
     
     // Create assets URL's for videos snippets
-    NSArray *allFolderFiles                             =   [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
-    NSPredicate *predicateVideo                         =   [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet_video_"];
-    NSMutableArray *allVideoTempSnippets                =   [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateVideo]];
-    NSPredicate *predicateAudio                         =   [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet_audio_"];
-    NSMutableArray *allAudioTempSnippets                =   [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
+    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+    NSPredicate *predicateVideo = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet_video_"];
+    NSMutableArray *allVideoTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateVideo]];
+    NSPredicate *predicateAudio = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet_audio_"];
+    NSMutableArray *allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
+    CMTimeRange range_0, range_1;
     
-    // Sort arrays
-    NSSortDescriptor *sortDescription                   =   [[NSSortDescriptor alloc] initWithKey:nil ascending:YES];
-    allVideoTempSnippets                                =   [NSMutableArray arrayWithArray:
-                                                             [allVideoTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
+    // Case 1 - get violation from one video & audio snippet
+    if (_violationTime >= 20) {
+        predicateVideo = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", _snippetVideoFileName];
+        allVideoTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateVideo]];
+        predicateAudio = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", _snippetAudioFileName];
+        allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
+        
+        CMTime start = CMTimeMakeWithSeconds(_violationTime - 20, 600);
+        CMTime duration = CMTimeMakeWithSeconds(30.0, 600);
+        range_0 = CMTimeRangeMake(start, duration);
+    }
     
-    allAudioTempSnippets                                =   [NSMutableArray arrayWithArray:
-                                                             [allAudioTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
+    // Case 2 - get violation from two video & audio snippets: violation take in first (0) snippet
+    else  if (allVideoTempSnippets.count == 1) {
+        predicateVideo = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", _snippetVideoFileName];
+        allVideoTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateVideo]];
+        predicateAudio = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", _snippetAudioFileName];
+        allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
+        
+        CMTime start = CMTimeMakeWithSeconds(0, 600);
+        CMTime duration = CMTimeMakeWithSeconds(_sessionDuration, 600);
+        range_0 = CMTimeRangeMake(start, duration);
+    }
+    
+    // Case 3 - get violation from two video & audio snippets: violation take in second (1) snippet
+    else {
+        // Sort arrays
+        BOOL ascendingKey = ([_snippetVideoFileName hasSuffix:@"_0"]) ? YES : NO;
+        NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:nil ascending:ascendingKey];
+        allVideoTempSnippets = [NSMutableArray arrayWithArray:[allVideoTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
+        allAudioTempSnippets = [NSMutableArray arrayWithArray:[allAudioTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
+        
+        CMTime start = CMTimeMakeWithSeconds(600 - (20 - _violationTime), 600);
+        CMTime duration = CMTimeMakeWithSeconds(20 - _violationTime, 600);
+        range_0 = CMTimeRangeMake(start, duration);
+        
+        start = CMTimeMakeWithSeconds(0, 600);
+        duration = CMTimeMakeWithSeconds(_sessionDuration, 600);
+        range_1 = CMTimeRangeMake(start, duration);
+    }
     
     for (int i = 0; i < allAudioTempSnippets.count; i++) {
-        NSString *videoSnippetFilePath                  =   [_mediaFolderPath stringByAppendingPathComponent:allVideoTempSnippets[i]];
-        
-        AVURLAsset *videoSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoSnippetFilePath]
-                                                                                    options:nil];
-        
-        NSString *audioSnippetFilePath                  =   [_mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
-       
-        AVURLAsset *audioSnippetAsset                   =   [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath]
-                                                                                    options:nil];
-        
-        AVAssetTrack *videoAssetTrack                   =   [[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-        UIImageOrientation videoAssetOrientation        =   UIImageOrientationUp;
-        BOOL isVideoAssetPortrait                       =   NO;
-        CGAffineTransform videoTransform                =   videoAssetTrack.preferredTransform;
+        NSString *videoSnippetFilePath =[_mediaFolderPath stringByAppendingPathComponent:allVideoTempSnippets[i]];
+        AVURLAsset *videoSnippetAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoSnippetFilePath] options:nil];
+        NSString *audioSnippetFilePath = [_mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
+        AVURLAsset *audioSnippetAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath] options:nil];
+        AVAssetTrack *videoAssetTrack = [[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
+        UIImageOrientation videoAssetOrientation = UIImageOrientationUp;
+        BOOL isVideoAssetPortrait = NO;
+        CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
         
         if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
-            videoAssetOrientation                       =   UIImageOrientationRight;
-            isVideoAssetPortrait                        =   YES;
+            videoAssetOrientation = UIImageOrientationRight;
+            isVideoAssetPortrait = YES;
         }
         
         if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
-            videoAssetOrientation                       =   UIImageOrientationLeft;
-            isVideoAssetPortrait                        =   YES;
+            videoAssetOrientation = UIImageOrientationLeft;
+            isVideoAssetPortrait = YES;
         }
         
         if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0)
-            videoAssetOrientation                       =   UIImageOrientationUp;
+            videoAssetOrientation = UIImageOrientationUp;
         
         if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0)
-            videoAssetOrientation                       =   UIImageOrientationDown;
-        
-//        // Extract Violation Photo from first video frame
-//        if (i == 1) {
-//            NSError *err                                =   NULL;
-//            AVAssetImageGenerator *imageGenerator       =   [[AVAssetImageGenerator alloc] initWithAsset:videoSnippetAsset];
-//            
-//            [imageGenerator setAppliesPreferredTrackTransform:YES];
-//            
-//            CMTime time                                 =   CMTimeMake(1, 2);
-//            CGImageRef oneRef                           =   [imageGenerator copyCGImageAtTime:time
-//                                                                                   actualTime:NULL
-//                                                                                        error:&err];
-//            
-//             _videoImageOriginal     =   [[UIImage alloc] initWithCGImage:oneRef
-//                                                                    scale:1.f
-//                                                              orientation:videoAssetOrientation];
-//        }
+            videoAssetOrientation = UIImageOrientationDown;
         
         // Set the video snippet time ranges in composition
-        [videoCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, videoSnippetAsset.duration)
+        [videoCompositionTrack insertTimeRange:(i == 0) ? range_0 : range_1
                                        ofTrack:[[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0]
                                         atTime:kCMTimeZero
                                          error:nil];
         
-        CGFloat FirstAssetScaleToFitRatio               =   320.0 / videoAssetTrack.naturalSize.width;
+        CGFloat FirstAssetScaleToFitRatio = 320.0 / videoAssetTrack.naturalSize.width;
         
         if (isVideoAssetPortrait) {
-            FirstAssetScaleToFitRatio                   =   320.0 / videoAssetTrack.naturalSize.height;
-            CGAffineTransform FirstAssetScaleFactor     =   CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
+            FirstAssetScaleToFitRatio = 320.0 / videoAssetTrack.naturalSize.height;
+            CGAffineTransform FirstAssetScaleFactor = CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
             
             [videoCompositionTrack setPreferredTransform:CGAffineTransformConcat(videoAssetTrack.preferredTransform, FirstAssetScaleFactor)];
         }
         
         else {
-            CGAffineTransform FirstAssetScaleFactor     =   CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
+            CGAffineTransform FirstAssetScaleFactor = CGAffineTransformMakeScale(FirstAssetScaleToFitRatio,FirstAssetScaleToFitRatio);
            
             [videoCompositionTrack setPreferredTransform:CGAffineTransformConcat(CGAffineTransformConcat(videoAssetTrack.preferredTransform, FirstAssetScaleFactor),CGAffineTransformMakeTranslation(0, 160))];
         }
         
         if (audioSnippetAsset)
-            [audioCompositionTrack insertTimeRange:CMTimeRangeMake(kCMTimeZero, audioSnippetAsset.duration)
+            [audioCompositionTrack insertTimeRange:(i == 0) ? range_0 : range_1
                                            ofTrack:[[audioSnippetAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0]
                                             atTime:kCMTimeZero
                                              error:nil];
@@ -546,8 +571,8 @@
 
 - (void)exportDidFinish:(AVAssetExportSession *)session {
     if (session.status == AVAssetExportSessionStatusCompleted) {
-        NSURL *outputURL                                =   session.outputURL;
-        ALAssetsLibrary *library                        =   [[ALAssetsLibrary alloc] init];
+        NSURL *outputURL = session.outputURL;
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
         
         // Save merged video to album
         if ([library videoAtPathIsCompatibleWithSavedPhotosAlbum:outputURL]) {
@@ -558,7 +583,7 @@
                                                     [self showAlertViewWithTitle:NSLocalizedString(@"Alert error email title", nil)
                                                                       andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
                                                 else {
-                                                    _videoAssetURL   =   assetURL;
+                                                    _videoAssetURL = assetURL;
                                                     [self saveVideoRecordToFile];
                                                     
                                                     [self removeAllFolderMediaTempFiles];
@@ -570,32 +595,31 @@
 }
 
 - (void)saveVideoRecordToFile {
-    HRPPhoto *photo                                         =   [[HRPPhoto alloc] init];
-    ALAssetsLibrary *assetsLibrary                          =   [[ALAssetsLibrary alloc] init];
+    HRPPhoto *photo = [[HRPPhoto alloc] init];
+    ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
     
     (_photosDataSource.count == 0) ? [_photosDataSource addObject:photo] : [_photosDataSource insertObject:photo atIndex:0];
     
     [assetsLibrary writeImageToSavedPhotosAlbum:_videoImageOriginal.CGImage
                                     orientation:(ALAssetOrientation)_videoImageOriginal.imageOrientation
                                 completionBlock:^(NSURL *assetURL, NSError *error) {
-                                    photo.assetsVideoURL    =   [_videoAssetURL absoluteString];
-                                    photo.assetsPhotoURL    =   [assetURL absoluteString];
-                                    photo.date              =   [NSDate date];
-                                    photo.latitude          =   _location.coordinate.latitude;
-                                    photo.longitude         =   _location.coordinate.longitude;
-                                    photo.isVideo           =   YES;
+                                    photo.assetsVideoURL = [_videoAssetURL absoluteString];
+                                    photo.assetsPhotoURL = [assetURL absoluteString];
+                                    photo.date = [NSDate date];
+                                    photo.latitude = _location.coordinate.latitude;
+                                    photo.longitude = _location.coordinate.longitude;
+                                    photo.isVideo = YES;
                                     
                                     [_photosDataSource replaceObjectAtIndex:0 withObject:photo];
-                                    
                                     [self savePhotosCollectionToFile];
                                 }];
 }
 
 - (void)savePhotosCollectionToFile {
-    NSData *arrayData   =   [NSKeyedArchiver archivedDataWithRootObject:_photosDataSource];
-    NSArray *paths      =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    _arrayPath          =   paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    _arrayPath          =   [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
+    NSData *arrayData = [NSKeyedArchiver archivedDataWithRootObject:_photosDataSource];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    _arrayPath = paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
     
     [[NSFileManager defaultManager] createFileAtPath:_arrayPath
                                             contents:arrayData
@@ -605,40 +629,20 @@
                                                         object:nil
                                                       userInfo:nil];
     
-    _videoImageOriginal =   nil;
+    _videoImageOriginal = nil;
 }
 
 - (void)extractFirstFrameFromVideoFilePath:(NSURL *)filePathURL {
-    NSError *err                                        =   NULL;
-    
-    AVURLAsset *movieAsset                              =   [[AVURLAsset alloc] initWithURL:filePathURL
-                                                                                    options:nil];
-    
-    AVAssetImageGenerator *imageGenerator               =   [[AVAssetImageGenerator alloc] initWithAsset:movieAsset];
-    
-    imageGenerator.appliesPreferredTrackTransform       =   YES;
-    CMTime time                                         =   CMTimeMake(1, 2);
-    
-    CGImageRef oneRef                                   =   [imageGenerator copyCGImageAtTime:time
-                                                                                   actualTime:NULL error:&err];
-    
-//    UIImageOrientation imageOrientation;
-//    
-//    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-//        imageOrientation    =   UIImageOrientationUp;
-//    
-//    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeRight)
-//        imageOrientation    =   UIImageOrientationUp;
-//    
-//    else if ([[UIApplication sharedApplication] statusBarOrientation] == UIDeviceOrientationLandscapeLeft)
-//        imageOrientation    =   UIImageOrientationUp;
-    
-    _videoImageOriginal     =   [[UIImage alloc] initWithCGImage:oneRef
-                                                           scale:1.f
-                                                     orientation:UIImageOrientationUp];
+    NSError *err = NULL;
+    AVURLAsset *movieAsset = [[AVURLAsset alloc] initWithURL:filePathURL options:nil];
+    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:movieAsset];
+    imageGenerator.appliesPreferredTrackTransform = YES;
+    CMTime time = CMTimeMake(_violationTime, _violationTime + 1);
+    CGImageRef oneRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&err];
+    _videoImageOriginal = [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:UIImageOrientationUp];
     
     if (_videoImageOriginal)
-        [self mergeAndSaveVideoFile];
+        [self handlerVideoSession];
 }
 
 - (void)showAlertViewWithTitle:(NSString *)titleText andMessage:(NSString *)messageText {
@@ -655,8 +659,8 @@
       fromConnections:(NSArray *)connections {
     [self setVideoSessionOrientation];
     
-    if (!_timerSeconds)
-        _timerSeconds       =   0;
+    if (!_currentTimerValue)
+        _currentTimerValue = 0;
     
     if (!_timer)
         [self createTimerWithLabel:_timerLabel];
@@ -673,35 +677,23 @@
     
     // Violation mode
     else if (_videoSessionMode == NSTimerVideoSessionModeViolation) {
-        // Start Record Violation Video mode
-        if (_videoImageOriginal == nil) {
-            //_timerSeconds               =   0;
-            _timer                      =   nil;
-            _videoImageOriginal         =   [UIImage new];
-            _isVideoSaving              =   YES;
-
-            [self startStreamVideoRecording];
-        }
-        
         // Finish Record Violation Video
-        else {
-            _videoSessionMode           =   NSTimerVideoSessionModeStream;
-            _timerSeconds               =   0;
-            _timer                      =   nil;
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"showMergeAndSaveAlertMessage"
-                                                                object:nil
-                                                              userInfo:nil];
-            
-            NSString *videoFilePath     =   [_mediaFolderPath stringByAppendingPathComponent:@"snippet_video_1.mp4"];
-            NSURL *videoFileURL         =   [NSURL fileURLWithPath:videoFilePath];
-            
-            [self extractFirstFrameFromVideoFilePath:videoFileURL];
-        }
+        _videoSessionMode = NSTimerVideoSessionModeStream;
+        _currentTimerValue = 0;
+        _timer = nil;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"showMergeAndSaveAlertMessage"
+                                                            object:nil
+                                                          userInfo:nil];
+        
+        NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetVideoFileName];
+        NSURL *videoFileURL = [NSURL fileURLWithPath:videoFilePath];
+        
+        [self extractFirstFrameFromVideoFilePath:videoFileURL];
     }
     
     else if (_videoSessionMode == NSTimerVideoSessionModeDismissed) {
-        _videoFileOutput                =   nil;
+        _videoFileOutput = nil;
     }
 }
 

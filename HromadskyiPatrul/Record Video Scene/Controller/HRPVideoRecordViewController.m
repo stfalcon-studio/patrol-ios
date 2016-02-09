@@ -28,7 +28,7 @@
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerStartVideoSession:)
@@ -44,6 +44,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    [_cameraManager removeMediaSnippets];
+
     // Set View frame
     self.view.frame = [UIScreen mainScreen].bounds;
     
@@ -65,7 +67,6 @@
     //Preview Layer
     _cameraManager.videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_cameraManager.captureSession];
     [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-//    [_cameraManager.videoPreviewLayer setFrame:self.view.frame];
     [_cameraManager setVideoPreviewLayerOrientation:self.view.frame.size];
     
     [self.view.layer setMasksToBounds:YES];
@@ -80,13 +81,6 @@
 
     [_cameraManager.captureSession startRunning];
     [_cameraManager startStreamVideoRecording];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    if (_cameraManager.captureSession)
-        [_cameraManager stopVideoSession];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -144,6 +138,8 @@
         _violationLabel.text = NSLocalizedString(@"Violation", nil);
         _cameraManager.isVideoSaving = YES;
         _cameraManager.videoSessionMode = NSTimerVideoSessionModeViolation;
+        _cameraManager.violationTime = [_cameraManager getCurrentTimerValue];
+        _cameraManager.sessionDuration = _cameraManager.violationTime + 10;
         self.navigationItem.rightBarButtonItem.enabled = NO;
 
         [_violationLabel startFlashing];

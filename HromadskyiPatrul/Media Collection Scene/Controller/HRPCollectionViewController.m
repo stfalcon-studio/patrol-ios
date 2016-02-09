@@ -100,11 +100,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     photosNeedUploadCount                   =   0;
     videosNeedUploadCount                   =   0;
     
-    self.navigationItem.rightBarButtonItem.enabled      =   YES;
-    _photosCollectionView.userInteractionEnabled        =   NO;
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    _photosCollectionView.userInteractionEnabled = NO;
 
     // Set network manager
-    imagesIndexPath                         =   [NSMutableArray array];
+    imagesIndexPath = [NSMutableArray array];
 
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -122,9 +122,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    isUploadPhotosUsingWiFiAllowed          =   [userApp boolForKey:@"networkStatus"];
-    isUploadAutomaticallyAllowed            =   [userApp boolForKey:@"sendingTypeStatus"];
-    isVideoPreviewStart                     =   NO;
+    isUploadPhotosUsingWiFiAllowed = [userApp boolForKey:@"networkStatus"];
+    isUploadAutomaticallyAllowed = [userApp boolForKey:@"sendingTypeStatus"];
+    isVideoPreviewStart = NO;
     
     if (photosNeedUploadCount > 0 && !isUploadInProcess)
         [self startUploadPhotos];
@@ -415,14 +415,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
           andBackgroundColor:BackgroundColorTypeBlack
                      forTime:300];
 
-    userApp                                     =   [NSUserDefaults standardUserDefaults];
-    photosDataSource                            =   [NSMutableArray array];
-    imagesDataSource                            =   [NSMutableArray array];
-    isUploadInProcess                           =   NO;
+    userApp                                     = [NSUserDefaults standardUserDefaults];
+    photosDataSource                            = [NSMutableArray array];
+    imagesDataSource                            = [NSMutableArray array];
+    isUploadInProcess                           = NO;
     
-    isPaginationRun                             =   NO;
+    isPaginationRun                             = NO;
     
-    self.userNameBarButton.title                =   [userApp objectForKey:@"userAppEmail"];
+    self.userNameBarButton.title                = [userApp objectForKey:@"userAppEmail"];
     //    [self createTestDataSource];
     
     
@@ -791,8 +791,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)createStoreDataPath {
     NSError *error;
-    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
 
     if (![[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
         if (![[NSFileManager defaultManager] createDirectoryAtPath:arrayPath

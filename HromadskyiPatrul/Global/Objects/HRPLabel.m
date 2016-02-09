@@ -12,10 +12,10 @@
 
 #pragma mark - Constructors -
 - (instancetype)init {
-    self                    =   [super init];
+    self = [super init];
     
     if (self) {
-        _isLabelFlashing    =   NO;
+        _isLabelFlashing = NO;
     }
     
     return self;
@@ -27,8 +27,8 @@
     if (_isLabelFlashing)
         return;
     
-    _isLabelFlashing        =   YES;
-    self.alpha              =   1.f;
+    _isLabelFlashing = YES;
+    self.alpha = 1.f;
     
     [UIView animateWithDuration:0.10f
                           delay:0.f
@@ -37,7 +37,7 @@
                                 UIViewAnimationOptionAutoreverse    |
                                 UIViewAnimationOptionAllowUserInteraction
                      animations:^{
-                         self.alpha     =   0.f;
+                         self.alpha = 0.f;
                      }
                      completion:nil];
 }
