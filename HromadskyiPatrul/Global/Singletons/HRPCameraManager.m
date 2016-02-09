@@ -104,7 +104,7 @@
 
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
-    _sessionDuration = 120; //(_videoSessionMode == NSTimerVideoSessionModeStream) ? 19 : 30;
+    _sessionDuration = 15;
     _violationTime = 0;
     _timerLabel = label;
     _timerLabel.text = [self formattedTime:_currentTimerValue];
@@ -280,6 +280,7 @@
     _audioPlayer = nil;
     _violationTime = 0;
     _currentTimerValue = 0;
+    _snippetVideoFileName = nil;
 }
 
 - (void)stopVideoRecording {
@@ -472,6 +473,7 @@
     NSPredicate *predicateAudio = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet_audio_"];
     NSMutableArray *allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
     CMTimeRange range_0, range_1;
+//    NSMutableArray *layers = [NSMutableArray array];
     
     // Case 1 - get violation from one video & audio snippet
     if (_violationTime >= 20) {
@@ -500,22 +502,27 @@
     // Case 3 - get violation from two video & audio snippets: violation take in second (1) snippet
     else {
         // Sort arrays
-        BOOL ascendingKey = ([_snippetVideoFileName hasSuffix:@"_0"]) ? YES : NO;
-        NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:nil ascending:ascendingKey];
-        allVideoTempSnippets = [NSMutableArray arrayWithArray:[allVideoTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
-        allAudioTempSnippets = [NSMutableArray arrayWithArray:[allAudioTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
-        
-        CMTime start = CMTimeMakeWithSeconds(600 - (20 - _violationTime), 600);
-        CMTime duration = CMTimeMakeWithSeconds(20 - _violationTime, 600);
-        range_0 = CMTimeRangeMake(start, duration);
-        
-        start = CMTimeMakeWithSeconds(0, 600);
-        duration = CMTimeMakeWithSeconds(_sessionDuration, 600);
+        int rest = 20 - _violationTime;
+        CMTime start = CMTimeMakeWithSeconds(0, 10);
+        CMTime duration = CMTimeMakeWithSeconds(rest, 10);
         range_1 = CMTimeRangeMake(start, duration);
+        
+        start = CMTimeMakeWithSeconds(1, 600);
+        duration = CMTimeMakeWithSeconds(_sessionDuration, 10);
+        range_0 = CMTimeRangeMake(start, duration);
     }
     
     for (int i = 0; i < allAudioTempSnippets.count; i++) {
-        NSString *videoSnippetFilePath =[_mediaFolderPath stringByAppendingPathComponent:allVideoTempSnippets[i]];
+        // Case 3 - get violation from two video & audio snippets: violation take in second (1) snippet
+        if (allVideoTempSnippets.count == 2) {
+            // Sort arrays
+            BOOL ascendingKey = ([_snippetVideoFileName hasSuffix:@"_0"]) ? YES : NO;
+            NSSortDescriptor *sortDescription = [[NSSortDescriptor alloc] initWithKey:nil ascending:ascendingKey];
+            allVideoTempSnippets = [NSMutableArray arrayWithArray:[allVideoTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
+            allAudioTempSnippets = [NSMutableArray arrayWithArray:[allAudioTempSnippets sortedArrayUsingDescriptors:@[sortDescription]]];
+        }
+        
+        NSString *videoSnippetFilePath = [_mediaFolderPath stringByAppendingPathComponent:allVideoTempSnippets[i]];
         AVURLAsset *videoSnippetAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:videoSnippetFilePath] options:nil];
         NSString *audioSnippetFilePath = [_mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
         AVURLAsset *audioSnippetAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath] options:nil];
@@ -566,6 +573,21 @@
                                            ofTrack:[[audioSnippetAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0]
                                             atTime:kCMTimeZero
                                              error:nil];
+        
+//        AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack];
+//        
+//        [layers addObject:layerInstruction];
+//        
+//        if (i == 1) {
+//            AVMutableVideoCompositionInstruction *instructions = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
+//            instructions.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(30, 10));
+//
+//            instructions.layerInstructions = [NSArray arrayWithArray:layers];
+//            
+//            AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
+//            composition.instructions = [NSArray arrayWithObject:instructions];
+//            composition.frameDuration = CMTimeMake(0, 30);
+//        }
     }
 }
 
@@ -670,7 +692,7 @@
       fromConnections:(NSArray *)connections error:(NSError *)error {
     // Stream mode
     if (_videoSessionMode == NSTimerVideoSessionModeStream) {
-        [self removeMediaSnippets];
+//        [self removeMediaSnippets];
         
         [self startStreamVideoRecording];
     }
