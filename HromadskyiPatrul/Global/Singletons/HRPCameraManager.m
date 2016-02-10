@@ -474,6 +474,10 @@
     NSMutableArray *allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
     CMTimeRange range_0, range_1;
     
+//    NSArray *arr = @[[NSValue valueWithCMTimeRange:range_0]];
+//    
+//    range_1 = [arr[0] CMTimeRangeValue];
+    
     // Case 1 - get violation from one video & audio snippet
     if (_violationTime >= 20) {
         predicateVideo = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", _snippetVideoFileName];
