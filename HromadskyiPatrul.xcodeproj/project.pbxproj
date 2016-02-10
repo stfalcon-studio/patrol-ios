@@ -8,6 +8,52 @@
 
 /* Begin PBXBuildFile section */
 		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
+		B10721261C6B33F10054443A /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
+		B10721271C6B33F10054443A /* HRPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B128052B1C25795C0058BAC8 /* HRPLoginViewController.m */; };
+		B10721281C6B33F10054443A /* UIImage+ChangeOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805421C257A370058BAC8 /* UIImage+ChangeOriginalImage.m */; };
+		B10721291C6B33F10054443A /* HRPVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805541C257B240058BAC8 /* HRPVideoPlayerViewController.m */; };
+		B107212A1C6B33F10054443A /* HRPNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805481C257A620058BAC8 /* HRPNavigationController.m */; };
+		B107212B1C6B33F10054443A /* HRPMainViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805251C2578E30058BAC8 /* HRPMainViewModel.m */; };
+		B107212C1C6B33F10054443A /* HRPPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805521C257B240058BAC8 /* HRPPhotoPreviewViewController.m */; };
+		B107212D1C6B33F10054443A /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */; };
+		B107212E1C6B33F10054443A /* HRPLocations.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805351C257A0F0058BAC8 /* HRPLocations.m */; };
+		B107212F1C6B33F10054443A /* HRPLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805751C2591F60058BAC8 /* HRPLabel.m */; };
+		B10721301C6B33F10054443A /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */; };
+		B10721311C6B33F10054443A /* HRPPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805391C257A0F0058BAC8 /* HRPPhotoCell.m */; };
+		B10721321C6B33F10054443A /* HRPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89871B879A06009D12D6 /* HRPAppDelegate.m */; };
+		B10721331C6B33F10054443A /* HRPVideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = B1E751331C340E040034FCC6 /* HRPVideoPreview.m */; };
+		B10721341C6B33F10054443A /* HRPVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */; };
+		B10721351C6B33F10054443A /* HRPButton.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805311C257A0F0058BAC8 /* HRPButton.m */; };
+		B10721361C6B33F10054443A /* HRPBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805461C257A620058BAC8 /* HRPBaseViewController.m */; };
+		B10721371C6B33F10054443A /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
+		B10721381C6B33F10054443A /* HRPSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B128054F1C257AD40058BAC8 /* HRPSettingsViewController.m */; };
+		B10721391C6B33F10054443A /* HRPMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805281C25791D0058BAC8 /* HRPMainViewController.m */; };
+		B107213A1C6B33F10054443A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89841B879A06009D12D6 /* main.m */; };
+		B107213B1C6B33F10054443A /* HRPCameraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B128052E1C2579B00058BAC8 /* HRPCameraManager.m */; };
+		B107213C1C6B33F10054443A /* UIColor+HexColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805401C257A370058BAC8 /* UIColor+HexColor.m */; };
+		B107213D1C6B33F10054443A /* HRPSettingsViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B1DFDBB41C36B9A000883D90 /* HRPSettingsViewModel.m */; };
+		B107213E1C6B33F10054443A /* HRPImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805331C257A0F0058BAC8 /* HRPImage.m */; };
+		B107213F1C6B33F10054443A /* HromadskyiPatrul.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B128054B1C257A8D0058BAC8 /* HromadskyiPatrul.xcdatamodeld */; };
+		B10721401C6B33F10054443A /* HRPPhoto.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805371C257A0F0058BAC8 /* HRPPhoto.m */; };
+		B10721421C6B33F10054443A /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1669E1C1BD657C500C4156D /* MediaPlayer.framework */; };
+		B10721431C6B33F10054443A /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B18F75AF1B95A3B600143338 /* SystemConfiguration.framework */; };
+		B10721441C6B33F10054443A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
+		B10721451C6B33F10054443A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
+		B10721461C6B33F10054443A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
+		B10721471C6B33F10054443A /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
+		B10721491C6B33F10054443A /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805601C257C120058BAC8 /* 5.png */; };
+		B107214A1C6B33F10054443A /* 7.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805621C257C120058BAC8 /* 7.png */; };
+		B107214B1C6B33F10054443A /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055B1C257C120058BAC8 /* 0.png */; };
+		B107214C1C6B33F10054443A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
+		B107214D1C6B33F10054443A /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055D1C257C120058BAC8 /* 2.png */; };
+		B107214E1C6B33F10054443A /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055E1C257C120058BAC8 /* 3.png */; };
+		B107214F1C6B33F10054443A /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
+		B10721501C6B33F10054443A /* 6.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805611C257C120058BAC8 /* 6.png */; };
+		B10721511C6B33F10054443A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
+		B10721521C6B33F10054443A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
+		B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
+		B10721541C6B33F10054443A /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055F1C257C120058BAC8 /* 4.png */; };
+		B10721551C6B33F10054443A /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055C1C257C120058BAC8 /* 1.png */; };
 		B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1669E1C1BD657C500C4156D /* MediaPlayer.framework */; };
 		B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
 		B12805231C25781A0058BAC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
@@ -70,6 +116,8 @@
 		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
+		B107215C1C6B33F10054443A /* HromadskyiPatrul-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HromadskyiPatrul-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B107215D1C6B33F10054443A /* HromadskyiPatrul-Dev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HromadskyiPatrul-Dev-Info.plist"; path = "/Users/msm72/Projects/STFalcon/hromadskyi-patrul-app-ios/HromadskyiPatrul-Dev-Info.plist"; sourceTree = "<absolute>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -155,6 +203,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		B10721411C6B33F10054443A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10721421C6B33F10054443A /* MediaPlayer.framework in Frameworks */,
+				B10721431C6B33F10054443A /* SystemConfiguration.framework in Frameworks */,
+				B10721441C6B33F10054443A /* MobileCoreServices.framework in Frameworks */,
+				B10721451C6B33F10054443A /* CoreLocation.framework in Frameworks */,
+				B10721461C6B33F10054443A /* AssetsLibrary.framework in Frameworks */,
+				B10721471C6B33F10054443A /* libPods-HromadskyiPatrul.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B1AC897C1B879A06009D12D6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -403,6 +464,7 @@
 			children = (
 				B1AC897F1B879A06009D12D6 /* HromadskyiPatrul.app */,
 				B1AC899B1B879A07009D12D6 /* HromadskyiPatrulTests.xctest */,
+				B107215C1C6B33F10054443A /* HromadskyiPatrul-Dev.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -430,6 +492,7 @@
 			isa = PBXGroup;
 			children = (
 				B1AC89831B879A06009D12D6 /* Info.plist */,
+				B107215D1C6B33F10054443A /* HromadskyiPatrul-Dev-Info.plist */,
 				B1AC89841B879A06009D12D6 /* main.m */,
 				B1AC89B31B879C8B009D12D6 /* Localizable.strings */,
 			);
@@ -534,6 +597,27 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		B10721231C6B33F10054443A /* HromadskyiPatrul-Dev */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B10721591C6B33F10054443A /* Build configuration list for PBXNativeTarget "HromadskyiPatrul-Dev" */;
+			buildPhases = (
+				B10721241C6B33F10054443A /* Check Pods Manifest.lock */,
+				B10721251C6B33F10054443A /* Sources */,
+				B10721411C6B33F10054443A /* Frameworks */,
+				B10721481C6B33F10054443A /* Resources */,
+				B10721561C6B33F10054443A /* Copy Pods Resources */,
+				B10721571C6B33F10054443A /* ShellScript */,
+				B10721581C6B33F10054443A /* Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "HromadskyiPatrul-Dev";
+			productName = HromadskyiPatrul;
+			productReference = B107215C1C6B33F10054443A /* HromadskyiPatrul-Dev.app */;
+			productType = "com.apple.product-type.application";
+		};
 		B1AC897E1B879A06009D12D6 /* HromadskyiPatrul */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1AC89A51B879A07009D12D6 /* Build configuration list for PBXNativeTarget "HromadskyiPatrul" */;
@@ -582,6 +666,9 @@
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Monastyrskiy Sergey";
 				TargetAttributes = {
+					B10721231C6B33F10054443A = {
+						DevelopmentTeam = HU8ZS7UX2R;
+					};
 					B1AC897E1B879A06009D12D6 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = HU8ZS7UX2R;
@@ -609,11 +696,32 @@
 			targets = (
 				B1AC897E1B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899A1B879A07009D12D6 /* HromadskyiPatrulTests */,
+				B10721231C6B33F10054443A /* HromadskyiPatrul-Dev */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		B10721481C6B33F10054443A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10721491C6B33F10054443A /* 5.png in Resources */,
+				B107214A1C6B33F10054443A /* 7.png in Resources */,
+				B107214B1C6B33F10054443A /* 0.png in Resources */,
+				B107214C1C6B33F10054443A /* Images.xcassets in Resources */,
+				B107214D1C6B33F10054443A /* 2.png in Resources */,
+				B107214E1C6B33F10054443A /* 3.png in Resources */,
+				B107214F1C6B33F10054443A /* Builds in Resources */,
+				B10721501C6B33F10054443A /* 6.png in Resources */,
+				B10721511C6B33F10054443A /* Localizable.strings in Resources */,
+				B10721521C6B33F10054443A /* Main.storyboard in Resources */,
+				B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */,
+				B10721541C6B33F10054443A /* 4.png in Resources */,
+				B10721551C6B33F10054443A /* 1.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B1AC897D1B879A06009D12D6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -689,6 +797,64 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		B10721241C6B33F10054443A /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		B10721561C6B33F10054443A /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B10721571C6B33F10054443A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\" b7ba58a3e64c5ff0d9fbc4faebb86c28b1bc40b9 0850a80e9c8d0f2bc357260b8b8c799b27dc7885123bce99ef22e59c196ea124";
+		};
+		B10721581C6B33F10054443A /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		B1AD29321B99F0340079D583 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -705,6 +871,40 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		B10721251C6B33F10054443A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10721261C6B33F10054443A /* HRPLoginViewModel.m in Sources */,
+				B10721271C6B33F10054443A /* HRPLoginViewController.m in Sources */,
+				B10721281C6B33F10054443A /* UIImage+ChangeOriginalImage.m in Sources */,
+				B10721291C6B33F10054443A /* HRPVideoPlayerViewController.m in Sources */,
+				B107212A1C6B33F10054443A /* HRPNavigationController.m in Sources */,
+				B107212B1C6B33F10054443A /* HRPMainViewModel.m in Sources */,
+				B107212C1C6B33F10054443A /* HRPPhotoPreviewViewController.m in Sources */,
+				B107212D1C6B33F10054443A /* UIViewController+NavigationBar.m in Sources */,
+				B107212E1C6B33F10054443A /* HRPLocations.m in Sources */,
+				B107212F1C6B33F10054443A /* HRPLabel.m in Sources */,
+				B10721301C6B33F10054443A /* HRPCollectionViewController.m in Sources */,
+				B10721311C6B33F10054443A /* HRPPhotoCell.m in Sources */,
+				B10721321C6B33F10054443A /* HRPAppDelegate.m in Sources */,
+				B10721331C6B33F10054443A /* HRPVideoPreview.m in Sources */,
+				B10721341C6B33F10054443A /* HRPVideoRecordViewController.m in Sources */,
+				B10721351C6B33F10054443A /* HRPButton.m in Sources */,
+				B10721361C6B33F10054443A /* HRPBaseViewController.m in Sources */,
+				B10721371C6B33F10054443A /* HRPVideoRecordView.m in Sources */,
+				B10721381C6B33F10054443A /* HRPSettingsViewController.m in Sources */,
+				B10721391C6B33F10054443A /* HRPMainViewController.m in Sources */,
+				B107213A1C6B33F10054443A /* main.m in Sources */,
+				B107213B1C6B33F10054443A /* HRPCameraManager.m in Sources */,
+				B107213C1C6B33F10054443A /* UIColor+HexColor.m in Sources */,
+				B107213D1C6B33F10054443A /* HRPSettingsViewModel.m in Sources */,
+				B107213E1C6B33F10054443A /* HRPImage.m in Sources */,
+				B107213F1C6B33F10054443A /* HromadskyiPatrul.xcdatamodeld in Sources */,
+				B10721401C6B33F10054443A /* HRPPhoto.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B1AC897B1B879A06009D12D6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -790,6 +990,48 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		B107215A1C6B33F10054443A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"DEVELOPMENT=1",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/HromadskyiPatrul-Dev-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B107215B1C6B33F10054443A /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEPLOYMENT_POSTPROCESSING = YES;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"DEVELOPMENT=1",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/HromadskyiPatrul-Dev-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		B1AC89A31B879A07009D12D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -881,6 +1123,11 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"DEVELOPMENT=0",
+				);
 				INFOPLIST_FILE = HromadskyiPatrul/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
@@ -897,6 +1144,11 @@
 				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"COCOAPODS=1",
+					"DEVELOPMENT=0",
+				);
 				INFOPLIST_FILE = HromadskyiPatrul/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
@@ -937,6 +1189,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		B10721591C6B33F10054443A /* Build configuration list for PBXNativeTarget "HromadskyiPatrul-Dev" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B107215A1C6B33F10054443A /* Debug */,
+				B107215B1C6B33F10054443A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		B1AC897A1B879A06009D12D6 /* Build configuration list for PBXProject "HromadskyiPatrul" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

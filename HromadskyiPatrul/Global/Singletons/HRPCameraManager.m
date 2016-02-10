@@ -343,22 +343,22 @@
                                        withIntermediateDirectories:NO
                                                         attributes:nil
                                                              error:&error])
-            NSLog(@"Create directory error: %@", error);
+            DebugLog(@"Create directory error: %@", error);
     }
 }
 
 - (void)deleteFolder {
     if ([[NSFileManager defaultManager] removeItemAtPath:_mediaFolderPath error:nil])
-        NSLog(@"HRPVideoRecordViewController (352): DELETE");
+        DebugLog(@"HRPVideoRecordViewController (352): DELETE");
     
     else
-        NSLog(@"HRPVideoRecordViewController (354): NOT DELETE");
+        DebugLog(@"HRPVideoRecordViewController (354): NOT DELETE");
 }
 
 - (void)readAllFolderFile {
     NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     
-    NSLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
+    DebugLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
 }
 
 - (void)readPhotosCollectionFromFile {
@@ -373,7 +373,7 @@
         if (arrayData)
             _photosDataSource = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         else
-            NSLog(@"File does not exist");
+            DebugLog(@"File does not exist");
     }
 }
 
@@ -413,7 +413,7 @@
 - (NSInteger)countVideoSnippets {
     NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet"];
-    NSLog(@"HRPVideoRecordViewController (323): COUNT = %ld", (long)[[allFolderFiles filteredArrayUsingPredicate:predicate] count]);
+    DebugLog(@"HRPVideoRecordViewController (323): COUNT = %ld", (long)[[allFolderFiles filteredArrayUsingPredicate:predicate] count]);
     
     return [[allFolderFiles filteredArrayUsingPredicate:predicate] count];
 }
@@ -439,16 +439,16 @@
     [videoExportSession exportAsynchronouslyWithCompletionHandler:^{
         switch (videoExportSession.status) {
             case AVAssetExportSessionStatusFailed:
-                NSLog(@"HRPVideoRecordViewController (449): Failed to export video");
+                DebugLog(@"HRPVideoRecordViewController (449): Failed to export video");
                 break;
                 
             case AVAssetExportSessionStatusCancelled:
-                NSLog(@"HRPVideoRecordViewController (453): export cancelled");
+                DebugLog(@"HRPVideoRecordViewController (453): export cancelled");
                 break;
                 
             case AVAssetExportSessionStatusCompleted: {
                 // Here you go you have got the merged video :)
-                NSLog(@"HRPVideoRecordViewController (458): Merging completed");
+                DebugLog(@"HRPVideoRecordViewController (458): Merging completed");
                 [self exportDidFinish:videoExportSession];
             }
                 break;

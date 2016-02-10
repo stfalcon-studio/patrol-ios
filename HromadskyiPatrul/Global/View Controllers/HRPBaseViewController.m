@@ -27,23 +27,23 @@
 
 #pragma mark - Methods -
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType forTime:(unsigned int)duration {
-    NSString *colorString   =   nil;
-    _sleepDuration          =   duration;
+    NSString *colorString = nil;
+    _sleepDuration = duration;
     
     switch (colorType) {
         case BackgroundColorTypeBlue:
-            colorString     =   @"05A9F4";
+            colorString = @"05A9F4";
             break;
             
         case BackgroundColorTypeBlack:
-            colorString     =   @"000000";
+            colorString = @"000000";
             break;
     }
     
-    _HUD                    =   [[MBProgressHUD alloc] initWithView:self.view];
-    _HUD.labelText          =   text;
-    _HUD.yOffset            =   0.f;
-    _HUD.color              =   [UIColor colorWithHexString:colorString alpha:0.6f];
+    _HUD = [[MBProgressHUD alloc] initWithView:self.view];
+    _HUD.labelText = text;
+    _HUD.yOffset = 0.f;
+    _HUD.color = [UIColor colorWithHexString:colorString alpha:0.6f];
 
     [self.view addSubview:_HUD];
     [_HUD showWhileExecuting:@selector(sleepTask) onTarget:self withObject:nil animated:YES];

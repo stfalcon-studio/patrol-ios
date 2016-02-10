@@ -10,6 +10,11 @@
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
 
+#if DEVELOPMENT
+#define DebugLog(...) NSLog(__VA_ARGS__)
+#else
+#define DebugLog(...)
+#endif
 
 typedef NS_ENUM (NSInteger, HRPCameraManagerSetupResult) {
     HRPCameraManagerSetupResultSuccess,

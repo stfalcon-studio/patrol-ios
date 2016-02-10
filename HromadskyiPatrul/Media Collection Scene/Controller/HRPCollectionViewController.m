@@ -22,6 +22,7 @@
 #import "HRPVideoPlayerViewController.h"
 #import "UIViewController+NavigationBar.h"
 #import "HRPSettingsViewController.h"
+#import "HRPCameraManager.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -469,7 +470,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                  success(data);
              }
             failureBlock:^(NSError *error) {
-                NSLog(@"Error: %@",error.localizedDescription);
+                DebugLog(@"Error: %@",error.localizedDescription);
             }];
 }
 
@@ -799,7 +800,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                        withIntermediateDirectories:NO
                                                         attributes:nil
                                                              error:&error])
-            NSLog(@"Create directory error: %@", error);
+            DebugLog(@"Create directory error: %@", error);
     }
 }
 
@@ -856,7 +857,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             } else
                 [self createImagesDataSource];
         } else
-            NSLog(@"File does not exist");
+            DebugLog(@"File does not exist");
     } else {
         photosDataSource = [NSMutableArray array];
         imagesDataSource = [NSMutableArray array];
