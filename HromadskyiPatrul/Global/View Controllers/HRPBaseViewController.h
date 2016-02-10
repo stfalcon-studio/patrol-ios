@@ -27,6 +27,4 @@ typedef NS_ENUM (NSInteger, BackgroundColorType) {
 - (BOOL)isInternetConnectionAvailable;
 - (BOOL)isServerURLLocal;
 
-//- (void)hideNavigationBar;
-
 @end

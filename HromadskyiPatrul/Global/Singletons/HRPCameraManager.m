@@ -67,11 +67,11 @@
         _isVideoSaving = NO;
         
         _audioRecordSettings = [NSDictionary dictionaryWithObjectsAndKeys:
-                                    [NSNumber numberWithInt:kAudioFormatLinearPCM],     AVFormatIDKey,
-                                    [NSNumber numberWithInt:AVAudioQualityMax],         AVEncoderAudioQualityKey,
-                                    [NSNumber numberWithInt:32],                        AVEncoderBitRateKey,
-                                    [NSNumber numberWithInt:2],                         AVNumberOfChannelsKey,
-                                    [NSNumber numberWithFloat:44100.f],                 AVSampleRateKey, nil];
+                                    [NSNumber numberWithInt:kAudioFormatLinearPCM], AVFormatIDKey,
+                                    [NSNumber numberWithInt:AVAudioQualityMax], AVEncoderAudioQualityKey,
+                                    [NSNumber numberWithInt:32], AVEncoderBitRateKey,
+                                    [NSNumber numberWithInt:2], AVNumberOfChannelsKey,
+                                    [NSNumber numberWithFloat:44100.f], AVSampleRateKey, nil];
         
         // [self deleteFolder];
         
@@ -104,7 +104,7 @@
 
 #pragma mark - Timer Methods -
 - (void)createTimerWithLabel:(UILabel *)label {
-    _sessionDuration = 15;
+    _sessionDuration = 120; // 2 minutes
     _violationTime = 0;
     _timerLabel = label;
     _timerLabel.text = [self formattedTime:_currentTimerValue];
@@ -473,7 +473,6 @@
     NSPredicate *predicateAudio = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", @"snippet_audio_"];
     NSMutableArray *allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
     CMTimeRange range_0, range_1;
-//    NSMutableArray *layers = [NSMutableArray array];
     
     // Case 1 - get violation from one video & audio snippet
     if (_violationTime >= 20) {
@@ -502,12 +501,12 @@
     // Case 3 - get violation from two video & audio snippets: violation take in second (1) snippet
     else {
         // Sort arrays
-        int rest = 20 - _violationTime;
+        int rest = 21 - _violationTime;
         CMTime start = CMTimeMakeWithSeconds(0, 10);
         CMTime duration = CMTimeMakeWithSeconds(rest, 10);
         range_1 = CMTimeRangeMake(start, duration);
         
-        start = CMTimeMakeWithSeconds(1, 600);
+        start = CMTimeMakeWithSeconds(1, 10);
         duration = CMTimeMakeWithSeconds(_sessionDuration, 10);
         range_0 = CMTimeRangeMake(start, duration);
     }
@@ -573,21 +572,6 @@
                                            ofTrack:[[audioSnippetAsset tracksWithMediaType:AVMediaTypeAudio] objectAtIndex:0]
                                             atTime:kCMTimeZero
                                              error:nil];
-        
-//        AVMutableVideoCompositionLayerInstruction *layerInstruction = [AVMutableVideoCompositionLayerInstruction videoCompositionLayerInstructionWithAssetTrack:videoCompositionTrack];
-//        
-//        [layers addObject:layerInstruction];
-//        
-//        if (i == 1) {
-//            AVMutableVideoCompositionInstruction *instructions = [AVMutableVideoCompositionInstruction videoCompositionInstruction];
-//            instructions.timeRange = CMTimeRangeMake(kCMTimeZero, CMTimeMakeWithSeconds(30, 10));
-//
-//            instructions.layerInstructions = [NSArray arrayWithArray:layers];
-//            
-//            AVMutableVideoComposition *composition = [AVMutableVideoComposition videoComposition];
-//            composition.instructions = [NSArray arrayWithObject:instructions];
-//            composition.frameDuration = CMTimeMake(0, 30);
-//        }
     }
 }
 
@@ -692,8 +676,6 @@
       fromConnections:(NSArray *)connections error:(NSError *)error {
     // Stream mode
     if (_videoSessionMode == NSTimerVideoSessionModeStream) {
-//        [self removeMediaSnippets];
-        
         [self startStreamVideoRecording];
     }
     
@@ -740,7 +722,7 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    _location   =   [locations lastObject];
+    _location = [locations lastObject];
 }
 
 @end
