@@ -9,7 +9,7 @@
 #import "HRPCameraManager.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "HRPVideoRecordView.h"
-#import "HRPPhoto.h"
+#import "HRPViolation.h"
 
 
 @implementation HRPCameraManager {
@@ -18,16 +18,17 @@
     AVAudioSession *_audioSession;
     AVMutableComposition *_composition;
     UILabel *_timerLabel;
-    CLLocation *_location;
-    CLLocationManager *_locationManager;
 
     NSDictionary *_audioRecordSettings;
     NSString *_arrayPath;
     NSString *_mediaFolderPath;
-    NSMutableArray *_photosDataSource;
+    NSMutableArray *_violations;
     NSURL *_videoAssetURL;
     UIImage *_videoImageOriginal;
     CGRect _previewRect;
+    
+    CGFloat _latitude;
+    CGFloat _longitude;
     
     int _currentTimerValue;
     NSString *_snippetVideoFileName;
@@ -75,11 +76,12 @@
         
         // [self deleteFolder];
         
-        _locationManager = [[CLLocationManager alloc] init];
-        _locationManager.delegate = self;
-        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        // HSPLocations
+        _locationsService = [[HRPLocations alloc] init];
         
-        [_locationManager startUpdatingLocation];
+        if ([_locationsService isEnabled]) {
+            _locationsService.manager.delegate = self;
+        }
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(handlerVideoSessionStopRecording:)
@@ -117,21 +119,23 @@
 }
 
 - (void)timerTicked:(NSTimer *)timer {
-    _currentTimerValue++;
-    
-    if (_currentTimerValue == _sessionDuration) {
-        if (_videoSessionMode == NSTimerVideoSessionModeStream)
-            _currentTimerValue = 0;
+    if (_videoSessionMode != NSTimerVideoSessionModeViolation) {
+        _currentTimerValue++;
         
-        else {
-            [_timer invalidate];
+        if (_currentTimerValue == _sessionDuration) {
+            if (_videoSessionMode == NSTimerVideoSessionModeStream)
+                _currentTimerValue = 0;
+            
+            else {
+                [_timer invalidate];
+            }
+            
+            // Stop Video & Audio recording
+            [self stopVideoRecording];
         }
-
-        // Stop Video & Audio recording
-        [self stopVideoRecording];
+        
+        _timerLabel.text = [self formattedTime:_currentTimerValue];
     }
-    
-    _timerLabel.text = [self formattedTime:_currentTimerValue];
 }
 
 - (NSString *)formattedTime:(NSInteger)secondsTotal {
@@ -267,9 +271,6 @@
     // Stop Video & Audio recording
     [self stopVideoRecording];
     
-    // Stop Location service
-    [_locationManager stopUpdatingLocation];
-    
     // Stop Timer
     [_timer invalidate];
     
@@ -362,7 +363,7 @@
 }
 
 - (void)readPhotosCollectionFromFile {
-    _photosDataSource = [NSMutableArray array];
+    _violations = [NSMutableArray array];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     _arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
@@ -371,7 +372,7 @@
         NSData *arrayData = [[NSData alloc] initWithContentsOfFile:_arrayPath];
         
         if (arrayData)
-            _photosDataSource = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
+            _violations = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
         else
             DebugLog(@"File does not exist");
     }
@@ -605,28 +606,29 @@
 }
 
 - (void)saveVideoRecordToFile {
-    HRPPhoto *photo = [[HRPPhoto alloc] init];
+    HRPViolation *violation = [[HRPViolation alloc] init];
     ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
     
-    (_photosDataSource.count == 0) ? [_photosDataSource addObject:photo] : [_photosDataSource insertObject:photo atIndex:0];
+    (_violations.count == 0) ? [_violations addObject:violation] : [_violations insertObject:violation atIndex:0];
     
     [assetsLibrary writeImageToSavedPhotosAlbum:_videoImageOriginal.CGImage
                                     orientation:(ALAssetOrientation)_videoImageOriginal.imageOrientation
                                 completionBlock:^(NSURL *assetURL, NSError *error) {
-                                    photo.assetsVideoURL = [_videoAssetURL absoluteString];
-                                    photo.assetsPhotoURL = [assetURL absoluteString];
-                                    photo.date = [NSDate date];
-                                    photo.latitude = _location.coordinate.latitude;
-                                    photo.longitude = _location.coordinate.longitude;
-                                    photo.isVideo = YES;
+                                    violation.assetsVideoURL = [_videoAssetURL absoluteString];
+                                    violation.assetsPhotoURL = [assetURL absoluteString];
+                                    violation.date = [NSDate date];
+                                    violation.latitude = _latitude;
+                                    violation.longitude = _longitude;
+                                    violation.type = HRPViolationTypeVideo;
+                                    violation.state = HRPViolationStateUpload;
                                     
-                                    [_photosDataSource replaceObjectAtIndex:0 withObject:photo];
-                                    [self savePhotosCollectionToFile];
+                                    [_violations replaceObjectAtIndex:0 withObject:violation];
+                                    [self saveViolationsToFile];
                                 }];
 }
 
-- (void)savePhotosCollectionToFile {
-    NSData *arrayData = [NSKeyedArchiver archivedDataWithRootObject:_photosDataSource];
+- (void)saveViolationsToFile {
+    NSData *arrayData = [NSKeyedArchiver archivedDataWithRootObject:_violations];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     _arrayPath = paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
@@ -720,13 +722,36 @@
 
 
 #pragma mark - CLLocationManagerDelegate -
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-    [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                      andMessage:NSLocalizedString(@"Alert error location retrieving message", nil)];
+- (void)locationManager:(CLLocationManager *)manager
+    didUpdateToLocation:(CLLocation *)newLocation
+           fromLocation:(CLLocation *)oldLocation {
+    if (_videoSessionMode == NSTimerVideoSessionModeViolation) {
+        _latitude = newLocation.coordinate.latitude;
+        _longitude = newLocation.coordinate.longitude;
+    }
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    _location = [locations lastObject];
+- (void)requestAlwaysAuthorization {
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    
+    // If the status is denied or only granted for when in use, display an alert
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusDenied) {
+        NSString *titleText = NSLocalizedString(@"Alert error location title background", nil);
+        
+        NSString *messageText = (status == kCLAuthorizationStatusDenied) ?  NSLocalizedString(@"Alert error location message off", nil) :
+        NSLocalizedString(@"Alert error location message background", nil);
+        
+        [[[UIAlertView alloc] initWithTitle:titleText
+                                    message:messageText
+                                   delegate:nil
+                          cancelButtonTitle:nil
+                          otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+    }
+    
+    // The user has not enabled any location services. Request background authorization.
+    else if (status == kCLAuthorizationStatusNotDetermined) {
+        [_locationsService.manager requestAlwaysAuthorization];
+    }
 }
 
 @end

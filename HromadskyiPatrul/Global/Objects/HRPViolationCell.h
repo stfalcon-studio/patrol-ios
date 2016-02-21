@@ -1,5 +1,5 @@
 //
-//  HRPPhotoCell.h
+//  HRPViolationCell.h
 //  HromadskyiPatrul
 //
 //  Created by msm72 on 26.08.15.
@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HRPPhoto.h"
-#import "HRPImage.h"
+#import "HRPViolation.h"
+#import "HRPButton.h"
 #import "MBProgressHUD.h"
 
 
@@ -18,16 +18,16 @@ typedef NS_ENUM (NSInteger, CellBackgroundColorType) {
 };
 
 
-@interface HRPPhotoCell : UICollectionViewCell
+@interface HRPViolationCell : UICollectionViewCell
 
-@property (strong, nonatomic) HRPPhoto *photo;
-@property (strong, nonatomic) HRPImage *image;
+@property (strong, nonatomic) HRPViolation *violation;
 @property (strong, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *playVideoImageView;
-@property (strong, nonatomic) IBOutlet UIButton *photoStateButton;
+@property (strong, nonatomic) IBOutlet HRPButton *uploadStateButton;
 
 @property (strong, nonatomic) MBProgressHUD *HUD;
 
+- (void)customizeCellStyle;
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration;
 - (void)hideLoader;
 

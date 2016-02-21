@@ -17,7 +17,6 @@
 @interface HRPVideoPlayerViewController : AVPlayerViewController
 
 @property (strong, nonatomic) NSURL *videoURL;
-//@property (strong, nonatomic) AVPlayer *player;
 @property (weak, nonatomic) IBOutlet HRPVideoPreview *playerView;
 
 @end

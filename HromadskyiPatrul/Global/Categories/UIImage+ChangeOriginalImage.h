@@ -13,8 +13,6 @@
 
 - (UIImage *)cropToSize:(CGSize)newSize;
 - (UIImage *)resizeProportionalWithCropToSize:(CGSize)newSize center:(BOOL)center;
-
-
-//- (UIImage *)squareImageWithImage:(UIImage *)image scaledToSize:(CGSize)newSize;
+- (UIImage *)squareImageFromImage:(UIImage *)image scaledToSize:(CGFloat)newSize;
 
 @end

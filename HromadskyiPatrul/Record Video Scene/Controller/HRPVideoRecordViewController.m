@@ -45,6 +45,7 @@
     [super viewWillAppear:animated];
     
     [_cameraManager removeMediaSnippets];
+    [_cameraManager.locationsService.manager startUpdatingLocation];
 
     // Set View frame
     self.view.frame = [UIScreen mainScreen].bounds;
@@ -83,6 +84,12 @@
     [_cameraManager startStreamVideoRecording];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    [_cameraManager.locationsService.manager stopUpdatingLocation];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
@@ -102,8 +109,8 @@
     HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
     
     // Prepare DataSource
-    [collectionVC.userNameBarButton setTitle:[_cameraManager.userApp objectForKey:@"userAppEmail"]];
-    [collectionVC prepareDataSource];    
+//    [collectionVC.userNameBarButton setTitle:[_cameraManager.userApp objectForKey:@"userAppEmail"]];
+//    [collectionVC prepareDataSource];    
     
     [self.navigationController pushViewController:collectionVC animated:YES];
 }

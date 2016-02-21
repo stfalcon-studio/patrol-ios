@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-IB_DESIGNABLE
 
+typedef void(^didButtonPress)(id item);
+
+IB_DESIGNABLE
 
 @interface HRPButton : UIButton
 
@@ -17,5 +19,8 @@ IB_DESIGNABLE
 @property (strong, nonatomic) IBInspectable UIColor *borderColor;
 @property (assign, nonatomic) IBInspectable CGFloat cornerRadius;
 @property (assign, nonatomic) IBInspectable CGFloat borderWidth;
+
+@property (nonatomic, copy) didButtonPress didButtonPress;
+- (void)setDidButtonPress:(didButtonPress)didButtonPress;
 
 @end

@@ -209,7 +209,7 @@
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" reuseIdentifier="PhotoCell" id="rXR-mn-0lx" customClass="HRPPhotoCell">
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" reuseIdentifier="ViolationCell" id="rXR-mn-0lx" customClass="HRPViolationCell">
                                         <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -226,7 +226,7 @@
                                                         <constraint firstAttribute="width" constant="100" id="ptg-m7-aYP"/>
                                                     </constraints>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y8d-oq-ydh" userLabel="Photo State Button">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y8d-oq-ydh" userLabel="Upload Violation State Button" customClass="HRPButton">
                                                     <rect key="frame" x="114" y="114" width="44" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="4gk-PU-f13"/>
@@ -236,7 +236,7 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
-                                                        <action selector="actionPhotoStateButtonTap:" destination="rXR-mn-0lx" eventType="touchUpInside" id="DQo-zq-0Uj"/>
+                                                        <action selector="handlerUploadStateButtonTap:" destination="rXR-mn-0lx" eventType="touchUpInside" id="CEF-HH-BMV"/>
                                                     </connections>
                                                 </button>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-play" translatesAutoresizingMaskIntoConstraints="NO" id="DEh-uv-RHa" userLabel="Play Video Image View">
@@ -264,8 +264,8 @@
                                         <size key="customSize" width="158" height="158"/>
                                         <connections>
                                             <outlet property="photoImageView" destination="g2J-pk-qCv" id="GoT-4o-wb4"/>
-                                            <outlet property="photoStateButton" destination="Y8d-oq-ydh" id="TvZ-NL-m75"/>
                                             <outlet property="playVideoImageView" destination="DEh-uv-RHa" id="UsP-Tm-aRe"/>
+                                            <outlet property="uploadStateButton" destination="Y8d-oq-ydh" id="HeN-KR-WJf"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -324,8 +324,8 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="cameraButton" destination="5oC-zk-fjR" id="9k1-Fr-lsp"/>
-                        <outlet property="photosCollectionView" destination="B1W-PM-jbV" id="R9u-XL-KnP"/>
                         <outlet property="userNameBarButton" destination="GMb-0b-1A0" id="tjh-vp-55r"/>
+                        <outlet property="violationsCollectionView" destination="B1W-PM-jbV" id="MJ2-6W-gkz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fq6-3R-0JT" userLabel="First Responder" sceneMemberID="firstResponder"/>

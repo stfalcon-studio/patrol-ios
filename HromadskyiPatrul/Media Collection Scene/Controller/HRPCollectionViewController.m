@@ -9,20 +9,21 @@
 #import "HRPCollectionViewController.h"
 #import "UIColor+HexColor.h"
 #import "HRPButton.h"
-#import "HRPPhotoCell.h"
+#import "HRPViolationCell.h"
 #import "HRPPhoto.h"
 #import "HRPImage.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 #import <CoreLocation/CoreLocation.h>
 #import "HRPLocations.h"
-#import "AFNetworking.h"
 #import <AFHTTPRequestOperation.h>
 #import "HRPPhotoPreviewViewController.h"
 #import "HRPVideoPlayerViewController.h"
 #import "UIViewController+NavigationBar.h"
 #import "HRPSettingsViewController.h"
 #import "HRPCameraManager.h"
+#import "HRPViolationManager.h"
+#import "HRPViolation.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -32,90 +33,75 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
-@property (strong, nonatomic) IBOutlet UICollectionView *photosCollectionView;
+@property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
 
 @end
 
 
 @implementation HRPCollectionViewController {
-    HRPPhoto *currentPhoto;
-    HRPPhoto *_uploadingPhoto;
-    HRPImage *currentImage;
-    HRPPhotoCell *currentCell;
-    NSIndexPath *currentIndexPath;
-    NSUserDefaults *userApp;
-    ALAsset *myAsset;
+    HRPViolationManager *_violationManager;
+    
     UIView *_statusView;
-    
-    NSMutableArray *photosDataSource;
-    NSMutableArray *imagesDataSource;
-    CGSize photoSize;
-    CGFloat cellSide;
-    NSInteger missingPhotosCount;
-    NSString *arrayPath;
-    NSTimer *timer;
-    NSInteger photosNeedUploadCount;
-    NSInteger videosNeedUploadCount;
+    NSMutableArray *_violationsDataSource;
+
     NSInteger paginationOffset;
-    NSMutableArray *imagesIndexPath;
     
-    BOOL isUploadPhotosUsingWiFiAllowed;
-    BOOL isUploadAutomaticallyAllowed;
-    BOOL isUploadInProcess;
     BOOL isPaginationRun;
-    BOOL isVideoPreviewStart;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+          andBackgroundColor:BackgroundColorTypeBlack
+                     forTime:300];
 
     _statusView = [self customizeStatusBar];
+    self.navigationItem.rightBarButtonItem.enabled = YES;
 
+    // Create Manager & Violations data source
+    _violationManager = [[HRPViolationManager alloc] init];
+
+    [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
+        if (isFinished) {
+            _violationsDataSource = [NSMutableArray arrayWithArray:_violationManager.violations];
+
+            [_violationsCollectionView reloadData];
+        }
+    }];
+    
+    // Remove local file with violations array
+    // Only for Debug mode
+    //[_violationManager removeViolationsFromFile];
+    
+    _userNameBarButton.title = [_violationManager.userApp valueForKey:@"userAppEmail"];
+    
     [self customizeNavigationBarWithTitle:nil
                      andLeftBarButtonText:_userNameBarButton.title
                         withActionEnabled:NO
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-settings"]
                         withActionEnabled:YES];
     
-    if (CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame))
-        cellSide = (CGRectGetWidth(self.view.frame) - 4.f) / 2;
-    else
-        cellSide = (CGRectGetWidth(self.view.frame) - 8.f) / 3;
-
-    photoSize = CGSizeMake(cellSide, cellSide);
-    missingPhotosCount = 0;
-    photosNeedUploadCount = 0;
-    videosNeedUploadCount = 0;
-    
-    self.navigationItem.rightBarButtonItem.enabled = YES;
-    _photosCollectionView.userInteractionEnabled = NO;
-
-    // Set network manager
-    imagesIndexPath = [NSMutableArray array];
-
-    // Set Notification Observers
+    // Add Local Notifications Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handleRepeatButtonTap:)
-                                                 name:@"HRPPhotoCellStateButtonTap"
+                                             selector:@selector(handlerViolationUploadSuccess:)
+                                                 name:@"violation_upload_success"
+                                               object:nil];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handlerViolationUploadError:)
+                                                 name:@"violation_upload_error"
                                                object:nil];
     
-    // Set Reachability Observer
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reachabilityDidChange:)
-                                                 name:AFNetworkingReachabilityDidChangeNotification
-                                               object:nil];
+    [self hideLoader];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    isUploadPhotosUsingWiFiAllowed = [userApp boolForKey:@"networkStatus"];
-    isUploadAutomaticallyAllowed = [userApp boolForKey:@"sendingTypeStatus"];
-    isVideoPreviewStart = NO;
-    
-    if (photosNeedUploadCount > 0 && !isUploadInProcess)
-        [self startUploadPhotos];
+
+    [_violationManager uploadViolations];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -142,13 +128,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    UICollectionViewFlowLayout *flowLayout = (id)_photosCollectionView.collectionViewLayout;
-    flowLayout.itemSize = photoSize;
+    UICollectionViewFlowLayout *flowLayout = (id)_violationsCollectionView.collectionViewLayout;
+    flowLayout.itemSize = _violationManager.cellSize;
     
     [flowLayout invalidateLayout]; //force the elements to get laid out again with the new size
 }
 
-
+/*
 #pragma mark - API -
 - (void)uploadPhotoWithParameters:(NSDictionary *)parameters
                         onSuccess:(void(^)(NSDictionary *successResult))success
@@ -176,32 +162,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [operationRequest start];
 }
 
-- (void)uploadVideoWithParameters:(NSDictionary *)parameters
-                        onSuccess:(void(^)(NSDictionary *successResult))success
-                        orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
-    NSString *urlString = ([self isServerURLLocal]) ? @"http://192.168.0.29/app_dev.php/" : @"http://patrol.stfalcon.com/";
-    
-    AFHTTPRequestOperationManager *requestOperationDomainManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:urlString]];
-    
-    NSString *pathAPI = [NSString stringWithFormat:@"api/%@/violation-video/create", [userApp objectForKey:@"userAppID"]];
-      
-    [requestOperationDomainManager POST:pathAPI
-                             parameters:parameters
-              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                  [formData appendPartWithFileData:parameters[@"video"]
-                                              name:@"video"
-                                          fileName:@"video.mov"
-                                          mimeType:@"video/quicktime"];
-              }
-                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    if (operation.response.statusCode != 200)
-                                        success(responseObject);
-                                }
-                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                    failure(operation);
-                                }];
-}
-
+*/
 
 #pragma mark - Actions -
 - (void)handlerLeftBarButtonTap:(UIBarButtonItem *)sender {
@@ -286,50 +247,44 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 //    [alertController addAction:actionTakePhoto];
     [alertController addAction:actionCancel];
     
-    if (!isUploadInProcess)
-        [self presentViewController:alertController animated:YES completion:nil];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 
 #pragma mark - NSNotification -
-- (void)handleRepeatButtonTap:(NSNotification *)notification {
-    currentCell = notification.userInfo[@"cell"];
-    currentPhoto = currentCell.photo;
-    currentImage = currentCell.image;
-    
-    if (currentPhoto.state != HRPPhotoStateDone && !isUploadInProcess) {
-        [currentCell showLoaderWithText:nil
-                     andBackgroundColor:CellBackgroundColorTypeBlue
-                                forTime:300];
-        
-        [self uploadDataFromLoop:NO];
-    }
+- (void)handlerViolationUploadSuccess:(NSNotification *)notification {
+    HRPViolation *violation = notification.userInfo[@"violation"];
+    _violationsDataSource = _violationManager.violations;
+    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
+    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+
+    [cell hideLoader];
 }
 
-- (void)reachabilityDidChange:(NSNotification *)notification {
-    if (notification.userInfo[@"AFNetworkingReachabilityNotificationStatusItem"] && photosNeedUploadCount > 0)
-        [self uploadDatas];
+- (void)handlerViolationUploadError:(NSNotification *)notification {
+    HRPViolation *violation = notification.userInfo[@"violation"];
+    _violationsDataSource = _violationManager.violations;
+    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
+    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
+  
+    [cell hideLoader];
 }
-
 
 #pragma mark - Methods -
+#warning DELETE
+/*
 - (void)prepareDataSource {
     // Set Data Source
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
           andBackgroundColor:BackgroundColorTypeBlack
                      forTime:300];
 
-    userApp = [NSUserDefaults standardUserDefaults];
     photosDataSource = [NSMutableArray array];
     imagesDataSource = [NSMutableArray array];
     isUploadInProcess = NO;
-    
     isPaginationRun = NO;
     
-    self.userNameBarButton.title = [userApp objectForKey:@"userAppEmail"];
-    //    [self createTestDataSource];
-    
-    
+
     [self createStoreDataPath];
     
     //    [self savePhotosCollectionToFile];
@@ -337,84 +292,20 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [self readPhotosCollectionFromFile];
 }
+*/
 
-- (void)getVideoFromAlbumAtURL:(NSURL *)videoAssetsURL
-                     onSuccess:(void(^)(NSData *videoData))success {
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    
-    [library assetForURL:videoAssetsURL
-             resultBlock:^(ALAsset *asset) {
-                 myAsset = asset;
-                 ALAssetRepresentation *representation  = myAsset.defaultRepresentation;
-                 Byte *buffer  = (Byte*)malloc((NSUInteger)representation.size);
-                 NSUInteger buffered = [representation getBytes:buffer
-                                                     fromOffset:0.0
-                                                         length:(NSUInteger)representation.size
-                                                          error:nil];    // you should check for errors tho!
-                 
-                 // Get the data
-                 NSData *data = [NSData dataWithBytesNoCopy:buffer length:buffered freeWhenDone:YES];
-                 
-                 success(data);
-             }
-            failureBlock:^(NSError *error) {
-                DebugLog(@"Error: %@",error.localizedDescription);
-            }];
-}
 
-- (void)getPhotoFromAlbumAtURL:(NSURL *)assetsURL
-                     onSuccess:(void(^)(UIImage *image))success {
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    [library assetForURL:assetsURL
-             resultBlock:^(ALAsset *asset) {
-                 myAsset = asset;
-                 
-                 UIImage  *copyOfOriginalImage = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                                     scale:0.5f
-                                                               orientation:UIImageOrientationUp];
-                 
-                 success(copyOfOriginalImage);
-             }
-            failureBlock:^(NSError *error) { }];
-}
-
-- (BOOL)canPhotosSendToServer {
-    // Network is activity
-    if ([[AFNetworkReachabilityManager sharedManager] isReachable]) {
-        // Check WiFi network connection status
-        if (isUploadPhotosUsingWiFiAllowed && [[AFNetworkReachabilityManager sharedManager] isReachableViaWiFi] && !isUploadInProcess)
-            return YES;
-        
-        // Check WWAN network connection status
-        else if (!isUploadPhotosUsingWiFiAllowed && [[AFNetworkReachabilityManager sharedManager] isReachableViaWWAN] && !isUploadInProcess)
-            return YES;
-    }
-    
-    // Network disconnect
-    else
-        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
-                                    message:NSLocalizedString(@"Alert error internet message", nil)
-                                   delegate:nil
-                          cancelButtonTitle:nil
-                          otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-    
-    return NO;
-}
-
-- (void)startUploadPhotos {
-    if (photosNeedUploadCount > 0 && [self canPhotosSendToServer])
-        [self uploadDatas];
-}
-
+#warning REMOVE TO MANAGER
+/*
 - (void)uploadDataFromLoop:(BOOL)inLoop {
     // Check network connection state
-    if ((inLoop && isUploadAutomaticallyAllowed) ||
-        (!inLoop && !isUploadAutomaticallyAllowed)) {
+    if ((inLoop && _collectionModel.isAllowedUploadMediaAutomatically) ||
+        (!inLoop && !_collectionModel.isAllowedUploadMediaAutomatically)) {
         if ([self canPhotosSendToServer]) {
             // Async queue
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 // Save to device
-                [self savePhotosCollectionToFile];
+                [_collectionModel saveViolationsToFile];
                 isUploadInProcess = YES;
                 __block UIImage *imageOriginal;
                 __block NSDictionary *parameters;
@@ -443,7 +334,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      currentPhoto.state = HRPPhotoStateDone;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
                                                                      
-                                                                     [self savePhotosCollectionToFile];
+                                                                     [_collectionModel saveViolationsToFile];
                                                                      [currentCell hideLoader];
                                                                      
                                                                      isUploadInProcess = NO;
@@ -457,7 +348,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      currentPhoto.state = HRPPhotoStateRepeat;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
                                                                      
-                                                                     [self savePhotosCollectionToFile];
+                                                                     [_collectionModel saveViolationsToFile];
                                                                      [currentCell hideLoader];
                                                                      [self hideLoader];
                                                                      
@@ -492,7 +383,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      currentPhoto.state = HRPPhotoStateDone;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
                                                                      
-                                                                     [self savePhotosCollectionToFile];
+                                                                     [_collectionModel saveViolationsToFile];
                                                                      [currentCell hideLoader];
                                                                      
                                                                      isUploadInProcess      =   NO;
@@ -505,11 +396,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                      currentPhoto.state     =   HRPPhotoStateRepeat;
                                                                      [currentCell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
                                                                      
-                                                                     [self savePhotosCollectionToFile];
+                                                                     [_collectionModel saveViolationsToFile];
                                                                      [currentCell hideLoader];
                                                                      [self hideLoader];
                                                                      
-                                                                     isUploadInProcess      =   NO;
+                                                                     isUploadInProcess = NO;
                                                                  }];
                                        }
                      ];
@@ -518,7 +409,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         } else {
             [currentCell hideLoader];
 
-            if (!isUploadAutomaticallyAllowed)
+            if (!_collectionModel.isAllowedUploadMediaAutomatically)
                 [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
                                   andMessage:NSLocalizedString(@"Switch network title", nil)];
             
@@ -561,7 +452,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         HRPPhoto *photo = [[HRPPhoto alloc] init];
         HRPImage *image = [[HRPImage alloc] init];
         
-        image.imageAvatar = [image squareImageFromImage:[UIImage imageNamed:imageName[i]] scaledToSize:photoSize.height];
+        image.imageAvatar = [image squareImageFromImage:[UIImage imageNamed:imageName[i]] scaledToSize:_violationManager.cellSize.height];
         photo.state = arc4random_uniform(3);
         
         [imagesDataSource addObject:image];
@@ -577,103 +468,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                      }];
 }
 
-- (void)createImagesDataSource {
-    [UIView animateWithDuration:0.7f
-                     animations:^{
-                         self.photosCollectionView.alpha        =   (imagesDataSource.count == 0) ? 0.f : 0.8f;
-                     }];
-    
-    paginationOffset                                            =   16;
-    NSInteger indexStart                                        =   imagesDataSource.count;
-    NSInteger indexFinish                                       =   ((indexStart + paginationOffset) < photosDataSource.count) ?    (indexStart + paginationOffset) :
-                                                                                                                                    photosDataSource.count;
-    NSArray *photosDataSourceCopy                               =   [NSMutableArray arrayWithArray:photosDataSource];
-    
-    for (NSInteger i = indexStart; i <= indexFinish - 1; i++) {
-        HRPPhoto *photo                                         =   photosDataSourceCopy[i];
-        HRPImage *image                                         =   [[HRPImage alloc] init];
-        
-        if (photo.assetsPhotoURL)
-            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:photo.assetsPhotoURL]
-                               onSuccess:^(UIImage *photoFromAlbum) {
-                                   if (photoFromAlbum) {
-                                       image.imageOriginalURL   =   photo.assetsPhotoURL;
-                                       image.imageAvatar        =   [image squareImageFromImage:photoFromAlbum scaledToSize:photoSize.width];
-                                       
-                                       if (photo.state != HRPPhotoStateDone) {
-                                           if (photo.isVideo)
-                                               videosNeedUploadCount++;
-                                           else
-                                               photosNeedUploadCount++;
-                                       }
-                                       
-                                       [imagesDataSource addObject:image];
-                                   } else {
-                                       missingPhotosCount++;
-                                       [photosDataSource removeObject:photo];
-                                   }
-                                   
-                                   // Show count of missing photos
-                                   if (i == indexFinish - 1) {
-                                       if (missingPhotosCount == 1)
-                                           [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert info title", nil)
-                                                                       message:[NSString stringWithFormat:@"%li %@",    (long)missingPhotosCount,
-                                                                                                                        NSLocalizedString(@"Photo is missing", nil)]
-                                                                      delegate:nil
-                                                             cancelButtonTitle:nil
-                                                             otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-                                       
-                                       else if (missingPhotosCount > 0 && missingPhotosCount <= 4)
-                                           [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert info title", nil)
-                                                                       message:[NSString stringWithFormat:@"%li %@",    (long)missingPhotosCount,
-                                                                                                                        NSLocalizedString(@"Photos 2-4 are missing", nil)]
-                                                                      delegate:nil
-                                                             cancelButtonTitle:nil
-                                                             otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-                                       
-                                       else if (missingPhotosCount > 4)
-                                           [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert info title", nil)
-                                                                       message:[NSString stringWithFormat:@"%li %@",    (long)missingPhotosCount,
-                                                                                                                        NSLocalizedString(@"Photos >5 are missing", nil)]
-                                                                      delegate:nil
-                                                             cancelButtonTitle:nil
-                                                             otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-                                       
-                                       // Save modified photos array to local file
-                                       [self savePhotosCollectionToFile];
-                                       
-                                       missingPhotosCount                                       =   0;
-                                       imagesIndexPath                                          =   [NSMutableArray array];
-                                       
-                                       for (NSInteger i = indexStart; i <= imagesDataSource.count - 1; i++) {
-                                           [imagesIndexPath addObject:[NSIndexPath indexPathForItem:i inSection:0]];
-                                       }
-                                       
-                                       [self.photosCollectionView insertItemsAtIndexPaths:imagesIndexPath];
-                                       
-                                       [UIView animateWithDuration:0.7f
-                                                        animations:^{
-                                                            self.photosCollectionView.alpha     =   1.f;
-                                                        }
-                                                        completion:^(BOOL finished) {
-                                                            [self hideLoader];
-                                                            self.navigationItem.rightBarButtonItem.enabled      =   YES;
-                                                            self.photosCollectionView.userInteractionEnabled    =   YES;
-                                                        }];
-                                       
-                                       // Upload photos
-                                       if (photosNeedUploadCount > 0)
-                                           [self startUploadPhotos];
-                                       
-                                       if (isPaginationRun)
-                                           isPaginationRun                                      =   NO;
-                                   }
-                                   
-                                   if (self.HUD.alpha)
-                                       [self hideLoader];
-                               }];
-    }
-}
 
 - (void)createStoreDataPath {
     NSError *error;
@@ -688,70 +482,23 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             DebugLog(@"Create directory error: %@", error);
     }
 }
+*/
 
-- (void)savePhotosCollectionToFile {
-    NSData *arrayData                               =   [NSKeyedArchiver archivedDataWithRootObject:photosDataSource];
-    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
-    
-    [[NSFileManager defaultManager] createFileAtPath:arrayPath
-                                            contents:arrayData
-                                          attributes:nil];
-}
 
-- (void)removePhotosCollectionFromFile {
-    NSArray *paths                                  =   NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath                                       =   paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    arrayPath                                       =   [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
-    
-    [[NSFileManager defaultManager] removeItemAtPath:arrayPath
-                                               error:nil];
-}
-
-- (void)removeItemFromCollection {
-    [self.photosCollectionView performBatchUpdates:^{
-        [imagesDataSource removeObjectAtIndex:currentIndexPath.row];
-        [self.photosCollectionView deleteItemsAtIndexPaths:@[currentIndexPath]];
+- (void)removeViolationFromCollection:(NSIndexPath *)indexPath {
+    [_violationsCollectionView performBatchUpdates:^{
+        [_violationsDataSource removeObjectAtIndex:indexPath.row];
+        [_violationsCollectionView deleteItemsAtIndexPaths:@[indexPath]];
     }
-                                        completion:^(BOOL finished) {
-                                            [photosDataSource removeObjectAtIndex:currentIndexPath.row];
-                                            
-                                            [self savePhotosCollectionToFile];
-                                        }];
+                                            completion:^(BOOL finished) {
+                                                [_violationManager saveViolationsToFile:_violationsDataSource];
+                                            }];
 }
 
-- (void)readPhotosCollectionFromFile {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    arrayPath = [arrayPath stringByAppendingPathComponent:[userApp objectForKey:@"userAppEmail"]];
+- (void)showAlertController:(NSIndexPath *)indexPath {
+    HRPViolation *violation = _violationsDataSource[indexPath.row];
+    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
     
-    if ([[NSFileManager defaultManager] fileExistsAtPath:arrayPath]) {
-        NSData *arrayData = [[NSData alloc] initWithContentsOfFile:arrayPath];
-        photosDataSource = [NSMutableArray array];
-        imagesDataSource = [NSMutableArray array];
-
-        if (arrayData) {
-            photosDataSource = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
-        
-            if (photosDataSource.count == 0) {
-                [self.navigationItem.rightBarButtonItem setEnabled:YES];
-                [self.photosCollectionView setUserInteractionEnabled:YES];
-               
-                [self hideLoader];
-            } else
-                [self createImagesDataSource];
-        } else
-            DebugLog(@"File does not exist");
-    } else {
-        photosDataSource = [NSMutableArray array];
-        imagesDataSource = [NSMutableArray array];
-        
-        [self hideLoader];
-    }
-}
-
-- (void)showAlertController {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
                                                                              message:nil
                                                                       preferredStyle:UIAlertControllerStyleActionSheet];
@@ -760,70 +507,68 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
     
-    UIAlertAction *actionOpenPhoto = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction *action) {
-                                                                HRPPhotoPreviewViewController *photoPreviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
+    UIAlertAction *actionOpenViolationPhoto = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction *action) {
+                                                                         HRPPhotoPreviewViewController *photoPreviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
                                                                                    
-                                                                photoPreviewVC.photo = currentPhoto;
+                                                                         photoPreviewVC.violation = violation;
                                                                                    
-                                                                [self presentViewController:photoPreviewVC animated:YES completion:nil];
-                                                            }];
+                                                                         [self presentViewController:photoPreviewVC animated:YES completion:nil];
+                                                                     }];
     
-    UIAlertAction *actionOpenVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction *action) {
-                                                                if (!isVideoPreviewStart) {
-                                                                    HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
+    UIAlertAction *actionOpenViolationVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
+                                                                       style:UIAlertActionStyleDefault
+                                                                     handler:^(UIAlertAction *action) {
+                                                                         HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
 
-                                                                    videoPlayerVC.videoURL = [NSURL URLWithString:currentPhoto.assetsVideoURL];
-                                                                                       
-                                                                    [self presentViewController:videoPlayerVC animated:YES completion:^{
-                                                                        isVideoPreviewStart = YES;
-                                                                    }];
-                                                                }
-                                                            }];
+                                                                         videoPlayerVC.videoURL = [NSURL URLWithString:violation.assetsVideoURL];
+                                                                                   
+                                                                         [self presentViewController:videoPlayerVC animated:YES completion:^{}];
+                                                                     }];
     
-    UIAlertAction *actionRemoveItem = [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ? @"Remove a Video" : @"Remove a Photo", nil)
-                                                               style:UIAlertActionStyleDestructive
-                                                             handler:^(UIAlertAction *action) {
-                                                                 [self removeItemFromCollection];
-                                                             }];
+    UIAlertAction *actionRemoveViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Remove a Video" : @"Remove a Photo", nil)
+                                                                    style:UIAlertActionStyleDestructive
+                                                                  handler:^(UIAlertAction *action) {
+                                                                      [self removeViolationFromCollection:indexPath];
+                                                                  }];
 
-    UIAlertAction *actionUploadData = [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ? @"Upload a Video" : @"Upload a Photo", nil)
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction *action) {
-                                                                 if (currentPhoto.state != HRPPhotoStateDone) {
-                                                                     [currentCell showLoaderWithText:nil
-                                                                                  andBackgroundColor:CellBackgroundColorTypeBlue
-                                                                                             forTime:300];
-                                                                                       
-                                                                     [self uploadDataFromLoop:NO];
-                                                                 }
-                                                             }];
+    UIAlertAction *actionUploadViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload a Video" : @"Upload a Photo", nil)
+                                                                    style:UIAlertActionStyleDefault
+                                                                  handler:^(UIAlertAction *action) {
+                                                                      if (violation.state != HRPViolationStateDone) {
+                                                                          [cell showLoaderWithText:nil
+                                                                                andBackgroundColor:CellBackgroundColorTypeBlue
+                                                                                           forTime:300];
+                                                                     
+#warning ADD API TO UPLOAD ONE VIOLATION
+//                                                                     [self uploadDataFromLoop:NO];
+                                                                      }
+                                                                  }];
     
-    UIAlertAction *actionUploadDatas = [UIAlertAction actionWithTitle:NSLocalizedString((currentPhoto.isVideo) ? @"Upload Videos" : @"Upload Photos", nil)
-                                                                style:UIAlertActionStyleDefault
-                                                              handler:^(UIAlertAction *action) {
-                                                                  [self startUploadPhotos];
-                                                              }];
+    UIAlertAction *actionUploadViolations = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload Videos" : @"Upload Photos", nil)
+                                                                     style:UIAlertActionStyleDefault
+                                                                   handler:^(UIAlertAction *action) {
+#warning ADD API TO UPLOAD ALL VIOLATIONS
+//                                                                      [self startUploadPhotos];
+                                                                   }];
     
-    if (currentPhoto.isVideo)
-        [alertController addAction:actionOpenVideo];
+    if (violation.type == HRPViolationTypeVideo)
+        [alertController addAction:actionOpenViolationVideo];
     else
-        [alertController addAction:actionOpenPhoto];
+        [alertController addAction:actionOpenViolationPhoto];
     
-    if (currentPhoto.state != HRPPhotoStateDone)
-        [alertController addAction:actionUploadData];
+    if (violation.state != HRPViolationStateDone)
+        [alertController addAction:actionUploadViolation];
     
-    if (photosNeedUploadCount > 0 && !currentPhoto.isVideo)
-        [alertController addAction:actionUploadDatas];
+    if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
+        [alertController addAction:actionUploadViolation];
     
-    [alertController addAction:actionRemoveItem];
+    [alertController addAction:actionRemoveViolation];
     
     [alertController addAction:actionCancel];
     
-    if (!isUploadInProcess || currentPhoto != _uploadingPhoto) {
+    if (!violation.isUploading) {
         [self presentViewController:alertController animated:YES completion:nil];
     }
 }
@@ -835,79 +580,40 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return imagesDataSource.count;
+    return _violationsDataSource.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *cellIdentifier = @"PhotoCell";
-    HRPPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
+    static NSString *cellIdentifier = @"ViolationCell";
+    HRPViolationCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     
-    [cell hideLoader];
-    
-    HRPPhoto *photo = [photosDataSource objectAtIndex:indexPath.row];
-    HRPImage *image = [imagesDataSource objectAtIndex:indexPath.row];
-    
-    switch (photo.state) {
-        // HRPPhotoStateDone
-        case 0: {
-            [cell.photoStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
-            cell.photoStateButton.tag = 0;
-        }
-            break;
-            
-        // HRPPhotoStateRepeat
-        case 1: {
-            [cell.photoStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
-            cell.photoStateButton.tag = 1;
-        }
-            break;
+    cell.violation = _violationsDataSource[indexPath.row];
 
-        // HRPPhotoStateUpload
-        case 2: {
-            [cell.photoStateButton setImage:[UIImage imageNamed:@"icon-upload"] forState:UIControlStateNormal];
-            cell.photoStateButton.tag = 2;
-        }
-            break;
-    }
+    [cell customizeCellStyle];
     
-    [UIView transitionWithView:cell
-                      duration:0.7f
-                       options:UIViewAnimationOptionTransitionCrossDissolve
-                    animations:^{
-                        cell.photoImageView.image = image.imageAvatar;
-                        cell.playVideoImageView.alpha = (photo.isVideo) ? 1.f : 0.f;
-                    }
-                    completion:^(BOOL finished) {
-                        cell.photo = photo;
-                        cell.image = image;
-                    }];
+    [cell.uploadStateButton setDidButtonPress:^(id item) {
+        [_violationManager uploadViolation:item];
+    }];
     
     // Set pagination
-    if (indexPath.row == imagesDataSource.count - 2 &&
-        indexPath.row != photosDataSource.count - 2) {
+    if (indexPath.row == _violationsDataSource.count - 2) {
         isPaginationRun = YES;
         
         [self showLoaderWithText:NSLocalizedString(@"Upload title", nil)
               andBackgroundColor:BackgroundColorTypeBlue
                          forTime:10];
-        
-        [self createImagesDataSource];
+
+#warning ADD API TO GET NEW DATAS
+//        [self createImagesDataSource];
     }
     
-    [cell hideLoader];
-
     return cell;
 }
 
 
 #pragma mark - UICollectionViewDelegate -
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    currentCell = (HRPPhotoCell *)[collectionView cellForItemAtIndexPath:indexPath];
-    currentPhoto = currentCell.photo;
-    currentImage = currentCell.image;
-    currentIndexPath = indexPath;
-    
-    [self showAlertController];
+    [self showAlertController:indexPath];
 }
 
 
@@ -915,7 +621,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    return photoSize;
+    return _violationManager.cellSize;
 }
 
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
@@ -928,56 +634,55 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
-
-    if (size.height > size.width)
-        cellSide = (size.width - 4.f) / 2;
-    else
-        cellSide = (size.width - 8.f) / 3;
+    CGFloat cellNewSide = 0.f;
     
-    photoSize = CGSizeMake(cellSide, cellSide);
+    if (size.height > size.width)
+        cellNewSide = (size.width - 4.f) / 2;
+    
+    else
+        cellNewSide = (size.width - 8.f) / 3;
+    
+    _violationManager.cellSize = CGSizeMake(cellNewSide, cellNewSide);
 }
 
 
 #pragma mark - UIImagePickerControllerDelegate -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    if (imagesDataSource.count > 0)
-        [self.photosCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
+    if (_violationsDataSource.count > 0)
+        [_violationsCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
                                           atScrollPosition:UICollectionViewScrollPositionTop
                                                   animated:YES];
     
-    UIImage *chosenImage                        =   [info objectForKey:UIImagePickerControllerOriginalImage];
-    ALAssetsLibrary *assetsLibrary              =   [[ALAssetsLibrary alloc] init];
+    UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
+    ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    picker                                      =   nil;
-    self.imagePickerController                  =   nil;
+    picker = nil;
+    self.imagePickerController = nil;
     
-    HRPPhoto *photo                             =   [[HRPPhoto alloc] init];
-    HRPImage *image                             =   [[HRPImage alloc] init];
-    image.imageAvatar                           =   [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
+    HRPViolation *violation = [[HRPViolation alloc] init];
+    HRPImage *image = [[HRPImage alloc] init];
+    image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
 
-    [self.photosCollectionView performBatchUpdates:^{
-        NSMutableArray *arrayWithIndexPaths     =   [NSMutableArray array];
+    [_violationsCollectionView performBatchUpdates:^{
+        NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
 
-        for (int i = 0; i <= imagesDataSource.count; i++) {
+        for (int i = 0; i <= _violationsDataSource.count; i++) {
             [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
         
-        (photosDataSource.count == 0) ? [photosDataSource addObject:photo] : [photosDataSource insertObject:photo atIndex:0];
-        (imagesDataSource.count == 0) ? [imagesDataSource addObject:image] : [imagesDataSource insertObject:image atIndex:0];
+        (_violationsDataSource.count == 0) ? [_violationsDataSource addObject:violation] : [_violationsDataSource insertObject:violation atIndex:0];
         
-        [self.photosCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
+        [_violationsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
     }
                                         completion:nil];
    
-    if  (imagesDataSource.count == 1)
-        [self.photosCollectionView reloadData];
+    if  (_violationsDataSource.count == 1)
+        [_violationsCollectionView reloadData];
     
-    currentCell                                 =   [[HRPPhotoCell alloc] initWithFrame:CGRectMake(0.f, 0.f, photoSize.width, photoSize.height)];
-    currentCell                                 =   (HRPPhotoCell *)[self.photosCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    HRPViolationCell *cell = [[HRPViolationCell alloc] initWithFrame:CGRectMake(0.f, 0.f, _violationManager.cellSize.width, _violationManager.cellSize.height)];
+    cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
-    [currentCell showLoaderWithText:nil
-                 andBackgroundColor:CellBackgroundColorTypeBlue
-                            forTime:10];
+    [cell showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:10];
     
     [assetsLibrary writeImageToSavedPhotosAlbum:chosenImage.CGImage
                                     orientation:(ALAssetOrientation)chosenImage.imageOrientation
@@ -985,34 +690,24 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                     ALAssetsLibrary *libraryAssets = [[ALAssetsLibrary alloc] init];
                                     [libraryAssets assetForURL:assetURL
                                                    resultBlock:^(ALAsset *asset) {
-                                                       photo.assetsPhotoURL     =   [assetURL absoluteString];
-                                                       image.imageOriginalURL   =   [assetURL absoluteString];
-                                                       image.imageAvatar        =   [image resizeImage:chosenImage
-                                                                                                toSize:photoSize
-                                                                                       andCropInCenter:YES];
+                                                       violation.assetsPhotoURL = [assetURL absoluteString];
+                                                       image.imageOriginalURL = [assetURL absoluteString];
+                                                       image.imageAvatar = [image resizeImage:chosenImage
+                                                                                       toSize:_violationManager.cellSize
+                                                                              andCropInCenter:YES];
                                                        
-                                                       [UIView transitionWithView:currentCell.photoImageView
+                                                       [UIView transitionWithView:cell.photoImageView
                                                                          duration:0.5f
                                                                           options:UIViewAnimationOptionTransitionCrossDissolve
                                                                        animations:^{
-                                                                           currentCell.photoImageView.image =   image.imageAvatar;
+                                                                           cell.photoImageView.image = image.imageAvatar;
                                                                        }
                                                                        completion:^(BOOL finished) {
-                                                                           //photo.latitude   =   locationNew.coordinate.latitude;
-                                                                           //photo.longitude  =   locationNew.coordinate.longitude;
-                                                                           photo.isVideo    =   NO;
+                                                                           violation.type = HRPViolationTypePhoto;
                                                                            
-                                                                           // API
-                                                                           currentPhoto     =   photo;
-                                                                           currentImage     =   image;
+                                                                           [_violationsDataSource replaceObjectAtIndex:0 withObject:violation];
                                                                            
-                                                                           [photosDataSource replaceObjectAtIndex:0 withObject:photo];
-                                                                           [imagesDataSource replaceObjectAtIndex:0 withObject:image];
-                                                                           
-                                                                           [self savePhotosCollectionToFile];
-                                                                           photosNeedUploadCount++;
-                                                                           
-                                                                           [self uploadDataFromLoop:NO];
+                                                                           [_violationManager saveViolationsToFile:_violationsDataSource];
                                                                        }];
                                                    }
                                                   failureBlock:^(NSError *error) { }];
@@ -1023,49 +718,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [picker dismissViewControllerAnimated:YES
                                completion:^{ }];
     
-    picker                          =   nil;
-    self.imagePickerController      =   nil;
+    picker = nil;
+    self.imagePickerController = nil;
 }
-
-
-/*
-#pragma mark - CLLocationManagerDelegate -
-- (void)locationManager:(CLLocationManager *)manager
-    didUpdateToLocation:(CLLocation *)newLocation
-           fromLocation:(CLLocation *)oldLocation {
-    currentPhoto.latitude           =   newLocation.coordinate.latitude;
-    currentPhoto.longitude          =   newLocation.coordinate.longitude;
-    
-//    locationNew                     =   newLocation;
-//    isLocationServiceEnabled        =   YES;
-}
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
-//    isLocationServiceEnabled        =   NO;
-}
-
-- (void)requestAlwaysAuthorization {
-    CLAuthorizationStatus status    =   [CLLocationManager authorizationStatus];
-    
-    // If the status is denied or only granted for when in use, display an alert
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse || status == kCLAuthorizationStatusDenied) {
-        NSString *titleText         =   NSLocalizedString(@"Alert error location title background", nil);
-        
-        NSString *messageText       =   (status == kCLAuthorizationStatusDenied) ?  NSLocalizedString(@"Alert error location message off", nil) :
-                                                                                    NSLocalizedString(@"Alert error location message background", nil);
-        
-        [[[UIAlertView alloc] initWithTitle:titleText
-                                    message:messageText
-                                   delegate:nil
-                          cancelButtonTitle:nil
-                          otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-    }
-    
-    // The user has not enabled any location services. Request background authorization.
-    else if (status == kCLAuthorizationStatusNotDetermined) {
-        [locationsService.manager requestAlwaysAuthorization];
-    }
-}
-*/
 
 @end

@@ -12,8 +12,7 @@
 
 @interface HRPCollectionViewController : HRPBaseViewController
 
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
 
-- (void)prepareDataSource;
+//- (void)prepareDataSource;
 
 @end

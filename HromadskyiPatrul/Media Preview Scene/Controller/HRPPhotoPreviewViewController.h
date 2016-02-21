@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "HRPPhoto.h"
+#import "HRPViolation.h"
 
 
 @interface HRPPhotoPreviewViewController : UIViewController
 
-@property (strong, nonatomic) HRPPhoto *photo;
+@property (strong, nonatomic) HRPViolation *violation;
 
 @end

@@ -12,14 +12,6 @@
 
 #pragma mark - Methods -
 - (UIImage *)resizeProportionalWithCropToSize:(CGSize)newSize center:(BOOL)center {
-//    CGSize originalSize     =   self.size;
-//    CGSize firstSize;
-    
-//    if (originalSize.width / originalSize.height > newSize.width / newSize.height)
-//        firstSize           =   CGSizeMake(newSize.height / originalSize.height * originalSize.width, newSize.height);
-//    else
-//        firstSize           =   CGSizeMake(newSize.width, newSize.height);
-
     UIImage *resizedImage   =   [self resizeToSize:newSize];
     UIImage *result;
     
@@ -71,6 +63,41 @@
     CGImageRef imageRef     =   CGImageCreateWithImageInRect(sgImage, cropRect);
     UIImage *image          =   [UIImage imageWithCGImage:imageRef scale:self.scale orientation:self.imageOrientation];
     CGImageRelease(imageRef);
+    
+    return image;
+}
+
+- (UIImage *)squareImageFromImage:(UIImage *)image scaledToSize:(CGFloat)newSize {
+    CGAffineTransform scaleTransform;
+    CGPoint origin;
+    
+    if (image.size.width > image.size.height) {
+        CGFloat scaleRatio = newSize / image.size.height;
+        scaleTransform = CGAffineTransformMakeScale(scaleRatio, scaleRatio);
+        
+        origin = CGPointMake(-(image.size.width - image.size.height) / 2.0f, 0);
+    } else {
+        CGFloat scaleRatio = newSize / image.size.width;
+        scaleTransform = CGAffineTransformMakeScale(scaleRatio, scaleRatio);
+        
+        origin = CGPointMake(0, -(image.size.height - image.size.width) / 2.0f);
+    }
+    
+    CGSize size = CGSizeMake(newSize, newSize);
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        UIGraphicsBeginImageContextWithOptions(size, YES, 0);
+    } else {
+        UIGraphicsBeginImageContext(size);
+    }
+    
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextConcatCTM(context, scaleTransform);
+    
+    [image drawAtPoint:origin];
+    
+    image = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
     
     return image;
 }

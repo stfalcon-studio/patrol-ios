@@ -9,6 +9,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <CoreLocation/CoreLocation.h>
 #import <UIKit/UIKit.h>
+#import "HRPLocations.h"
+
 
 #if DEVELOPMENT
 #define DebugLog(...) NSLog(__VA_ARGS__)
@@ -32,6 +34,8 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @interface HRPCameraManager : AVCaptureSession <CLLocationManagerDelegate, AVCaptureFileOutputRecordingDelegate, AVAudioRecorderDelegate, AVAudioPlayerDelegate>
 
 @property (strong, nonatomic) NSUserDefaults *userApp;
+
+@property (strong, nonatomic) HRPLocations *locationsService;
 
 @property (strong, nonatomic) AVCaptureSession *captureSession;
 @property (strong, nonatomic) AVCaptureMovieFileOutput *videoFileOutput;

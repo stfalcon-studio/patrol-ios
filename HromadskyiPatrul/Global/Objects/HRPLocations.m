@@ -17,8 +17,8 @@
     self = [super init];
     
     if (self) {
-        self.geocoder               =   [[CLGeocoder alloc] init];
-        self.isLocationCorrect      =   YES;
+        self.geocoder = [[CLGeocoder alloc] init];
+        self.isLocationCorrect = YES;
     }
     
     return self;
@@ -36,7 +36,7 @@
 
 - (BOOL)isEnabled {
     if ([CLLocationManager locationServicesEnabled]) {
-        self.manager                                            =   [[CLLocationManager alloc] init];
+        self.manager = [[CLLocationManager alloc] init];
         
         if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
             // Request for foreground location use
@@ -52,7 +52,7 @@
         
         return YES;
     } else {
-        self.isLocationCorrect                                  =   NO;
+        self.isLocationCorrect = NO;
         [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
                           andMessage:NSLocalizedString(@"Alert error location message off", nil)];
     }

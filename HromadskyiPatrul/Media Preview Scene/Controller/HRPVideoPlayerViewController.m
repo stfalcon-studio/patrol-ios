@@ -23,13 +23,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.navigationItem.title           =   NSLocalizedString(@"Preview a Video", nil);
+    self.navigationItem.title = NSLocalizedString(@"Preview a Video", nil);
     
-    _statusViewTopConstraint.constant   =   ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
+    _statusViewTopConstraint.constant = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
                                                     0.f : -20.f;
     
-    self.player                         =   [AVPlayer playerWithURL:_videoURL];
-    self.player.volume                  =   [[AVAudioSession sharedInstance] outputVolume];
+    self.player = [AVPlayer playerWithURL:_videoURL];
+    self.player.volume = [[AVAudioSession sharedInstance] outputVolume];
     
     [self setAudioVolume];
     
@@ -44,9 +44,9 @@
 
 #pragma mark - Methods -
 - (void)setAudioVolume {
-    AVAsset *avAsset                    =   [[self.player currentItem] asset] ;
-    NSArray *audioTracks                =   [avAsset tracksWithMediaType:AVMediaTypeAudio] ;
-    NSMutableArray *allAudioParams      =   [NSMutableArray array] ;
+    AVAsset *avAsset = [[self.player currentItem] asset] ;
+    NSArray *audioTracks = [avAsset tracksWithMediaType:AVMediaTypeAudio] ;
+    NSMutableArray *allAudioParams = [NSMutableArray array] ;
     
     for(AVAssetTrack *track in audioTracks){
         AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters] ;
@@ -55,7 +55,7 @@
         [allAudioParams addObject:audioInputParams];
     }
     
-    AVMutableAudioMix *audioVolMix      =   [AVMutableAudioMix audioMix] ;
+    AVMutableAudioMix *audioVolMix = [AVMutableAudioMix audioMix] ;
     [audioVolMix setInputParameters:allAudioParams];
     [[self.player currentItem] setAudioMix:audioVolMix];
 }
@@ -63,13 +63,11 @@
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) {
-        self.statusViewTopConstraint.constant       =   -20.f;
-//        [self.videoController.view setFrame:CGRectMake(0.f, 0.f, size.width, size.height)];
-    } else {
-        self.statusViewTopConstraint.constant       =   0.f;
-//        [self.videoController.view setFrame:CGRectMake(0.f, 20.f, size.width, size.height - 20.f)];
-    }
+    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
+        self.statusViewTopConstraint.constant = -20.f;
+    
+    else
+        self.statusViewTopConstraint.constant = 0.f;
 }
 
 @end
