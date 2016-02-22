@@ -19,9 +19,9 @@
 #pragma mark - Actions -
 - (IBAction)handlerUploadStateButtonTap:(HRPButton *)sender {
     if (_violation.state != HRPViolationStateDone) {
-        _uploadStateButton.didButtonPress(_violation);
-     
         [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
+
+        _uploadStateButton.didButtonPress(_violation);
     }
 }
 
@@ -98,6 +98,7 @@
 
 - (void)hideLoader {
     [MBProgressHUD hideAllHUDsForView:self animated:YES];
+    _HUD = nil;
 }
 
 - (void)sleepTask {

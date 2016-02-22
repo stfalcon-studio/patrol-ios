@@ -119,7 +119,7 @@
 }
 
 - (void)timerTicked:(NSTimer *)timer {
-    if (_videoSessionMode != NSTimerVideoSessionModeViolation) {
+//    if (_videoSessionMode != NSTimerVideoSessionModeViolation) {
         _currentTimerValue++;
         
         if (_currentTimerValue == _sessionDuration) {
@@ -135,7 +135,7 @@
         }
         
         _timerLabel.text = [self formattedTime:_currentTimerValue];
-    }
+//    }
 }
 
 - (NSString *)formattedTime:(NSInteger)secondsTotal {
