@@ -44,10 +44,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     UIView *_statusView;
     NSMutableArray *_violationsDataSource;
-
-    NSInteger paginationOffset;
-    
-    BOOL isPaginationRun;
 }
 
 #pragma mark - Constructors -
@@ -380,10 +376,16 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
     [cell customizeCellStyle];
     
+    // SET USERACTIVITY IN STORYBOARD - NOW IT DISABLED
+    /*
     [cell.uploadStateButton setDidButtonPress:^(id item) {
         [_violationManager uploadViolation:item];
     }];
+     */
     
+    
+    // ADD PAGINATION IF IT NEED
+    /*
     // Set pagination
     if (indexPath.row == _violationsDataSource.count - 2) {
         isPaginationRun = YES;
@@ -400,6 +402,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             }
         }];
     }
+     */
     
     return cell;
 }
@@ -421,7 +424,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
     // top, left, bottom, right
-    return UIEdgeInsetsMake(0.f, 0.f, 0.f, 0.f);
+    return UIEdgeInsetsZero;
 }
 
 
@@ -500,7 +503,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                            violation.type = HRPViolationTypePhoto;
                                                                            
                                                                            [_violationsDataSource replaceObjectAtIndex:0 withObject:violation];
-                                                                           
                                                                            [_violationManager saveViolationsToFile:_violationsDataSource];
                                                                        }];
                                                    }

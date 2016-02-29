@@ -54,10 +54,10 @@
 "Remove a Photo"                                =   "Удалить фото";
 "Remove a Video"                                =   "Удалить видео";
 "Preview a Photo"                               =   "Просмотр фото";
-"Upload a Photo"                                =   "Загрузить одно фото";
-"Upload a Video"                                =   "Загрузить одно видео";
-"Upload Photos"                                 =   "Загрузить все фото";
-"Upload Videos"                                 =   "Загрузить все видео";
+"Upload a Photo"                                =   "Загрузить фото";
+"Upload a Video"                                =   "Загрузить видео";
+"Upload Photos"                                 =   "Загрузить фото";
+"Upload Videos"                                 =   "Загрузить видео";
 "Upload title"                                  =   "Загрузка";
 "Take a Photo"                                  =   "Сделать фото";
 "Take a Video"                                  =   "Снять видео";

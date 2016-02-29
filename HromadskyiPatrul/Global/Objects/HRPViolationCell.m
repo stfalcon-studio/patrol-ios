@@ -28,8 +28,6 @@
 
 #pragma mark - Methods -
 - (void)customizeCellStyle {
-    [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
-
     switch (_violation.state) {
         // HRPPhotoStateDone
         case 0: {
@@ -65,8 +63,6 @@
                                                completion:^(BOOL finished) {
                                                    if (finished) {
                                                        _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
-                                                       
-                                                       [self hideLoader];
                                                    }
                                                }];
                            }
