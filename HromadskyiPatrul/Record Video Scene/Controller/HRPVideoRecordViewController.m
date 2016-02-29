@@ -108,24 +108,20 @@
     // Transition to Collection Scene
     HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
     
-    // Prepare DataSource
-//    [collectionVC.userNameBarButton setTitle:[_cameraManager.userApp objectForKey:@"userAppEmail"]];
-//    [collectionVC prepareDataSource];    
-    
     [self.navigationController pushViewController:collectionVC animated:YES];
 }
 
 
 #pragma mark - NSNotification -
 - (void)handlerStartVideoSession:(NSNotification *)notification {
-    if (self.HUD.alpha)
-        [self hideLoader];
-        
     self.navigationItem.rightBarButtonItem.enabled = YES;
     _cameraManager.isVideoSaving = NO;
     
     [_cameraManager startStreamVideoRecording];
-    [_cameraManager createTimerWithLabel:_timerLabel];    
+    [_cameraManager createTimerWithLabel:_timerLabel];
+    
+    if (self.HUD.alpha)
+        [self hideLoader];
 }
 
 - (void)handlerMergeAndSaveVideo:(NSNotification *)notification {

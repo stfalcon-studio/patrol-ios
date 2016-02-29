@@ -51,10 +51,6 @@
     
     [self hideNavigationBar];
     
-    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
-          andBackgroundColor:BackgroundColorTypeBlack
-                     forTime:3];
-    
     _statusView = [self customizeStatusBar];
 
     // Create model
@@ -143,7 +139,6 @@
                                           [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
                                                             andMessage:NSLocalizedString(@"Alert error API message", nil)];
                                           
-                                          [self hideLoader];
                                           [sender setUserInteractionEnabled:YES];
                                       }];
         }

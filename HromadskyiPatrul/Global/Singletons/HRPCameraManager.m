@@ -119,23 +119,21 @@
 }
 
 - (void)timerTicked:(NSTimer *)timer {
-//    if (_videoSessionMode != NSTimerVideoSessionModeViolation) {
-        _currentTimerValue++;
+    _currentTimerValue++;
+    
+    if (_currentTimerValue == _sessionDuration) {
+        if (_videoSessionMode == NSTimerVideoSessionModeStream)
+            _currentTimerValue = 0;
         
-        if (_currentTimerValue == _sessionDuration) {
-            if (_videoSessionMode == NSTimerVideoSessionModeStream)
-                _currentTimerValue = 0;
-            
-            else {
-                [_timer invalidate];
-            }
-            
-            // Stop Video & Audio recording
-            [self stopVideoRecording];
+        else {
+            [_timer invalidate];
         }
         
-        _timerLabel.text = [self formattedTime:_currentTimerValue];
-//    }
+        // Stop Video & Audio recording
+        [self stopVideoRecording];
+    }
+    
+    _timerLabel.text = [self formattedTime:_currentTimerValue];
 }
 
 - (NSString *)formattedTime:(NSInteger)secondsTotal {
@@ -220,9 +218,10 @@
 - (void)startStreamVideoRecording {
     [self startAudioRecording];
     
-    _snippetVideoFileName = ([_snippetVideoFileName isEqualToString:@"snippet_video_1.mp4"] || _snippetVideoFileName == nil) ? @"snippet_video_0.mp4" : @"snippet_video_1.mp4";
-    NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetVideoFileName];
+    _snippetVideoFileName = ([_snippetVideoFileName isEqualToString:@"snippet_video_1.mp4"] || _snippetVideoFileName == nil) ?
+                                @"snippet_video_0.mp4" : @"snippet_video_1.mp4";
     
+    NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetVideoFileName];
     NSURL *videoFileURL = [NSURL fileURLWithPath:videoFilePath];
 
     [_videoFileOutput startRecordingToOutputFileURL:videoFileURL recordingDelegate:self];
@@ -236,9 +235,10 @@
         [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
         [_audioSession setActive:YES withOptions:0 error:nil];
         
-        _snippetAudioFileName = ([_snippetAudioFileName isEqualToString:@"snippet_audio_1.caf"] || _snippetAudioFileName == nil) ? @"snippet_audio_0.caf" : @"snippet_audio_1.caf";
+        _snippetAudioFileName = ([_snippetAudioFileName isEqualToString:@"snippet_audio_1.caf"] || _snippetAudioFileName == nil) ?
+                                    @"snippet_audio_0.caf" : @"snippet_audio_1.caf";
+        
         NSString *audioFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetAudioFileName];
-
         NSURL *audioFileURL = [NSURL fileURLWithPath:audioFilePath];
         
         _audioRecorder = [[AVAudioRecorder alloc] initWithURL:audioFileURL
