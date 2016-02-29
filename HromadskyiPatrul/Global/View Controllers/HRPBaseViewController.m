@@ -25,7 +25,19 @@
 }
 
 
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
+}
+
+
 #pragma mark - Methods -
+- (void)setRightBarButtonEnable:(BOOL)enable {
+    self.navigationItem.rightBarButtonItem.enabled = enable;
+}
+
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType forTime:(unsigned int)duration {
     NSString *colorString = nil;
     _sleepDuration = duration;

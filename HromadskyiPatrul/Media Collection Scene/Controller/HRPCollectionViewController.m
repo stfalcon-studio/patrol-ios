@@ -59,7 +59,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                      forTime:300];
 
     _statusView = [self customizeStatusBar];
-    self.navigationItem.rightBarButtonItem.enabled = YES;
 
     // Create Manager & Violations data source
     _violationManager = [[HRPViolationManager alloc] init];
@@ -102,6 +101,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewWillAppear:animated];
 
     [_violationManager uploadViolations];
+    [self setRightBarButtonEnable:YES];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -118,12 +118,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
-}
+
+// DELETE AFTER CHECK IT IN BASEVC
+//- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
+//    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
+//}
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
@@ -171,6 +173,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender {
     // Settings button
+    [self setRightBarButtonEnable:NO];
     HRPSettingsViewController *settingsTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTVC"];
     
     [self.navigationController pushViewController:settingsTVC animated:YES];
@@ -192,7 +195,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                            style:UIAlertActionStyleCancel
                                                          handler:nil];
     
-/*
+
+    // RECOMMENT IF NEED WORK WITH PHOTO
+    /*
     UIAlertAction *actionTakePhoto          =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Photo", nil)
                                                                          style:UIAlertActionStyleDefault
                                                                        handler:^(UIAlertAction *action) {

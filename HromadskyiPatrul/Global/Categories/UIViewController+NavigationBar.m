@@ -101,7 +101,7 @@
 }
 
 - (void)customizeLeftBarButtonWithImage:(UIImage *)image withActionEnabled:(BOOL)enabled {
-    UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 14.f, 44.f)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 14.f, 44.f)];
     
     [button setImage:image forState:UIControlStateNormal];
     
@@ -113,7 +113,7 @@
 }
 
 - (void)customizeRightBarButtonWithImage:(UIImage *)image withActionEnabled:(BOOL)enabled {
-    UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 20.f, 44.f)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 20.f, 44.f)];
         
     [button setImage:image forState:UIControlStateNormal];
     
@@ -125,12 +125,12 @@
 }
 
 - (void)customizeLeftBarButtonWithText:(NSString *)text withActionEnabled:(BOOL)enabled {
-    UILabel *label      =   [[UILabel alloc] init];
-    label.font          =   [UIFont systemFontOfSize:14.f weight:UIFontWeightUltraLight];
-    label.text          =   text;
+    UILabel *label = [[UILabel alloc] init];
+    label.font = [UIFont systemFontOfSize:14.f weight:UIFontWeightUltraLight];
+    label.text = text;
     [label sizeToFit];
     
-    UIButton *button    =   [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(label.frame) + 50.f, 44.f)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(label.frame) + 50.f, 44.f)];
 
     [button setTitle:text forState:UIControlStateNormal];
     [button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];

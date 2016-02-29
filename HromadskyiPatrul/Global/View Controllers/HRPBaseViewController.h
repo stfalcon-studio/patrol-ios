@@ -26,5 +26,6 @@ typedef NS_ENUM (NSInteger, BackgroundColorType) {
 - (void)hideLoader;
 - (BOOL)isInternetConnectionAvailable;
 - (BOOL)isServerURLLocal;
+- (void)setRightBarButtonEnable:(BOOL)enable;
 
 @end
