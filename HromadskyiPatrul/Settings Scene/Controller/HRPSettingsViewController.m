@@ -68,6 +68,10 @@
 
 - (IBAction)actionSendingTypeSwitchChangeValue:(UISwitch *)sender {
     [_settingsViewModel changeSendingType:sender.on];
+    
+    if (_didChangeAutoUploadItem) {
+        _didChangeAutoUploadItem(@(sender.on));
+    }
 }
 
 - (IBAction)actionNetworkSwitchChangeValue:(UISwitch *)sender {

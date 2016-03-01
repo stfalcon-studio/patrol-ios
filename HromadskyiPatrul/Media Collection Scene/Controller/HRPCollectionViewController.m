@@ -116,6 +116,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [flowLayout invalidateLayout]; //force the elements to get laid out again with the new size
 }
 
+
+// DELETE AFTER CHECK APP WORK
 /*
 #pragma mark - API -
 - (void)uploadPhotoWithParameters:(NSDictionary *)parameters
@@ -155,6 +157,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     // Settings button
     [self setRightBarButtonEnable:NO];
     HRPSettingsViewController *settingsTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTVC"];
+    
+    // Handler change Auto upload item
+    [settingsTVC setDidChangeAutoUploadItem:^(id item) {
+        if ([item boolValue] == YES) {
+            [_violationsCollectionView reloadData];
+        }
+    }];
     
     [self.navigationController pushViewController:settingsTVC animated:YES];
 }
