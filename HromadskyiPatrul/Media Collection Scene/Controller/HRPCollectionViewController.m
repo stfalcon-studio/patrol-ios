@@ -308,20 +308,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                     style:UIAlertActionStyleDefault
                                                                   handler:^(UIAlertAction *action) {
                                                                       if (violation.state != HRPViolationStateDone) {
-                                                                          /*[cell uploadViolationAuto:NO
-                                                                                          onSuccess:^(BOOL isFinished) {
-                                                                                              _violationsDataSource = _violationManager.violations;
-                                                                                          
-                                                                                              [_violationsCollectionView reloadData];
-                                                                                          }];*/
-                                                                          
                                                                           [_violationManager uploadViolation:violation
                                                                                                     fromCell:cell
                                                                                                   inAutoMode:NO
                                                                                                    onSuccess:^(BOOL isSuccess) {
                                                                                                        _violationsDataSource = _violationManager.violations;
-                                                                                                       
-                                                                                                       //[_violationsCollectionView reloadData];
                                                                                                    }];
                                                                       }
                                                                   }];
@@ -415,6 +406,15 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                     }];
     }
      */
+    
+    if (cell.violation.state != HRPViolationStateDone) {
+        [_violationManager uploadViolation:cell.violation
+                                  fromCell:cell
+                                inAutoMode:YES
+                                 onSuccess:^(BOOL isSuccess) {
+                                     _violationsDataSource = _violationManager.violations;
+                                 }];
+    }
     
     return cell;
 }
