@@ -31,6 +31,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 @interface HRPCollectionViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate>
 
+@property (strong, nonatomic) HRPViolationManager *violationManager;
 @property (strong, nonatomic) UIImagePickerController *imagePickerController;
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
@@ -40,8 +41,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 @implementation HRPCollectionViewController {
-    HRPViolationManager *_violationManager;
-    
     UIView *_statusView;
     NSMutableArray *_violationsDataSource;
 }
@@ -57,15 +56,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     _statusView = [self customizeStatusBar];
 
     // Create Manager & Violations data source
-    _violationManager = [[HRPViolationManager alloc] init];
-
-    [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
-        if (isFinished) {
-            _violationsDataSource = [NSMutableArray arrayWithArray:_violationManager.violations];
-
-            [_violationsCollectionView reloadData];
-        }
-    }];
+    _violationManager = [HRPViolationManager sharedManager];
     
     // Remove local file with violations array
     // Only for Debug mode
@@ -79,24 +70,22 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-settings"]
                         withActionEnabled:YES];
     
-    // Add Local Notifications Observers
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handlerViolationUploadSuccess:)
-                                                 name:@"violation_upload_success"
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(handlerViolationUploadError:)
-                                                 name:@"violation_upload_error"
-                                               object:nil];
-    
-    [self hideLoader];
+    [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
+        if (isFinished) {
+            _violationsDataSource = [NSMutableArray arrayWithArray:_violationManager.violations];
+            
+            [_violationsCollectionView reloadData];
+            [self hideLoader];
+        }
+        
+        else
+            [self hideLoader];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    [_violationManager uploadViolations];
     [self setRightBarButtonEnable:YES];
 }
 
@@ -109,11 +98,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
-
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
 
 // DELETE AFTER CHECK IT IN BASEVC
 //- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
@@ -253,23 +237,23 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 #pragma mark - NSNotification -
-- (void)handlerViolationUploadSuccess:(NSNotification *)notification {
-    HRPViolation *violation = notification.userInfo[@"violation"];
-    _violationsDataSource = _violationManager.violations;
-    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
-    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+//- (void)handlerViolationUploadSuccess:(NSNotification *)notification {
+//    HRPViolation *violation = notification.userInfo[@"violation"];
+//    _violationsDataSource = _violationManager.violations;
+//    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
+//    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+//
+//    [cell hideLoader];
+//}
 
-    [cell hideLoader];
-}
-
-- (void)handlerViolationUploadError:(NSNotification *)notification {
-    HRPViolation *violation = notification.userInfo[@"violation"];
-    _violationsDataSource = _violationManager.violations;
-    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
-    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
-  
-    [cell hideLoader];
-}
+//- (void)handlerViolationUploadError:(NSNotification *)notification {
+//    HRPViolation *violation = notification.userInfo[@"violation"];
+//    _violationsDataSource = _violationManager.violations;
+//    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
+//    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
+//  
+//    [cell hideLoader];
+//}
 
 #pragma mark - Methods -
 - (void)removeViolationFromCollection:(NSIndexPath *)indexPath {
@@ -324,19 +308,32 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                     style:UIAlertActionStyleDefault
                                                                   handler:^(UIAlertAction *action) {
                                                                       if (violation.state != HRPViolationStateDone) {
-                                                                          [cell showLoaderWithText:nil
-                                                                                andBackgroundColor:CellBackgroundColorTypeBlue
-                                                                                           forTime:300];
-                                                                     
-                                                                     [_violationManager uploadViolation:violation];
+                                                                          /*[cell uploadViolationAuto:NO
+                                                                                          onSuccess:^(BOOL isFinished) {
+                                                                                              _violationsDataSource = _violationManager.violations;
+                                                                                          
+                                                                                              [_violationsCollectionView reloadData];
+                                                                                          }];*/
+                                                                          
+                                                                          [_violationManager uploadViolation:violation
+                                                                                                    fromCell:cell
+                                                                                                  inAutoMode:NO
+                                                                                                   onSuccess:^(BOOL isSuccess) {
+                                                                                                       _violationsDataSource = _violationManager.violations;
+                                                                                                       
+                                                                                                       //[_violationsCollectionView reloadData];
+                                                                                                   }];
                                                                       }
                                                                   }];
-    
+
+    // ADD WHEN NEED
+    /*
     UIAlertAction *actionUploadViolations = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload Videos" : @"Upload Photos", nil)
                                                                      style:UIAlertActionStyleDefault
                                                                    handler:^(UIAlertAction *action) {
-                                                                      [_violationManager uploadViolations];
+                                                                       [_violationManager uploadViolations:_violationsCollectionView];
                                                                    }];
+     */
     
     if (violation.type == HRPViolationTypeVideo)
         [alertController addAction:actionOpenViolationVideo];
@@ -346,8 +343,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     if (violation.state != HRPViolationStateDone)
         [alertController addAction:actionUploadViolation];
     
+    // ADD WHEN NEED
+    /*
     if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
         [alertController addAction:actionUploadViolations];
+     */
     
     [alertController addAction:actionRemoveViolation];
     
@@ -401,6 +401,18 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                 [_violationsCollectionView reloadData];
             }
         }];
+    }
+     */
+    
+    // Check need upload videos
+    /*
+    if (cell.violation.state != HRPPhotoStateDone) {
+        [cell uploadVideoAuto:YES
+                    onSuccess:^(BOOL isFinished) {
+                        _violationsDataSource = _violationManager.violations;
+
+                        [collectionView reloadData];
+                    }];
     }
      */
     

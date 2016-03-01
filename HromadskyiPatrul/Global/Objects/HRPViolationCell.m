@@ -10,6 +10,7 @@
 #import "UIColor+HexColor.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UIImage+ChangeOriginalImage.h"
+#import "HRPViolationManager.h"
 
 
 @implementation HRPViolationCell {
@@ -55,7 +56,7 @@
                        onSuccess:^(UIImage *photoFromAlbum) {
                            if (photoFromAlbum) {
                                [UIView transitionWithView:self
-                                                 duration:0.7f
+                                                 duration:0.3f
                                                   options:UIViewAnimationOptionTransitionCrossDissolve
                                                animations:^{
                                                    _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
@@ -105,15 +106,37 @@
 - (void)getPhotoFromAlbumAtURL:(NSURL *)assetsURL
                      onSuccess:(void(^)(UIImage *image))success {
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    
     [library assetForURL:assetsURL
              resultBlock:^(ALAsset *asset) {
                  UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                      scale:0.5f
+                                                      scale:1.f
                                                 orientation:UIImageOrientationUp];
                  
                  success(image);
              }
             failureBlock:^(NSError *error) { }];
 }
+
+//- (void)uploadViolationAuto:(BOOL)isAutoUpload onSuccess:(void(^)(BOOL isFinished))finished {
+//    HRPViolationManager *violationManager = [HRPViolationManager sharedManager];
+//
+//    if (!_violation.isUploading) {
+////        _violation.isUploading = YES;
+//
+//        [self showLoaderWithText:nil
+//              andBackgroundColor:CellBackgroundColorTypeBlue
+//                         forTime:300];
+//        
+//        [violationManager uploadViolation:_violation
+//                               inAutoMode:isAutoUpload
+//                                onSuccess:^(BOOL isSuccess) {
+//                                    [_uploadStateButton setImage:[UIImage imageNamed:(isSuccess) ? @"icon-done" : @"icon-repeat"] forState:UIControlStateNormal];
+//                                    [self hideLoader];
+//                                    
+//                                    finished(YES);
+//                                }];
+//    }
+//}
 
 @end

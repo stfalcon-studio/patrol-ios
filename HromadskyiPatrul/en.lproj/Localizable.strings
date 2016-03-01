@@ -48,6 +48,7 @@
 "Alert add output video file error message"     =   "Could not add movie file output to the session";
 "Alert add still image error message"           =   "Could not add still image output to the session";
 "Alert API Upload error message"                =   "Could not upload video file to server. Please try again";
+"Alert Location error message"                  =   "This violation has no coordinates.";
 
 "Open a Photo"                                  =   "Open a Photo";
 "Open a Video"                                  =   "Open a Video";

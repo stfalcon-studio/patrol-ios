@@ -48,6 +48,7 @@
 "Alert add output video file error message"     =   "Не удалось добавить итоговый видео файл к текущей сессии";
 "Alert add still image error message"           =   "Не удалось добавить скриншот к текущей сессии";
 "Alert API Upload error message"                =   "Не удалось отправить видео на сервер. Пожалуйста, попробуйте еще раз";
+"Alert Location error message"                  =   "Это нарушение не имеет координат.";
 
 "Open a Photo"                                  =   "Просмотреть фото";
 "Open a Video"                                  =   "Просмотреть видео";

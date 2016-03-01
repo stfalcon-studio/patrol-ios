@@ -31,4 +31,6 @@ typedef NS_ENUM (NSInteger, CellBackgroundColorType) {
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration;
 - (void)hideLoader;
 
+//- (void)uploadViolationAuto:(BOOL)isAutoUpload onSuccess:(void(^)(BOOL isFinished))finished;
+
 @end
