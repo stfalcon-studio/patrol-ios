@@ -41,6 +41,8 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (strong, nonatomic) AVCaptureMovieFileOutput *videoFileOutput;
 @property (strong, nonatomic) AVCaptureVideoPreviewLayer *videoPreviewLayer;
 
+@property (strong, nonatomic) NSMutableArray *violations;
+
 @property (assign, nonatomic) BOOL isVideoSaving;
 @property (assign, nonatomic) int sessionDuration;
 @property (assign, nonatomic) int violationTime;
@@ -51,7 +53,7 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 - (void)startStreamVideoRecording;
 - (void)stopVideoSession;
 - (void)removeMediaSnippets;
-- (void)readPhotosCollectionFromFile;
+//- (void)readPhotosCollectionFromFile;
 - (int)getCurrentTimerValue;
 
 // Orientation

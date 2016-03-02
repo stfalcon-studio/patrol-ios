@@ -10,6 +10,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "HRPVideoRecordView.h"
 #import "HRPViolation.h"
+#import "HRPViolationManager.h"
 
 
 @implementation HRPCameraManager {
@@ -22,7 +23,6 @@
     NSDictionary *_audioRecordSettings;
     NSString *_arrayPath;
     NSString *_mediaFolderPath;
-    NSMutableArray *_violations;
     NSURL *_videoAssetURL;
     UIImage *_videoImageOriginal;
     CGRect _previewRect;
@@ -362,6 +362,8 @@
     DebugLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
 }
 
+// DELETE AFTER TESTING
+/*
 - (void)readPhotosCollectionFromFile {
     _violations = [NSMutableArray array];
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -377,6 +379,7 @@
             DebugLog(@"File does not exist");
     }
 }
+*/
 
 - (void)removeOldVideoFile {
     NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
@@ -632,10 +635,13 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     _arrayPath = paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
-    
+
+    [HRPViolationManager sharedManager].violations = _violations;
+
     [[NSFileManager defaultManager] createFileAtPath:_arrayPath
                                             contents:arrayData
                                           attributes:nil];
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"startVideoSession"
                                                         object:nil

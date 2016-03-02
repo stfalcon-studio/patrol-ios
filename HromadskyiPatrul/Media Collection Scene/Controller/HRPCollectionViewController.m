@@ -42,7 +42,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 @implementation HRPCollectionViewController {
     UIView *_statusView;
-    NSMutableArray *_violationsDataSource;
 }
 
 #pragma mark - Constructors -
@@ -69,10 +68,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                         withActionEnabled:NO
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-settings"]
                         withActionEnabled:YES];
+
     
+    // DELETE AFTER TESTING
+    /*
     [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
         if (isFinished) {
-            _violationsDataSource = [NSMutableArray arrayWithArray:_violationManager.violations];
+            _violationsDataSource = _violationManager.violations;
             
             [_violationsCollectionView reloadData];
             [self hideLoader];
@@ -81,18 +83,31 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         else
             [self hideLoader];
     }];
+     */
+    
+    // Add Notification Observers
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handlerViolationSuccessUpload:)
+                                                 name:@"violation_upload_success"
+                                               object:nil];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
     CGSize size = [[UIScreen mainScreen] bounds].size;
     [_violationManager modifyCellSize:size];
+    
+    [self hideLoader];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
+    
+    _violationManager.isCollectionShow = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -100,6 +115,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 
 // DELETE AFTER CHECK IT IN BASEVC
 //- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
@@ -248,6 +268,21 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 #pragma mark - NSNotification -
+- (void)handlerViolationSuccessUpload:(NSNotification *)notification {
+    HRPViolation *violation = notification.userInfo[@"violation"];
+    _violationsDataSource = _violationManager.violations;
+    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation]
+                                                inSection:0];
+    
+    [_violationsDataSource replaceObjectAtIndex:indexPath.row withObject:violation];
+
+    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
+    [cell customizeCellStyle];
+    [cell hideLoader];
+}
+
+// DELETE AFTER TESTING
 //- (void)handlerViolationUploadSuccess:(NSNotification *)notification {
 //    HRPViolation *violation = notification.userInfo[@"violation"];
 //    _violationsDataSource = _violationManager.violations;

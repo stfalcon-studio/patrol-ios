@@ -29,6 +29,10 @@
 
 #pragma mark - Methods -
 - (void)customizeCellStyle {
+    if (_violation.isUploading) {
+        [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
+    }
+    
     switch (_violation.state) {
         // HRPPhotoStateDone
         case 0: {

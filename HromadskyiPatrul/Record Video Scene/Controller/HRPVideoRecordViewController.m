@@ -9,6 +9,7 @@
 #import "HRPVideoRecordViewController.h"
 #import "HRPCollectionViewController.h"
 #import "HRPCameraManager.h"
+#import "HRPViolationManager.h"
 #import "HRPLabel.h"
 
 
@@ -28,6 +29,9 @@
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    // Create violations array
+    [HRPViolationManager sharedManager];
     
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -62,7 +66,8 @@
     
     _cameraManager = [HRPCameraManager sharedManager];
     
-    [_cameraManager readPhotosCollectionFromFile];
+//    [_cameraManager readPhotosCollectionFromFile];
+    _cameraManager.violations = [HRPViolationManager sharedManager].violations;
     [_cameraManager createCaptureSession];
 
     //Preview Layer
@@ -107,6 +112,7 @@
    
     // Transition to Collection Scene
     HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+    collectionVC.violationsDataSource = [HRPViolationManager sharedManager].violations;
     
     [self.navigationController pushViewController:collectionVC animated:YES];
 }

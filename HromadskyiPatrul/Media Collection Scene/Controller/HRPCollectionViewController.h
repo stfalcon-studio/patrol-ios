@@ -12,4 +12,6 @@
 
 @interface HRPCollectionViewController : HRPBaseViewController
 
+@property (strong, nonatomic) NSMutableArray *violationsDataSource;
+
 @end
