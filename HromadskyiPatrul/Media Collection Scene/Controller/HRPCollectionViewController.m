@@ -87,6 +87,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewWillAppear:animated];
 
     [self setRightBarButtonEnable:YES];
+    CGSize size = [[UIScreen mainScreen] bounds].size;
+    [_violationManager modifyCellSize:size];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -452,6 +454,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
     _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
+    
+    [_violationManager modifyCellSize:size];
+    
+    
+    // DELETE AFTER TESTING
+    /*
     CGFloat cellNewSide = 0.f;
     
     if (size.height > size.width)
@@ -461,6 +469,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         cellNewSide = (size.width - 8.f) / 3;
     
     _violationManager.cellSize = CGSizeMake(cellNewSide, cellNewSide);
+     */
 }
 
 
