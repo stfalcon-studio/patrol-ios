@@ -31,7 +31,7 @@
     [super viewDidLoad];
     
     // Create violations array
-    [HRPViolationManager sharedManager];
+    [[HRPViolationManager sharedManager] customizeManager];
     
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self

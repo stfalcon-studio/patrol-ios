@@ -534,25 +534,25 @@
         NSString *audioSnippetFilePath = [_mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
         AVURLAsset *audioSnippetAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath] options:nil];
         AVAssetTrack *videoAssetTrack = [[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-        UIImageOrientation videoAssetOrientation = UIImageOrientationUp;
+//        UIImageOrientation videoAssetOrientation = UIImageOrientationUp;
         BOOL isVideoAssetPortrait = NO;
         CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
         
         if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
-            videoAssetOrientation = UIImageOrientationRight;
+//            videoAssetOrientation = UIImageOrientationRight;
             isVideoAssetPortrait = YES;
         }
         
         if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
-            videoAssetOrientation = UIImageOrientationLeft;
+//            videoAssetOrientation = UIImageOrientationLeft;
             isVideoAssetPortrait = YES;
         }
         
-        if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0)
-            videoAssetOrientation = UIImageOrientationUp;
-        
-        if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0)
-            videoAssetOrientation = UIImageOrientationDown;
+//        if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0)
+//            videoAssetOrientation = UIImageOrientationUp;
+//        
+//        if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0)
+//            videoAssetOrientation = UIImageOrientationDown;
         
         // Set the video snippet time ranges in composition
         [videoCompositionTrack insertTimeRange:(i == 0) ? range_0 : range_1

@@ -541,8 +541,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     if  (_violationsDataSource.count == 1)
         [_violationsCollectionView reloadData];
     
-    HRPViolationCell *cell = [[HRPViolationCell alloc] initWithFrame:CGRectMake(0.f, 0.f, _violationManager.cellSize.width, _violationManager.cellSize.height)];
-    cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+//    HRPViolationCell *cell = [[HRPViolationCell alloc] initWithFrame:CGRectMake(0.f, 0.f, _violationManager.cellSize.width, _violationManager.cellSize.height)];
+    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
     [cell showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:10];
     
