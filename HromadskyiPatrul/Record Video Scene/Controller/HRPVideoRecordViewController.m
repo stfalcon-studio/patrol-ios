@@ -137,6 +137,10 @@
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
     if ([_cameraManager.locationsService isEnabled]) {
+        _cameraManager.locationsService.manager.delegate = _cameraManager;
+
+        [_cameraManager.locationsService.manager startUpdatingLocation];
+        
         if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
             _violationLabel.hidden = NO;
             _violationLabel.text = NSLocalizedString(@"Violation", nil);
