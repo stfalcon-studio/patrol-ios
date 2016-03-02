@@ -49,6 +49,7 @@
 "Alert add still image error message"           =   "Could not add still image output to the session";
 "Alert API Upload error message"                =   "Could not upload video file to server. Please try again";
 "Alert Location error message"                  =   "This violation has no coordinates.";
+"Alert GPS error message"                       =   "Please turn on GPS sensor to shoot video";
 
 "Open a Photo"                                  =   "Open a Photo";
 "Open a Video"                                  =   "Open a Video";

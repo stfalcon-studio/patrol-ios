@@ -51,10 +51,13 @@
         [self.manager startUpdatingLocation];
         
         return YES;
-    } else {
+    }
+    
+    else {
         self.isLocationCorrect = NO;
-        [self showAlertViewWithTitle:NSLocalizedString(@"Alert error location title", nil)
-                          andMessage:NSLocalizedString(@"Alert error location message off", nil)];
+        
+        [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
+                          andMessage:NSLocalizedString(@"Alert GPS error message", nil)];
     }
     
     return NO;

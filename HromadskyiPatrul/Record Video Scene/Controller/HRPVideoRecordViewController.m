@@ -136,16 +136,18 @@
 
 #pragma mark - UIGestureRecognizer -
 - (IBAction)tapGesture:(id)sender {
-    if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
-        _violationLabel.hidden = NO;
-        _violationLabel.text = NSLocalizedString(@"Violation", nil);
-        _cameraManager.isVideoSaving = YES;
-        _cameraManager.videoSessionMode = NSTimerVideoSessionModeViolation;
-        _cameraManager.violationTime = [_cameraManager getCurrentTimerValue];
-        _cameraManager.sessionDuration = _cameraManager.violationTime + 10;
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-
-        [_violationLabel startFlashing];
+    if ([_cameraManager.locationsService isEnabled]) {
+        if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
+            _violationLabel.hidden = NO;
+            _violationLabel.text = NSLocalizedString(@"Violation", nil);
+            _cameraManager.isVideoSaving = YES;
+            _cameraManager.videoSessionMode = NSTimerVideoSessionModeViolation;
+            _cameraManager.violationTime = [_cameraManager getCurrentTimerValue];
+            _cameraManager.sessionDuration = _cameraManager.violationTime + 10;
+            self.navigationItem.rightBarButtonItem.enabled = NO;
+            
+            [_violationLabel startFlashing];
+        }
     }
 }
 
