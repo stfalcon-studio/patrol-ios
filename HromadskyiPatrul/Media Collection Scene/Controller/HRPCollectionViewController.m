@@ -36,12 +36,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
+@property (strong, nonatomic) NSCache *cache;
 
 @end
 
 
 @implementation HRPCollectionViewController {
-    NSCache *_cache;
     UIView *_statusView;
 }
 
@@ -113,7 +113,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewDidDisappear:animated];
     
     _violationManager.isCollectionShow = NO;
-    [_cache removeAllObjects];
+    //[_cache removeAllObjects];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -313,10 +313,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                     style:UIAlertActionStyleDefault
                                                                   handler:^(UIAlertAction *action) {
                                                                       if (violation.state != HRPViolationStateDone) {
+                                                                          [cell showLoaderWithText:nil
+                                                                                andBackgroundColor:CellBackgroundColorTypeBlue
+                                                                                           forTime:300];
+                                                                          
                                                                           [_violationManager uploadViolation:violation
-                                                                                                    fromCell:cell
                                                                                                   inAutoMode:NO
                                                                                                    onSuccess:^(BOOL isSuccess) {
+                                                                                                       [cell hideLoader];
 //                                                                                                       _violationsArray = _violationManager.violations;
                                                                                                    }];
                                                                       }
@@ -368,17 +372,15 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     static NSString *cellIdentifier = @"ViolationCell";
     HRPViolationCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     HRPViolation *violation = _violationManager.violations[indexPath.row];
+
+    if (_violationManager.uploadingCount == 0 && violation.isUploading) {
+        violation.isUploading = NO;        
+        [_violationManager.violations replaceObjectAtIndex:indexPath.row withObject:violation];
+    }
+    
     cell.violation = violation;
 
-    DebugLog(@"Row = %li", (long)indexPath.row);
-    
     [cell customizeCellStyle:_cache];
-    
-//    [cell customizeCellStyle:photoFromCash
-//                   onSuccess:^(BOOL isFinished) {
-//                       if (!photoFromCash)
-//                           [_cache setObject:cell.photoImageView.image forKey:photoName];
-//                   }];
     
     
     // SET USERACTIVITY IN STORYBOARD - NOW IT DISABLED
@@ -420,13 +422,18 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                     }];
     }
      */
+   
     
-    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading) {
+    
+    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2) {
+        [cell showLoaderWithText:nil
+              andBackgroundColor:CellBackgroundColorTypeBlue
+                         forTime:300];
+
         [_violationManager uploadViolation:cell.violation
-                                  fromCell:cell
                                 inAutoMode:YES
                                  onSuccess:^(BOOL isSuccess) {
-//                                     _violationsArray = _violationManager.violations;
+                                     [cell hideLoader];
                                  }];
     }
     

@@ -96,11 +96,45 @@
         // DELETE AFTER TESTING
          */
         
+        dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+            //Background Thread
+            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:_violation.assetsPhotoURL]
+                               onSuccess:^(UIImage *photoFromAlbum) {
+                                   //Run UI Updates
+                                   dispatch_async(dispatch_get_main_queue(), ^(void) {
+                                       UIImage *image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
+
+                                       /*
+                                       UIImage *image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
+                                       _photoImageView.image = image;
+                                       _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                      
+                                       [cache setObject:image forKey:photoName];
+                                        */
+                                       
+                                       [UIView transitionWithView:self
+                                                         duration:0.1f
+                                                          options:UIViewAnimationOptionTransitionCrossDissolve
+                                                       animations:^{
+                                                           _photoImageView.image = image;
+                                                       }
+                                                       completion:^(BOOL finished) {
+                                                           _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                           
+                                                           [cache setObject:image forKey:photoName];
+                                                       }];
+                                       
+                                   });
+                               }];            
+        });
+        
+        
+        /*
         [self getPhotoFromAlbumAtURL:[NSURL URLWithString:_violation.assetsPhotoURL]
                            onSuccess:^(UIImage *photoFromAlbum) {
                                if (photoFromAlbum) {
                                    [UIView transitionWithView:self
-                                                     duration:0.3f
+                                                     duration:0.5f
                                                       options:UIViewAnimationOptionTransitionCrossDissolve
                                                    animations:^{
                                                        _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
@@ -110,22 +144,9 @@
                                                        
                                                        [cache setObject:_photoImageView.image forKey:photoName];
                                                    }];
-
-                                   /*
-                                   [UIView transitionWithView:self
-                                                     duration:0.3f
-                                                      options:UIViewAnimationOptionTransitionCrossDissolve
-                                                   animations:^{
-                                                       _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
-                                                   }
-                                                   completion:^(BOOL finished) {
-                                                       _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
-                                                           
-                                                        [cache setObject:_photoImageView.image forKey:photoName];
-                                                   }];
-                                    */
                                }
                            }];
+         */
     }
 }
 
@@ -169,7 +190,7 @@
     [library assetForURL:assetsURL
              resultBlock:^(ALAsset *asset) {
                  UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                      scale:0.5f
+                                                      scale:1.f
                                                 orientation:UIImageOrientationUp];
                  
                  success(image);

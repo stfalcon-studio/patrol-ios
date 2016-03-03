@@ -636,7 +636,7 @@
     _arrayPath = paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
 
-    [HRPViolationManager sharedManager].violations = _violations;
+    //[HRPViolationManager sharedManager].violations = _violations;
 
     [[NSFileManager defaultManager] createFileAtPath:_arrayPath
                                             contents:arrayData

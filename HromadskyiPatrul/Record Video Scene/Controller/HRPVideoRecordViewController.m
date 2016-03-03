@@ -106,13 +106,14 @@
 
 #pragma mark - Actions -
 - (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender {
+    sender.enabled = NO;
+    
     // Stop Video Record Session
     [_cameraManager stopVideoSession];
     [_cameraManager.videoPreviewLayer removeFromSuperlayer];
    
     // Transition to Collection Scene
     HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
-//    collectionVC.violationsArray = [HRPViolationManager sharedManager].violations;
     
     [self.navigationController pushViewController:collectionVC animated:YES];
 }
