@@ -27,7 +27,9 @@ typedef NS_ENUM (NSInteger, CellBackgroundColorType) {
 
 @property (strong, nonatomic) MBProgressHUD *HUD;
 
-- (void)customizeCellStyle;
+- (void)customizeCellStyle:(NSCache *)cache;
+
+//- (void)customizeCellStyle:(UIImage *)photo onSuccess:(void(^)(BOOL isFinished))isFinished;
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration;
 - (void)hideLoader;
 

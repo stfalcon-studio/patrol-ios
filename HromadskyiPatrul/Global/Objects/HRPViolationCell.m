@@ -10,7 +10,7 @@
 #import "UIColor+HexColor.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UIImage+ChangeOriginalImage.h"
-#import "HRPViolationManager.h"
+//#import "HRPViolationManager.h"
 
 
 @implementation HRPViolationCell {
@@ -18,6 +18,8 @@
 }
 
 #pragma mark - Actions -
+
+// DELETE AFTER TESTING
 - (IBAction)handlerUploadStateButtonTap:(HRPButton *)sender {
     if (_violation.state != HRPViolationStateDone) {
         [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
@@ -28,9 +30,14 @@
 
 
 #pragma mark - Methods -
-- (void)customizeCellStyle {
+- (void)customizeCellStyle:(NSCache *)cache {
+//- (void)customizeCellStyle:(UIImage *)photo onSuccess:(void (^)(BOOL))isFinished {
     if (_violation.isUploading) {
         [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
+    }
+    
+    else  /*if (!_violation.isUploading && _HUD.alpha) */ {
+        [self hideLoader];
     }
     
     switch (_violation.state) {
@@ -56,22 +63,70 @@
             break;
     }
     
-    [self getPhotoFromAlbumAtURL:[NSURL URLWithString:_violation.assetsPhotoURL]
-                       onSuccess:^(UIImage *photoFromAlbum) {
-                           if (photoFromAlbum) {
-                               [UIView transitionWithView:self
-                                                 duration:0.3f
-                                                  options:UIViewAnimationOptionTransitionCrossDissolve
-                                               animations:^{
-                                                   _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
-                                               }
-                                               completion:^(BOOL finished) {
-                                                   if (finished) {
-                                                       _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+    // Get violation photo from device Album
+    NSString *photoName = [NSString stringWithFormat:@"photo-%@", _violation.assetsPhotoURL];
+    UIImage *photoFromCash = [cache objectForKey:photoName];
+
+    if (photoFromCash) {
+        _photoImageView.image = [photoFromCash squareImageFromImage:photoFromCash scaledToSize:self.frame.size.width];
+        
+//        isFinished(YES);
+    }
+    
+    else {
+        /*
+//        dispatch_queue_t downloadQueue = dispatch_queue_create("image downloader", NULL);
+//        
+//        dispatch_async(downloadQueue, ^{
+            [self getPhotoFromAlbumAtURL:[NSURL URLWithString:_violation.assetsPhotoURL]
+                               onSuccess:^(UIImage *photoFromAlbum) {
+                                   if (photoFromAlbum)
+//                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
+                                           _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                           
+                                           [self setNeedsDisplay];
+                                           
+                                           isFinished(YES);
+//                                       });
+                               }];
+//        });
+
+        
+        // DELETE AFTER TESTING
+         */
+        
+        [self getPhotoFromAlbumAtURL:[NSURL URLWithString:_violation.assetsPhotoURL]
+                           onSuccess:^(UIImage *photoFromAlbum) {
+                               if (photoFromAlbum) {
+                                   [UIView transitionWithView:self
+                                                     duration:0.3f
+                                                      options:UIViewAnimationOptionTransitionCrossDissolve
+                                                   animations:^{
+                                                       _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
                                                    }
-                                               }];
-                           }
-                       }];
+                                                   completion:^(BOOL finished) {
+                                                       _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                       
+                                                       [cache setObject:_photoImageView.image forKey:photoName];
+                                                   }];
+
+                                   /*
+                                   [UIView transitionWithView:self
+                                                     duration:0.3f
+                                                      options:UIViewAnimationOptionTransitionCrossDissolve
+                                                   animations:^{
+                                                       _photoImageView.image = [photoFromAlbum squareImageFromImage:photoFromAlbum scaledToSize:self.frame.size.width];
+                                                   }
+                                                   completion:^(BOOL finished) {
+                                                       _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                           
+                                                        [cache setObject:_photoImageView.image forKey:photoName];
+                                                   }];
+                                    */
+                               }
+                           }];
+    }
 }
 
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration {
@@ -114,33 +169,12 @@
     [library assetForURL:assetsURL
              resultBlock:^(ALAsset *asset) {
                  UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                      scale:1.f
+                                                      scale:0.5f
                                                 orientation:UIImageOrientationUp];
                  
                  success(image);
              }
             failureBlock:^(NSError *error) { }];
 }
-
-//- (void)uploadViolationAuto:(BOOL)isAutoUpload onSuccess:(void(^)(BOOL isFinished))finished {
-//    HRPViolationManager *violationManager = [HRPViolationManager sharedManager];
-//
-//    if (!_violation.isUploading) {
-////        _violation.isUploading = YES;
-//
-//        [self showLoaderWithText:nil
-//              andBackgroundColor:CellBackgroundColorTypeBlue
-//                         forTime:300];
-//        
-//        [violationManager uploadViolation:_violation
-//                               inAutoMode:isAutoUpload
-//                                onSuccess:^(BOOL isSuccess) {
-//                                    [_uploadStateButton setImage:[UIImage imageNamed:(isSuccess) ? @"icon-done" : @"icon-repeat"] forState:UIControlStateNormal];
-//                                    [self hideLoader];
-//                                    
-//                                    finished(YES);
-//                                }];
-//    }
-//}
 
 @end

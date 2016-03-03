@@ -41,6 +41,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 @implementation HRPCollectionViewController {
+    NSCache *_cache;
     UIView *_statusView;
 }
 
@@ -53,6 +54,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                      forTime:300];
 
     _statusView = [self customizeStatusBar];
+
+    // Create Cache
+    // Get violation photo from device Album
+    _cache = [[NSCache alloc] init];
 
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
@@ -108,6 +113,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewDidDisappear:animated];
     
     _violationManager.isCollectionShow = NO;
+    [_cache removeAllObjects];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -120,15 +126,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-
-// DELETE AFTER CHECK IT IN BASEVC
-//- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-//    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-//    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
-//    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-//    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
-//}
-
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
@@ -138,37 +135,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [flowLayout invalidateLayout]; //force the elements to get laid out again with the new size
 }
 
-
-// DELETE AFTER CHECK APP WORK
-/*
-#pragma mark - API -
-- (void)uploadPhotoWithParameters:(NSDictionary *)parameters
-                        onSuccess:(void(^)(NSDictionary *successResult))success
-                        orFailure:(void(^)(AFHTTPRequestOperation *failureOperation))failure {
-    AFHTTPRequestOperationManager *requestOperationDomainManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://xn--80awkfjh8d.com/"]];
-    
-    NSString *pathAPI = [NSString stringWithFormat:@"api/%@/violation/create", [userApp objectForKey:@"userAppID"]];
-    
-    AFHTTPRequestOperation *operationRequest    =   [requestOperationDomainManager POST:pathAPI
-                                                                             parameters:parameters
-                                                              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                                                                  [formData appendPartWithFileData:parameters[@"photo"]
-                                                                                              name:@"photo"
-                                                                                          fileName:@"photo.jpg"
-                                                                                          mimeType:@"image/jpeg"];
-                                                              }
-                                                                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                                                                    if (operation.response.statusCode != 200)
-                                                                                        success(responseObject);
-                                                                                }
-                                                                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                                                                    failure(operation);
-                                                                                }];
-    
-    [operationRequest start];
-}
-
-*/
 
 #pragma mark - Actions -
 - (void)handlerLeftBarButtonTap:(UIBarButtonItem *)sender {
@@ -270,50 +236,43 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - NSNotification -
 - (void)handlerViolationSuccessUpload:(NSNotification *)notification {
     HRPViolation *violation = notification.userInfo[@"violation"];
-    _violationsDataSource = _violationManager.violations;
+//    _violationsArray = _violationManager.violations;
     
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation]
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_violationManager.violations indexOfObject:violation]
                                                 inSection:0];
     
-    [_violationsDataSource replaceObjectAtIndex:indexPath.row withObject:violation];
+    [_violationManager.violations replaceObjectAtIndex:indexPath.row withObject:violation];
 
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
-    [cell customizeCellStyle];
+//    NSString *photoName = [NSString stringWithFormat:@"photo-%li", (long)indexPath.row];
+//    UIImage *photoFromCash = [_cache objectForKey:photoName];
+
+    [cell customizeCellStyle:_cache];
+    
+    
+//    [cell customizeCellStyle:photoFromCash
+//                   onSuccess:^(BOOL isFinished) {
+//                       if (!photoFromCash)
+//                           [_cache setObject:cell.photoImageView.image forKey:photoName];
+//                   }];
+    
     [cell hideLoader];
 }
 
-// DELETE AFTER TESTING
-//- (void)handlerViolationUploadSuccess:(NSNotification *)notification {
-//    HRPViolation *violation = notification.userInfo[@"violation"];
-//    _violationsDataSource = _violationManager.violations;
-//    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
-//    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
-//
-//    [cell hideLoader];
-//}
-
-//- (void)handlerViolationUploadError:(NSNotification *)notification {
-//    HRPViolation *violation = notification.userInfo[@"violation"];
-//    _violationsDataSource = _violationManager.violations;
-//    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:[_violationsDataSource indexOfObject:violation] inSection:0]];
-//    [cell.uploadStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
-//  
-//    [cell hideLoader];
-//}
 
 #pragma mark - Methods -
 - (void)removeViolationFromCollection:(NSIndexPath *)indexPath {
     [_violationsCollectionView performBatchUpdates:^{
-        [_violationsDataSource removeObjectAtIndex:indexPath.row];
+        [_violationManager.violations removeObjectAtIndex:indexPath.row];
         [_violationsCollectionView deleteItemsAtIndexPaths:@[indexPath]];
     }
                                             completion:^(BOOL finished) {
-                                                [_violationManager saveViolationsToFile:_violationsDataSource];
+                                                [_violationManager saveViolationsToFile:_violationManager.violations];
                                             }];
 }
 
 - (void)showAlertController:(NSIndexPath *)indexPath {
-    HRPViolation *violation = _violationsDataSource[indexPath.row];
+    HRPViolation *violation = _violationManager.violations[indexPath.row];
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
@@ -358,7 +317,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                                     fromCell:cell
                                                                                                   inAutoMode:NO
                                                                                                    onSuccess:^(BOOL isSuccess) {
-                                                                                                       _violationsDataSource = _violationManager.violations;
+//                                                                                                       _violationsArray = _violationManager.violations;
                                                                                                    }];
                                                                       }
                                                                   }];
@@ -402,16 +361,25 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
-    return _violationsDataSource.count;
+    return _violationManager.violations.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *cellIdentifier = @"ViolationCell";
     HRPViolationCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    
-    cell.violation = _violationsDataSource[indexPath.row];
+    HRPViolation *violation = _violationManager.violations[indexPath.row];
+    cell.violation = violation;
 
-    [cell customizeCellStyle];
+    DebugLog(@"Row = %li", (long)indexPath.row);
+    
+    [cell customizeCellStyle:_cache];
+    
+//    [cell customizeCellStyle:photoFromCash
+//                   onSuccess:^(BOOL isFinished) {
+//                       if (!photoFromCash)
+//                           [_cache setObject:cell.photoImageView.image forKey:photoName];
+//                   }];
+    
     
     // SET USERACTIVITY IN STORYBOARD - NOW IT DISABLED
     /*
@@ -453,12 +421,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
      */
     
-    if (cell.violation.state != HRPViolationStateDone) {
+    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading) {
         [_violationManager uploadViolation:cell.violation
                                   fromCell:cell
                                 inAutoMode:YES
                                  onSuccess:^(BOOL isSuccess) {
-                                     _violationsDataSource = _violationManager.violations;
+//                                     _violationsArray = _violationManager.violations;
                                  }];
     }
     
@@ -491,26 +459,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
     
     [_violationManager modifyCellSize:size];
-    
-    
-    // DELETE AFTER TESTING
-    /*
-    CGFloat cellNewSide = 0.f;
-    
-    if (size.height > size.width)
-        cellNewSide = (size.width - 4.f) / 2;
-    
-    else
-        cellNewSide = (size.width - 8.f) / 3;
-    
-    _violationManager.cellSize = CGSizeMake(cellNewSide, cellNewSide);
-     */
 }
 
 
 #pragma mark - UIImagePickerControllerDelegate -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
-    if (_violationsDataSource.count > 0)
+    if (_violationManager.violations.count > 0)
         [_violationsCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
                                           atScrollPosition:UICollectionViewScrollPositionTop
                                                   animated:YES];
@@ -528,20 +482,20 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [_violationsCollectionView performBatchUpdates:^{
         NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
 
-        for (int i = 0; i <= _violationsDataSource.count; i++) {
+        for (int i = 0; i <= _violationManager.violations.count; i++) {
             [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
         }
         
-        (_violationsDataSource.count == 0) ? [_violationsDataSource addObject:violation] : [_violationsDataSource insertObject:violation atIndex:0];
+        (_violationManager.violations.count == 0) ? [_violationManager.violations addObject:violation] :
+                                                    [_violationManager.violations insertObject:violation atIndex:0];
         
         [_violationsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
     }
                                         completion:nil];
    
-    if  (_violationsDataSource.count == 1)
+    if  (_violationManager.violations.count == 1)
         [_violationsCollectionView reloadData];
     
-//    HRPViolationCell *cell = [[HRPViolationCell alloc] initWithFrame:CGRectMake(0.f, 0.f, _violationManager.cellSize.width, _violationManager.cellSize.height)];
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
     [cell showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:10];
@@ -567,8 +521,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                        completion:^(BOOL finished) {
                                                                            violation.type = HRPViolationTypePhoto;
                                                                            
-                                                                           [_violationsDataSource replaceObjectAtIndex:0 withObject:violation];
-                                                                           [_violationManager saveViolationsToFile:_violationsDataSource];
+                                                                           [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
+                                                                           [_violationManager saveViolationsToFile:_violationManager.violations];
                                                                        }];
                                                    }
                                                   failureBlock:^(NSError *error) { }];

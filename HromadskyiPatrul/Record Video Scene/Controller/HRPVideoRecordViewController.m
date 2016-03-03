@@ -112,7 +112,7 @@
    
     // Transition to Collection Scene
     HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
-    collectionVC.violationsDataSource = [HRPViolationManager sharedManager].violations;
+//    collectionVC.violationsArray = [HRPViolationManager sharedManager].violations;
     
     [self.navigationController pushViewController:collectionVC animated:YES];
 }
