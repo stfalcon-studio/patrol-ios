@@ -30,13 +30,99 @@
 
 
 #pragma mark - Methods -
-- (void)customizeCellStyle:(NSCache *)cache {
-//- (void)customizeCellStyle:(UIImage *)photo onSuccess:(void (^)(BOOL))isFinished {
+- (void)customizeCellStyle {
     if (_violation.isUploading) {
         [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
     }
     
-    else  /*if (!_violation.isUploading && _HUD.alpha) */ {
+    else {
+        [self hideLoader];
+    }
+    
+    switch (_violation.state) {
+        // HRPPhotoStateDone
+        case 0: {
+            [_uploadStateButton setImage:[UIImage imageNamed:@"icon-done"] forState:UIControlStateNormal];
+            _uploadStateButton.tag = 0;
+        }
+            break;
+            
+        // HRPPhotoStateRepeat
+        case 1: {
+            [_uploadStateButton setImage:[UIImage imageNamed:@"icon-repeat"] forState:UIControlStateNormal];
+            _uploadStateButton.tag = 1;
+        }
+            break;
+            
+        // HRPPhotoStateUpload
+        case 2: {
+            [_uploadStateButton setImage:[UIImage imageNamed:@"icon-upload"] forState:UIControlStateNormal];
+            _uploadStateButton.tag = 2;
+        }
+            break;
+    }
+}
+
+- (void)uploadImage:(NSIndexPath *)indexPath withCache:(NSCache *)cache {
+    __block UIImage *imageViolation = [UIImage imageNamed:@"icon-no-image"];
+    _photoImageView.image = imageViolation;
+
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+        NSString *imageName = [NSString stringWithFormat:@"photo-%li", (long)indexPath.row];
+        UIImage *imageFromCache = [cache objectForKey:imageName];
+        
+        if (imageFromCache) {
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                [UIView transitionWithView:self
+                                  duration:0.3f
+                                   options:UIViewAnimationOptionTransitionCrossDissolve
+                                animations:^{
+                                    _photoImageView.image = [imageFromCache squareImageFromImage:imageFromCache scaledToSize:self.frame.size.width];
+                                }
+                                completion:^(BOOL finished) {
+                                    _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                }];
+            });
+        }
+        
+        else {
+            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+            
+            [library assetForURL:[NSURL URLWithString:_violation.assetsPhotoURL]
+                     resultBlock:^(ALAsset *asset) {
+                         imageViolation = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
+                                                              scale:0.5f
+                                                        orientation:UIImageOrientationUp];
+                         
+                         dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                             [UIView transitionWithView:self
+                                               duration:0.3f
+                                                options:UIViewAnimationOptionTransitionCrossDissolve
+                                             animations:^{
+                                                 _photoImageView.image = imageViolation;
+                                             }
+                                             completion:^(BOOL finished) {
+                                                 _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                 
+                                                 if (!imageFromCache)
+                                                     [cache setObject:imageViolation forKey:imageName];
+                                             }];
+                         });
+                     }
+                    failureBlock:^(NSError *error) { }];
+        }
+    });
+}
+
+   
+   
+/*
+- (void)customizeCellStyle:(NSCache *)cache {
+    if (_violation.isUploading) {
+        [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
+    }
+    
+    else {
         [self hideLoader];
     }
     
@@ -95,7 +181,8 @@
         
         // DELETE AFTER TESTING
          */
-        
+
+/*
         dispatch_async(dispatch_get_global_queue( DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             //Background Thread
             [self getPhotoFromAlbumAtURL:[NSURL URLWithString:_violation.assetsPhotoURL]
@@ -111,7 +198,7 @@
                                                       
                                        [cache setObject:image forKey:photoName];
                                         */
-                                       
+                                       /*
                                        [UIView transitionWithView:self
                                                          duration:0.1f
                                                           options:UIViewAnimationOptionTransitionCrossDissolve
@@ -146,9 +233,11 @@
                                                    }];
                                }
                            }];
-         */
+         
     }
 }
+*/
+
 
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration {
     NSString *colorString = nil;

@@ -24,6 +24,7 @@
 #import "HRPCameraManager.h"
 #import "HRPViolationManager.h"
 #import "HRPViolation.h"
+#import "UIImage+ChangeOriginalImage.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -247,7 +248,37 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 //    NSString *photoName = [NSString stringWithFormat:@"photo-%li", (long)indexPath.row];
 //    UIImage *photoFromCash = [_cache objectForKey:photoName];
 
-    [cell customizeCellStyle:_cache];
+    [cell customizeCellStyle];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+        NSString *photoName = [NSString stringWithFormat:@"photo-%@", violation.assetsPhotoURL];
+        UIImage *photoFromCash = [_cache objectForKey:photoName];
+
+            if (photoFromCash) {
+                cell.photoImageView.image = [photoFromCash squareImageFromImage:photoFromCash scaledToSize:cell.frame.size.width];
+            }
+            
+            else {
+                UIImage *image = _violationManager.images[indexPath.row];
+                    
+                dispatch_sync(dispatch_get_main_queue(), ^(void) {
+
+                    [UIView transitionWithView:cell
+                                  duration:0.5f
+                                   options:UIViewAnimationOptionTransitionCrossDissolve
+                                animations:^{
+                                    cell.photoImageView.image = image;
+                                }
+                                completion:^(BOOL finished) {
+                                    cell.playVideoImageView.alpha = (violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                    
+                                    [_cache setObject:_violationManager.images[indexPath.row] forKey:photoName];
+                                }];
+        });
+        }
+    });
+    
+//    [cell customizeCellStyle:_cache];
     
     
 //    [cell customizeCellStyle:photoFromCash
@@ -380,7 +411,47 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     cell.violation = violation;
 
-    [cell customizeCellStyle:_cache];
+    [cell customizeCellStyle];
+    [cell uploadImage:indexPath withCache:_cache];
+    
+    /*
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+        NSString *photoName = [NSString stringWithFormat:@"photo-%@", violation.assetsPhotoURL];
+        UIImage *photoFromCash = [_cache objectForKey:photoName];
+        
+        if (photoFromCash) {
+            cell.photoImageView.image = [photoFromCash squareImageFromImage:photoFromCash scaledToSize:cell.frame.size.width];
+        }
+        
+        else {
+            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+            
+            [library assetForURL:[NSURL URLWithString:violation.assetsPhotoURL]
+                     resultBlock:^(ALAsset *asset) {
+                         UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
+                                                              scale:0.1f
+                                                        orientation:UIImageOrientationUp];
+                         
+                         dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                             
+                             [UIView transitionWithView:cell
+                                               duration:0.5f
+                                                options:UIViewAnimationOptionTransitionCrossDissolve
+                                             animations:^{
+                                                 cell.photoImageView.image = image;
+                                             }
+                                             completion:^(BOOL finished) {
+                                                 cell.playVideoImageView.alpha = (violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                 
+                                                 [_cache setObject:image forKey:photoName];
+                                             }];
+                         });
+                     }
+                    failureBlock:^(NSError *error) { }];
+        }
+    });
+*/
+//    [cell customizeCellStyle:_cache];
     
     
     // SET USERACTIVITY IN STORYBOARD - NOW IT DISABLED
