@@ -613,6 +613,7 @@
     ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
     
     (_violations.count == 0) ? [_violations addObject:violation] : [_violations insertObject:violation atIndex:0];
+    (_images.count == 0) ? [_images addObject:@"777"] : [_images insertObject:@"777" atIndex:0];
     
     [assetsLibrary writeImageToSavedPhotosAlbum:_videoImageOriginal.CGImage
                                     orientation:(ALAssetOrientation)_videoImageOriginal.imageOrientation
@@ -635,8 +636,6 @@
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     _arrayPath = paths[0];   // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
     _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
-
-    //[HRPViolationManager sharedManager].violations = _violations;
 
     [[NSFileManager defaultManager] createFileAtPath:_arrayPath
                                             contents:arrayData

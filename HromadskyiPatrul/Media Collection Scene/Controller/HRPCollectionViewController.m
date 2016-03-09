@@ -37,7 +37,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
-@property (strong, nonatomic) NSCache *cache;
+//@property (strong, nonatomic) NSCache *cache;
 
 @end
 
@@ -58,7 +58,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
     // Create Cache
     // Get violation photo from device Album
-    _cache = [[NSCache alloc] init];
+//    _cache = [[NSCache alloc] init];
 
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
@@ -237,56 +237,15 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - NSNotification -
 - (void)handlerViolationSuccessUpload:(NSNotification *)notification {
     HRPViolation *violation = notification.userInfo[@"violation"];
-//    _violationsArray = _violationManager.violations;
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_violationManager.violations indexOfObject:violation]
                                                 inSection:0];
     
     [_violationManager.violations replaceObjectAtIndex:indexPath.row withObject:violation];
-
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
-//    NSString *photoName = [NSString stringWithFormat:@"photo-%li", (long)indexPath.row];
-//    UIImage *photoFromCash = [_cache objectForKey:photoName];
 
     [cell customizeCellStyle];
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
-        NSString *photoName = [NSString stringWithFormat:@"photo-%@", violation.assetsPhotoURL];
-        UIImage *photoFromCash = [_cache objectForKey:photoName];
-
-            if (photoFromCash) {
-                cell.photoImageView.image = [photoFromCash squareImageFromImage:photoFromCash scaledToSize:cell.frame.size.width];
-            }
-            
-            else {
-                UIImage *image = _violationManager.images[indexPath.row];
-                    
-                dispatch_sync(dispatch_get_main_queue(), ^(void) {
-
-                    [UIView transitionWithView:cell
-                                  duration:0.5f
-                                   options:UIViewAnimationOptionTransitionCrossDissolve
-                                animations:^{
-                                    cell.photoImageView.image = image;
-                                }
-                                completion:^(BOOL finished) {
-                                    cell.playVideoImageView.alpha = (violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
-                                    
-                                    [_cache setObject:_violationManager.images[indexPath.row] forKey:photoName];
-                                }];
-        });
-        }
-    });
-    
-//    [cell customizeCellStyle:_cache];
-    
-    
-//    [cell customizeCellStyle:photoFromCash
-//                   onSuccess:^(BOOL isFinished) {
-//                       if (!photoFromCash)
-//                           [_cache setObject:cell.photoImageView.image forKey:photoName];
-//                   }];
-    
+    [cell uploadImage:indexPath inImages:_violationManager.images];
     [cell hideLoader];
 }
 
@@ -295,6 +254,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)removeViolationFromCollection:(NSIndexPath *)indexPath {
     [_violationsCollectionView performBatchUpdates:^{
         [_violationManager.violations removeObjectAtIndex:indexPath.row];
+        [_violationManager.images removeObjectAtIndex:indexPath.row];
         [_violationsCollectionView deleteItemsAtIndexPaths:@[indexPath]];
     }
                                             completion:^(BOOL finished) {
@@ -412,7 +372,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     cell.violation = violation;
 
     [cell customizeCellStyle];
-    [cell uploadImage:indexPath withCache:_cache];
+    [cell uploadImage:indexPath inImages:_violationManager.images];
+
+//    [cell uploadImage:indexPath withCache:_cache];
     
     /*
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
@@ -496,7 +458,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
    
     
     
-    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2) {
+    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2 && _violationManager.uploadingCount != 0) {
         [cell showLoaderWithText:nil
               andBackgroundColor:CellBackgroundColorTypeBlue
                          forTime:300];
@@ -508,6 +470,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                  }];
     }
     
+    cell.layer.shouldRasterize = YES;
+    cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
+
     return cell;
 }
 

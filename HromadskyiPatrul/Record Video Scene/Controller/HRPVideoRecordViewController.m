@@ -68,6 +68,7 @@
     
 //    [_cameraManager readPhotosCollectionFromFile];
     _cameraManager.violations = [HRPViolationManager sharedManager].violations;
+    _cameraManager.images = [HRPViolationManager sharedManager].images;
     [_cameraManager createCaptureSession];
 
     //Preview Layer

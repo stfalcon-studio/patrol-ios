@@ -29,7 +29,8 @@ typedef NS_ENUM (NSInteger, CellBackgroundColorType) {
 
 //- (void)customizeCellStyle:(NSCache *)cache;
 - (void)customizeCellStyle;
-- (void)uploadImage:(NSIndexPath *)indexPath withCache:(NSCache *)cache;
+- (void)uploadImage:(NSIndexPath *)indexPath inImages:(NSMutableArray *)images;
+//- (void)uploadImage:(NSIndexPath *)indexPath withCache:(NSCache *)cache;
 
 
 //- (void)customizeCellStyle:(UIImage *)photo onSuccess:(void(^)(BOOL isFinished))isFinished;
