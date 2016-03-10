@@ -94,12 +94,6 @@
                          imageViolation = [imageViolation squareImageFromImage:imageViolation scaledToSize:self.frame.size.width];
                          
                          dispatch_sync(dispatch_get_main_queue(), ^(void) {
-//                             _photoImageView.image = imageViolation;
-//                             _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
-//                                           
-//                             (images.count == 0) ?  [images addObject:imageViolation] :
-//                                                    [images insertObject:imageViolation atIndex:indexPath.row];
-
                              [UIView transitionWithView:self
                                                duration:0.1f
                                                 options:UIViewAnimationOptionTransitionCrossDissolve
@@ -122,7 +116,6 @@
 
 
 
-
 /*
 - (void)uploadImage:(NSIndexPath *)indexPath withCache:(NSCache *)cache {
     __block UIImage *imageViolation = [UIImage imageNamed:@"icon-no-image"];
@@ -133,10 +126,10 @@
     
     if (imageFromCache) {
         [UIView transitionWithView:self
-                          duration:0.3f
+                          duration:0.1f
                            options:UIViewAnimationOptionTransitionCrossDissolve
                         animations:^{
-                            _photoImageView.image = [imageFromCache squareImageFromImage:imageFromCache scaledToSize:self.frame.size.width];
+                            _photoImageView.image = imageFromCache;
                         }
                         completion:^(BOOL finished) {
                             _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
@@ -145,37 +138,38 @@
     
     else {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
-
-        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-        
-        [library assetForURL:[NSURL URLWithString:_violation.assetsPhotoURL]
-                 resultBlock:^(ALAsset *asset) {
-                     imageViolation = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                          scale:0.5f
-                                                    orientation:UIImageOrientationUp];
-                     
-                     dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                         [UIView transitionWithView:self
-                                           duration:0.2f
-                                            options:UIViewAnimationOptionTransitionCrossDissolve
-                                         animations:^{
-                                             _photoImageView.image = imageViolation;
-                                         }
-                                         completion:^(BOOL finished) {
-                                             _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
-                                             
-                                             if (!imageFromCache)
+            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+            
+            [library assetForURL:[NSURL URLWithString:_violation.assetsPhotoURL]
+                     resultBlock:^(ALAsset *asset) {
+                         imageViolation = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
+                                                              scale:1.f
+                                                        orientation:UIImageOrientationUp];
+                         
+                         imageViolation = [imageViolation squareImageFromImage:imageViolation scaledToSize:self.frame.size.width];
+                         
+                         dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                             [UIView transitionWithView:self
+                                               duration:0.1f
+                                                options:UIViewAnimationOptionTransitionCrossDissolve
+                                             animations:^{
+                                                 _photoImageView.image = imageViolation;
+                                             }
+                                             completion:^(BOOL finished) {
+                                                 _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
+                                                 
                                                  [cache setObject:imageViolation forKey:imageName];
-                                         }];
-                     });
-                 }
-                failureBlock:^(NSError *error) { }];
+                                             }];
+                         });
+                     }
+                    failureBlock:^(NSError *error) { }];
         });
     }
 }
+*/
 
-  */
-   
+
+
 /*
 - (void)customizeCellStyle:(NSCache *)cache {
     if (_violation.isUploading) {

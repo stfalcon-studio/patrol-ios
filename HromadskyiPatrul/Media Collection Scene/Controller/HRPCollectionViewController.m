@@ -24,7 +24,7 @@
 #import "HRPCameraManager.h"
 #import "HRPViolationManager.h"
 #import "HRPViolation.h"
-#import "UIImage+ChangeOriginalImage.h"
+//#import "UIImage+ChangeOriginalImage.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -37,7 +37,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
-//@property (strong, nonatomic) NSCache *cache;
+@property (strong, nonatomic) NSCache *cache;
 
 @end
 
@@ -58,7 +58,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
     // Create Cache
     // Get violation photo from device Album
-//    _cache = [[NSCache alloc] init];
+    _cache = [[NSCache alloc] init];
 
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
@@ -114,7 +114,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [super viewDidDisappear:animated];
     
     _violationManager.isCollectionShow = NO;
-    //[_cache removeAllObjects];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -223,6 +222,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     UIAlertAction *actionTakeVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction *action) {
+                                                                self.view.userInteractionEnabled = NO;
+                                                                
+                                                                [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+                                                                      andBackgroundColor:BackgroundColorTypeBlue
+                                                                                 forTime:300];
+                                                                
                                                                 [self.navigationController popViewControllerAnimated:YES];
                                                             }];
     
@@ -245,6 +250,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
 
     [cell customizeCellStyle];
+//    [cell uploadImage:indexPath withCache:_cache];
     [cell uploadImage:indexPath inImages:_violationManager.images];
     [cell hideLoader];
 }
