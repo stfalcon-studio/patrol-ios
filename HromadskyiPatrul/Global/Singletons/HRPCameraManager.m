@@ -281,24 +281,11 @@
 - (void)stopAudioRecording {
     if (_audioRecorder.recording) {
         [_audioRecorder stop];
-        
-        _captureSession = nil;
-        _videoFileOutput = nil;
-        _videoPreviewLayer = nil;
-        _audioSession = nil;
-        _audioRecorder = nil;
-        _audioPlayer = nil;
-        _violationTime = 0;
-        _currentTimerValue = 0;
-        _snippetVideoFileName = nil;
-        _snippetAudioFileName = nil;
     }
 }
 
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
     _videoPreviewLayer.frame = CGRectMake(0.f, 0.f, newSize.width, newSize.height);
-    
-//    [self setVideoSessionOrientation];
 }
 
 - (void)setVideoSessionOrientation {
@@ -676,7 +663,17 @@
         [self extractFirstFrameFromVideoFilePath:videoFileURL];
     }
     
-    else if (_videoSessionMode == NSTimerVideoSessionModeDismissed) {
+    else if (_videoSessionMode == NSTimerVideoSessionModeDismissed) {        
+        _captureSession = nil;
+        _videoFileOutput = nil;
+        _videoPreviewLayer = nil;
+        _audioSession = nil;
+        _audioRecorder = nil;
+        _audioPlayer = nil;
+        _violationTime = 0;
+        _currentTimerValue = 0;
+        _snippetVideoFileName = nil;
+        _snippetAudioFileName = nil;
         _videoFileOutput = nil;
     }
 }

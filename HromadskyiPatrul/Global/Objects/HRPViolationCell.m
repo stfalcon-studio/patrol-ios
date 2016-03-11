@@ -103,11 +103,9 @@
                                              completion:^(BOOL finished) {
                                                  _playVideoImageView.alpha = (_violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
                                                  
-                                                 [images addObject:imageViolation];
-                                                 
-//                                                 (images.count == 0) ?  [images addObject:imageViolation] :
-//                                                                        [images insertObject:imageViolation
-//                                                                                     atIndex:indexPath.row];
+                                                 (images.count == 0) ?  [images addObject:imageViolation] :
+                                                                        [images replaceObjectAtIndex:indexPath.row
+                                                                                          withObject:imageViolation];
                                              }];
                          });
                      }
