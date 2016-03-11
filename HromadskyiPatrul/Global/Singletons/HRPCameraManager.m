@@ -204,9 +204,6 @@
         }
     }
     
-    if ([videoConnection isVideoOrientationSupported])
-        [self setVideoSessionOrientation];
-    
     // Create StillImageOutput
     AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
     NSDictionary *outputSettings = [[NSDictionary alloc] initWithObjectsAndKeys: AVVideoCodecJPEG, AVVideoCodecKey, nil];
@@ -273,31 +270,35 @@
     
     // Stop Timer
     [_timer invalidate];
-    
-    _captureSession = nil;
-    _videoPreviewLayer = nil;
-    _audioSession = nil;
-    _audioRecorder = nil;
-    _audioPlayer = nil;
-    _violationTime = 0;
-    _currentTimerValue = 0;
-    _snippetVideoFileName = nil;
+    _timer = nil;
 }
 
 - (void)stopVideoRecording {
-    [self stopAudioRecording];
     [_videoFileOutput stopRecording];
+    [self stopAudioRecording];
 }
 
 - (void)stopAudioRecording {
-    if (_audioRecorder.recording)
+    if (_audioRecorder.recording) {
         [_audioRecorder stop];
+        
+        _captureSession = nil;
+        _videoFileOutput = nil;
+        _videoPreviewLayer = nil;
+        _audioSession = nil;
+        _audioRecorder = nil;
+        _audioPlayer = nil;
+        _violationTime = 0;
+        _currentTimerValue = 0;
+        _snippetVideoFileName = nil;
+        _snippetAudioFileName = nil;
+    }
 }
 
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
     _videoPreviewLayer.frame = CGRectMake(0.f, 0.f, newSize.width, newSize.height);
     
-    [self setVideoSessionOrientation];
+//    [self setVideoSessionOrientation];
 }
 
 - (void)setVideoSessionOrientation {
@@ -361,25 +362,6 @@
     
     DebugLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
 }
-
-// DELETE AFTER TESTING
-/*
-- (void)readPhotosCollectionFromFile {
-    _violations = [NSMutableArray array];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    _arrayPath = paths[0]; // [[paths objectAtIndex:0] stringByAppendingPathComponent:@"Photos"];
-    _arrayPath = [_arrayPath stringByAppendingPathComponent:[_userApp objectForKey:@"userAppEmail"]];
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:_arrayPath]) {
-        NSData *arrayData = [[NSData alloc] initWithContentsOfFile:_arrayPath];
-        
-        if (arrayData)
-            _violations = [NSMutableArray arrayWithArray:[NSKeyedUnarchiver unarchiveObjectWithData:arrayData]];
-        else
-            DebugLog(@"File does not exist");
-    }
-}
-*/
 
 - (void)removeOldVideoFile {
     NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
@@ -478,10 +460,6 @@
     NSMutableArray *allAudioTempSnippets = [NSMutableArray arrayWithArray:[allFolderFiles filteredArrayUsingPredicate:predicateAudio]];
     CMTimeRange range_0, range_1;
     
-//    NSArray *arr = @[[NSValue valueWithCMTimeRange:range_0]];
-//    
-//    range_1 = [arr[0] CMTimeRangeValue];
-    
     // Case 1 - get violation from one video & audio snippet
     if (_violationTime >= 20) {
         predicateVideo = [NSPredicate predicateWithFormat:@"SELF contains[cd] %@", _snippetVideoFileName];
@@ -534,25 +512,16 @@
         NSString *audioSnippetFilePath = [_mediaFolderPath stringByAppendingPathComponent:allAudioTempSnippets[i]];
         AVURLAsset *audioSnippetAsset = [[AVURLAsset alloc] initWithURL:[NSURL fileURLWithPath:audioSnippetFilePath] options:nil];
         AVAssetTrack *videoAssetTrack = [[videoSnippetAsset tracksWithMediaType:AVMediaTypeVideo] objectAtIndex:0];
-//        UIImageOrientation videoAssetOrientation = UIImageOrientationUp;
         BOOL isVideoAssetPortrait = NO;
         CGAffineTransform videoTransform = videoAssetTrack.preferredTransform;
         
         if (videoTransform.a == 0 && videoTransform.b == 1.0 && videoTransform.c == -1.0 && videoTransform.d == 0) {
-//            videoAssetOrientation = UIImageOrientationRight;
             isVideoAssetPortrait = YES;
         }
         
         if (videoTransform.a == 0 && videoTransform.b == -1.0 && videoTransform.c == 1.0 && videoTransform.d == 0) {
-//            videoAssetOrientation = UIImageOrientationLeft;
             isVideoAssetPortrait = YES;
         }
-        
-//        if (videoTransform.a == 1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == 1.0)
-//            videoAssetOrientation = UIImageOrientationUp;
-//        
-//        if (videoTransform.a == -1.0 && videoTransform.b == 0 && videoTransform.c == 0 && videoTransform.d == -1.0)
-//            videoAssetOrientation = UIImageOrientationDown;
         
         // Set the video snippet time ranges in composition
         [videoCompositionTrack insertTimeRange:(i == 0) ? range_0 : range_1

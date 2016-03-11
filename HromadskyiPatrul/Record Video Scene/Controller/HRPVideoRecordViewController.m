@@ -15,11 +15,12 @@
 
 @interface HRPVideoRecordViewController ()
 
+@property (strong, nonatomic) HRPCameraManager *cameraManager;
+
 @end
 
 
 @implementation HRPVideoRecordViewController {
-    HRPCameraManager *_cameraManager;
     UIView *_statusView;
     
     __weak IBOutlet HRPLabel *_violationLabel;
@@ -30,6 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _cameraManager = [HRPCameraManager sharedManager];
+
     // Create violations array
     [[HRPViolationManager sharedManager] customizeManager];
     
@@ -63,8 +66,6 @@
                         withActionEnabled:NO
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-action-close"]
                         withActionEnabled:YES];
-    
-    _cameraManager = [HRPCameraManager sharedManager];
     
 //    [_cameraManager readPhotosCollectionFromFile];
     _cameraManager.violations = [HRPViolationManager sharedManager].violations;

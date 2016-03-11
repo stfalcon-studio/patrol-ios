@@ -24,7 +24,6 @@
 #import "HRPCameraManager.h"
 #import "HRPViolationManager.h"
 #import "HRPViolation.h"
-//#import "UIImage+ChangeOriginalImage.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -337,7 +336,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     else
         [alertController addAction:actionOpenViolationPhoto];
     
-    if (violation.state != HRPViolationStateDone)
+    if (violation.state != HRPViolationStateDone && _violationManager.uploadingCount < 2)
         [alertController addAction:actionUploadViolation];
     
     // ADD WHEN NEED
@@ -379,47 +378,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
     [cell customizeCellStyle];
     [cell uploadImage:indexPath inImages:_violationManager.images];
-
-//    [cell uploadImage:indexPath withCache:_cache];
-    
-    /*
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
-        NSString *photoName = [NSString stringWithFormat:@"photo-%@", violation.assetsPhotoURL];
-        UIImage *photoFromCash = [_cache objectForKey:photoName];
-        
-        if (photoFromCash) {
-            cell.photoImageView.image = [photoFromCash squareImageFromImage:photoFromCash scaledToSize:cell.frame.size.width];
-        }
-        
-        else {
-            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-            
-            [library assetForURL:[NSURL URLWithString:violation.assetsPhotoURL]
-                     resultBlock:^(ALAsset *asset) {
-                         UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                              scale:0.1f
-                                                        orientation:UIImageOrientationUp];
-                         
-                         dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                             
-                             [UIView transitionWithView:cell
-                                               duration:0.5f
-                                                options:UIViewAnimationOptionTransitionCrossDissolve
-                                             animations:^{
-                                                 cell.photoImageView.image = image;
-                                             }
-                                             completion:^(BOOL finished) {
-                                                 cell.playVideoImageView.alpha = (violation.type == HRPViolationTypeVideo) ? 1.f : 0.f;
-                                                 
-                                                 [_cache setObject:image forKey:photoName];
-                                             }];
-                         });
-                     }
-                    failureBlock:^(NSError *error) { }];
-        }
-    });
-*/
-//    [cell customizeCellStyle:_cache];
     
     
     // SET USERACTIVITY IN STORYBOARD - NOW IT DISABLED
@@ -450,21 +408,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
      */
     
-    // Check need upload videos
-    /*
-    if (cell.violation.state != HRPPhotoStateDone) {
-        [cell uploadVideoAuto:YES
-                    onSuccess:^(BOOL isFinished) {
-                        _violationsDataSource = _violationManager.violations;
 
-                        [collectionView reloadData];
-                    }];
-    }
-     */
-   
-    
-    
-    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2 && _violationManager.uploadingCount != 0) {
+    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2 && [_violationManager canViolationUploadAuto:YES]) {
         [cell showLoaderWithText:nil
               andBackgroundColor:CellBackgroundColorTypeBlue
                          forTime:300];
@@ -476,9 +421,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                  }];
     }
     
-    cell.layer.shouldRasterize = YES;
-    cell.layer.rasterizationScale = [UIScreen mainScreen].scale;
-
     return cell;
 }
 
