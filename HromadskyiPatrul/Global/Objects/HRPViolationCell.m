@@ -112,11 +112,23 @@
 }
 
 - (void)showActivityLoader {
-    [_activityLoader startAnimating];
+    [UIView animateWithDuration:0.3f
+                     animations:^{
+                         _uploadStateButton.alpha = 0.f;
+                     }
+                     completion:^(BOOL finished) {
+                         [_activityLoader startAnimating];
+                     }];
 }
 
 - (void)hideActivityLoader {
-    [_activityLoader stopAnimating];
+    [UIView animateWithDuration:0.3f
+                     animations:^{
+                         _uploadStateButton.alpha = 1.f;
+                     }
+                     completion:^(BOOL finished) {
+                         [_activityLoader stopAnimating];
+                     }];
 }
 
 - (void)sleepTask {

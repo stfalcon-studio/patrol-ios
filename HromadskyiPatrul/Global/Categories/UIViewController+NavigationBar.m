@@ -101,7 +101,7 @@
 }
 
 - (void)customizeLeftBarButtonWithImage:(UIImage *)image withActionEnabled:(BOOL)enabled {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 14.f, 44.f)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 20.f, 60.f)];
     
     [button setImage:image forState:UIControlStateNormal];
     
@@ -113,7 +113,7 @@
 }
 
 - (void)customizeRightBarButtonWithImage:(UIImage *)image withActionEnabled:(BOOL)enabled {
-    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 20.f, 44.f)];
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.f, 0.f, 20.f, 60.f)];
         
     [button setImage:image forState:UIControlStateNormal];
     

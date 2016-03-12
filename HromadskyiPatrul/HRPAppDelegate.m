@@ -28,7 +28,7 @@ NSString const *DeviceMode = @"Device";
 @implementation HRPAppDelegate
 
 #pragma mark - Constructors -
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
     // Start Monitoring Network
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
     

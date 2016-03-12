@@ -194,6 +194,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                               style:UIAlertActionStyleDefault
                                                             handler:^(UIAlertAction *action) {
                                                                 self.view.userInteractionEnabled = NO;
+                                                                _violationManager.isCollectionShow = NO;
                                                                 
                                                                 [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
                                                                       andBackgroundColor:BackgroundColorTypeBlue
@@ -298,8 +299,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                   handler:^(UIAlertAction *action) {
                                                                       if (violation.state != HRPViolationStateDone) {
                                                                           [cell showActivityLoader];
-                                                                          _violationManager.isCollectionShow = NO;
-                                                                          
                                                                           [_violationManager uploadViolation:violation
                                                                                                   inAutoMode:NO
                                                                                                    onSuccess:^(BOOL isSuccess) {
@@ -322,22 +321,21 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     else
         [alertController addAction:actionOpenViolationPhoto];
     
-    if (violation.state != HRPViolationStateDone && _violationManager.uploadingCount < 2)
+    if (violation.state != HRPViolationStateDone && !violation.isUploading && _violationManager.uploadingCount < 2) {
         [alertController addAction:actionUploadViolation];
-    
+        [alertController addAction:actionRemoveViolation];
+    }
+
     // ADD WHEN NEED
     /*
     if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
         [alertController addAction:actionUploadViolations];
      */
     
-    [alertController addAction:actionRemoveViolation];
     
     [alertController addAction:actionCancel];
     
-    if (!violation.isUploading) {
-        [self presentViewController:alertController animated:YES completion:nil];
-    }
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 

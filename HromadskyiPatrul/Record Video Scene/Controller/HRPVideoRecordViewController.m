@@ -31,6 +31,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+
     _cameraManager = [HRPCameraManager sharedManager];
 
     // Create violations array
