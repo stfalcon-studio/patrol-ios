@@ -72,3 +72,6 @@
 
 "Start"                                         =   "START";
 "Violation"                                     =   "ATTENTION";
+
+"Alert error sleep message"                     =    "Recording was stopped incorrectly, the file was lost…";
+"Start from Recorder"                           =    "Show dashcam screen on launch";

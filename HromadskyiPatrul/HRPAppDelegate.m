@@ -10,7 +10,8 @@
 #import "AFNetworking.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
-#import "HRPCameraManager.h"
+//#import "HRPCameraManager.h"
+#import "HRPVideoRecordViewController.h"
 
 
 #if TARGET_IPHONE_SIMULATOR
@@ -21,11 +22,15 @@ NSString const *DeviceMode = @"Device";
 
 
 @interface HRPAppDelegate ()
-
 @end
 
 
-@implementation HRPAppDelegate
+@implementation HRPAppDelegate {
+    UIViewController *_presentedVC;
+    HRPVideoRecordViewController *_videoRecordVC;
+    
+    int _modeVC;
+}
 
 #pragma mark - Constructors -
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {    
@@ -53,10 +58,66 @@ NSString const *DeviceMode = @"Device";
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    _presentedVC = self.window.rootViewController;
+    
+    // HRPVideoRecordViewController
+    if ([[((UINavigationController *)_presentedVC).viewControllers lastObject] isKindOfClass:[HRPVideoRecordViewController class]]) {
+        _videoRecordVC = [((UINavigationController *)_presentedVC).viewControllers lastObject];
+        _modeVC = _videoRecordVC.cameraManager.videoSessionMode;
+        
+        [_videoRecordVC.cameraManager stopVideoSession];
+    }
+    
+    else
+        _videoRecordVC = nil;
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    if ([_videoRecordVC isKindOfClass:[HRPVideoRecordViewController class]]) {
+        _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+        
+        if (_modeVC == NSTimerVideoSessionModeStream) {
+            [_videoRecordVC startVideoRecord];
+
+            /*
+            if (!_videoRecordVC.cameraManager.timer)
+                [_videoRecordVC.cameraManager createTimerWithLabel:_videoRecordVC.cameraManager.timerLabel];
+            
+            [_videoRecordVC.cameraManager startStreamVideoRecording];
+             */
+        }
+        
+        else {
+            _videoRecordVC.violationLabel.text = nil;
+            _videoRecordVC.violationLabel.isLabelFlashing = NO;
+            _videoRecordVC.navigationItem.rightBarButtonItem.enabled = YES;
+            _videoRecordVC.cameraManager.isVideoSaving = NO;
+            _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+            
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Alert info title", nil)
+                                                                           message:NSLocalizedString(@"Alert error sleep message", nil)
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *actionOk = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Ok", nil)
+                                                               style:UIAlertActionStyleDefault
+                                                             handler:^(UIAlertAction *action) {
+                                                                 [_videoRecordVC startVideoRecord];
+
+                                                                 /*
+                                                                 if (!_videoRecordVC.cameraManager.timer)
+                                                                     [_videoRecordVC.cameraManager createTimerWithLabel:_videoRecordVC.cameraManager.timerLabel];
+                                                                 
+                                                                 [_videoRecordVC.cameraManager.captureSession startRunning];
+                                                                 [_videoRecordVC.cameraManager startStreamVideoRecording];
+                                                                  */
+                                                             }];
+            
+            [alert addAction:actionOk];
+            
+            [_videoRecordVC presentViewController:alert animated:YES completion:nil];
+        }
+    }
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -69,8 +130,8 @@ NSString const *DeviceMode = @"Device";
     [self saveContext];
 }
 
-#pragma mark - Core Data stack
 
+#pragma mark - Core Data stack
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
@@ -85,8 +146,10 @@ NSString const *DeviceMode = @"Device";
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
+    
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"HromadskyiPatrul" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
+    
     return _managedObjectModel;
 }
 
@@ -102,6 +165,7 @@ NSString const *DeviceMode = @"Device";
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"HromadskyiPatrul.sqlite"];
     NSError *error = nil;
     NSString *failureReason = @"There was an error creating or loading the application's saved data.";
+    
     if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
         // Report any error we got.
         NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -129,15 +193,18 @@ NSString const *DeviceMode = @"Device";
     if (!coordinator) {
         return nil;
     }
+    
     _managedObjectContext = [[NSManagedObjectContext alloc] init];
     [_managedObjectContext setPersistentStoreCoordinator:coordinator];
+    
     return _managedObjectContext;
 }
 
-#pragma mark - Core Data Saving support
 
+#pragma mark - Core Data Saving support
 - (void)saveContext {
     NSManagedObjectContext *managedObjectContext = self.managedObjectContext;
+   
     if (managedObjectContext != nil) {
         NSError *error = nil;
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {

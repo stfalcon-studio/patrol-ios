@@ -7,8 +7,15 @@
 //
 
 #import "HRPBaseViewController.h"
+#import "HRPCameraManager.h"
+#import "HRPLabel.h"
 
 
 @interface HRPVideoRecordViewController : HRPBaseViewController
+
+@property (strong, nonatomic) HRPCameraManager *cameraManager;
+@property (weak, nonatomic) IBOutlet HRPLabel *violationLabel;
+
+- (void)startVideoRecord;
 
 @end

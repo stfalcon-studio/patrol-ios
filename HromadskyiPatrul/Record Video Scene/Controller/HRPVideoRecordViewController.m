@@ -8,14 +8,10 @@
 
 #import "HRPVideoRecordViewController.h"
 #import "HRPCollectionViewController.h"
-#import "HRPCameraManager.h"
 #import "HRPViolationManager.h"
-#import "HRPLabel.h"
 
 
 @interface HRPVideoRecordViewController ()
-
-@property (strong, nonatomic) HRPCameraManager *cameraManager;
 
 @end
 
@@ -23,7 +19,6 @@
 @implementation HRPVideoRecordViewController {
     UIView *_statusView;
     
-    __weak IBOutlet HRPLabel *_violationLabel;
     __weak IBOutlet UILabel *_timerLabel;
 }
 
@@ -53,44 +48,7 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [_cameraManager removeMediaSnippets];
-    [_cameraManager.locationsService.manager startUpdatingLocation];
-
-    // Set View frame
-    self.view.frame = [UIScreen mainScreen].bounds;
-    
-    [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
-          andBackgroundColor:BackgroundColorTypeBlue
-                     forTime:2];
-
-    [self customizeNavigationBarWithTitle:NSLocalizedString(@"Record a Video", nil)
-                    andLeftBarButtonImage:[UIImage new]
-                        withActionEnabled:NO
-                   andRightBarButtonImage:[UIImage imageNamed:@"icon-action-close"]
-                        withActionEnabled:YES];
-    
-//    [_cameraManager readPhotosCollectionFromFile];
-    _cameraManager.violations = [HRPViolationManager sharedManager].violations;
-    _cameraManager.images = [HRPViolationManager sharedManager].images;
-    [_cameraManager createCaptureSession];
-
-    //Preview Layer
-    _cameraManager.videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_cameraManager.captureSession];
-    [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
-    [_cameraManager setVideoPreviewLayerOrientation:self.view.frame.size];
-    
-    [self.view.layer setMasksToBounds:YES];
-    [self.view layoutIfNeeded];
-
-    [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
-    
-    _statusView = [self customizeStatusBar];
-    [self customizeViewStyle];
-
-    _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
-
-    [_cameraManager.captureSession startRunning];
-    [_cameraManager startStreamVideoRecording];
+    [self startVideoRecord];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -168,6 +126,47 @@
 
 
 #pragma mark - Methods -
+- (void)startVideoRecord {
+    [_cameraManager removeMediaSnippets];
+    [_cameraManager.locationsService.manager startUpdatingLocation];
+    
+    // Set View frame
+    self.view.frame = [UIScreen mainScreen].bounds;
+    
+    [self showLoaderWithText:NSLocalizedString(@"Start a Video", nil)
+          andBackgroundColor:BackgroundColorTypeBlue
+                     forTime:2];
+    
+    [self customizeNavigationBarWithTitle:NSLocalizedString(@"Record a Video", nil)
+                    andLeftBarButtonImage:[UIImage new]
+                        withActionEnabled:NO
+                   andRightBarButtonImage:[UIImage imageNamed:@"icon-action-close"]
+                        withActionEnabled:YES];
+    
+    //    [_cameraManager readPhotosCollectionFromFile];
+    _cameraManager.violations = [HRPViolationManager sharedManager].violations;
+    _cameraManager.images = [HRPViolationManager sharedManager].images;
+    [_cameraManager createCaptureSession];
+    
+    //Preview Layer
+    _cameraManager.videoPreviewLayer = [[AVCaptureVideoPreviewLayer alloc] initWithSession:_cameraManager.captureSession];
+    [_cameraManager.videoPreviewLayer setVideoGravity:AVLayerVideoGravityResizeAspectFill];
+    [_cameraManager setVideoPreviewLayerOrientation:self.view.frame.size];
+    
+    [self.view.layer setMasksToBounds:YES];
+    [self.view layoutIfNeeded];
+    
+    [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
+    
+    _statusView = [self customizeStatusBar];
+    [self customizeViewStyle];
+    
+    _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+    
+    [_cameraManager.captureSession startRunning];
+    [_cameraManager startStreamVideoRecording];
+}
+
 - (void)customizeViewStyle {
     _violationLabel.hidden = YES;
     

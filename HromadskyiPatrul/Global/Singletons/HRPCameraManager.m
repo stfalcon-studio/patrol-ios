@@ -18,7 +18,6 @@
     AVAudioPlayer *_audioPlayer;
     AVAudioSession *_audioSession;
     AVMutableComposition *_composition;
-    UILabel *_timerLabel;
 
     NSDictionary *_audioRecordSettings;
     NSString *_arrayPath;
@@ -29,8 +28,8 @@
     
     CGFloat _latitude;
     CGFloat _longitude;
-    
     int _currentTimerValue;
+    
     NSString *_snippetVideoFileName;
     NSString *_snippetAudioFileName;
 }
@@ -219,9 +218,9 @@
                                 @"snippet_video_0.mp4" : @"snippet_video_1.mp4";
     
     NSString *videoFilePath = [_mediaFolderPath stringByAppendingPathComponent:_snippetVideoFileName];
-    NSURL *videoFileURL = [NSURL fileURLWithPath:videoFilePath];
+    _videoFileURL = [NSURL fileURLWithPath:videoFilePath];
 
-    [_videoFileOutput startRecordingToOutputFileURL:videoFileURL recordingDelegate:self];
+    [_videoFileOutput startRecordingToOutputFileURL:_videoFileURL recordingDelegate:self];
 }
 
 - (void)startAudioRecording {
@@ -271,6 +270,7 @@
     // Stop Timer
     [_timer invalidate];
     _timer = nil;
+    _currentTimerValue = 0;
 }
 
 - (void)stopVideoRecording {
@@ -289,7 +289,7 @@
 }
 
 - (void)setVideoSessionOrientation {
-    AVCaptureVideoOrientation videoOrientation  =   AVCaptureVideoOrientationPortraitUpsideDown;
+    AVCaptureVideoOrientation videoOrientation = AVCaptureVideoOrientationPortraitUpsideDown;
     UIDeviceOrientation deviceOrientation = [[UIDevice currentDevice] orientation];
     
     switch (deviceOrientation) {

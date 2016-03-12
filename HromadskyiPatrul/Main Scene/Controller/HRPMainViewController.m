@@ -55,9 +55,10 @@
     HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:
                                     [_mainViewModel selectNextSceneStoryboardID]];
     
-    HRPNavigationController *navBar = [[HRPNavigationController alloc] initWithRootViewController:nextVC];
-    
-    [self.navigationController presentViewController:navBar animated:YES completion:nil];
+//    HRPNavigationController *navBar = [[HRPNavigationController alloc] initWithRootViewController:nextVC];
+  
+    [self.navigationController pushViewController:nextVC animated:YES];
+//    [self.navigationController presentViewController:navBar animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning {

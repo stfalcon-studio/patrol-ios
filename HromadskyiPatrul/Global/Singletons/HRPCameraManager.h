@@ -44,6 +44,9 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (strong, nonatomic) NSMutableArray *violations;
 @property (strong, nonatomic) NSMutableArray *images;
 
+@property (strong, nonatomic) NSURL *videoFileURL;
+@property (strong, nonatomic) UILabel *timerLabel;
+
 @property (assign, nonatomic) BOOL isVideoSaving;
 @property (assign, nonatomic) int sessionDuration;
 @property (assign, nonatomic) int violationTime;
@@ -67,6 +70,7 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (strong, nonatomic) NSTimer *timer;
 @property (assign, nonatomic) NSTimerVideoSessionMode videoSessionMode;
 
+- (void)timerTicked:(NSTimer *)timer;
 - (void)createTimerWithLabel:(UILabel *)label;
 
 @end

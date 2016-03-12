@@ -473,8 +473,8 @@
                     <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
                     <connections>
                         <outlet property="_timerLabel" destination="BzL-3N-W4p" id="oGy-jp-eCJ"/>
-                        <outlet property="_violationLabel" destination="DxB-Zj-qIu" id="W0H-4V-scT"/>
                         <outlet property="view" destination="Lh8-SN-AYI" id="ktR-Ng-rGf"/>
+                        <outlet property="violationLabel" destination="DxB-Zj-qIu" id="8q5-I1-kCK"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="qxG-qD-MMO" userLabel="First Responder" sceneMemberID="firstResponder"/>
