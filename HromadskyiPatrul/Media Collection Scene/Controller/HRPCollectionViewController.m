@@ -36,7 +36,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
 @property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
-@property (strong, nonatomic) NSCache *cache;
 
 @end
 
@@ -55,10 +54,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
     _statusView = [self customizeStatusBar];
 
-    // Create Cache
-    // Get violation photo from device Album
-    _cache = [[NSCache alloc] init];
-
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
     
@@ -74,28 +69,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-settings"]
                         withActionEnabled:YES];
 
-    
-    // DELETE AFTER TESTING
-    /*
-    [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
-        if (isFinished) {
-            _violationsDataSource = _violationManager.violations;
-            
-            [_violationsCollectionView reloadData];
-            [self hideLoader];
-        }
-        
-        else
-            [self hideLoader];
-    }];
-     */
-    
     // Add Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerViolationSuccessUpload:)
                                                  name:@"violation_upload_success"
                                                object:nil];
-
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -107,12 +85,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [_violationManager modifyCellSize:size];
     
     [self hideLoader];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    
-    _violationManager.isCollectionShow = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -241,6 +213,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - NSNotification -
 - (void)handlerViolationSuccessUpload:(NSNotification *)notification {
     HRPViolation *violation = notification.userInfo[@"violation"];
+    HRPViolation *violationNext = notification.userInfo[@"violationNext"];
     
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[_violationManager.violations indexOfObject:violation]
                                                 inSection:0];
@@ -249,9 +222,23 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
 
     [cell customizeCellStyle];
-//    [cell uploadImage:indexPath withCache:_cache];
     [cell uploadImage:indexPath inImages:_violationManager.images];
-    [cell hideLoader];
+    [cell hideActivityLoader];
+    
+    // Upload next violation
+    if (violationNext) {
+        indexPath = [NSIndexPath indexPathForRow:[_violationManager.violations indexOfObject:violationNext]
+                                       inSection:0];
+        
+        HRPViolationCell *cellNext = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
+        [cellNext showActivityLoader];
+        
+        [_violationManager uploadViolation:violationNext
+                                inAutoMode:YES
+                                 onSuccess:^(BOOL isSuccess) {
+                                     [cellNext hideActivityLoader];
+                                 }];
+    }
 }
 
 
@@ -295,7 +282,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                          HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
 
                                                                          videoPlayerVC.videoURL = [NSURL URLWithString:violation.assetsVideoURL];
-                                                                                   
+                                                                         _violationManager.isCollectionShow = NO;
+          
                                                                          [self presentViewController:videoPlayerVC animated:YES completion:^{}];
                                                                      }];
     
@@ -309,15 +297,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                     style:UIAlertActionStyleDefault
                                                                   handler:^(UIAlertAction *action) {
                                                                       if (violation.state != HRPViolationStateDone) {
-                                                                          [cell showLoaderWithText:nil
-                                                                                andBackgroundColor:CellBackgroundColorTypeBlue
-                                                                                           forTime:300];
+                                                                          [cell showActivityLoader];
+                                                                          _violationManager.isCollectionShow = NO;
                                                                           
                                                                           [_violationManager uploadViolation:violation
                                                                                                   inAutoMode:NO
                                                                                                    onSuccess:^(BOOL isSuccess) {
-                                                                                                       [cell hideLoader];
-//                                                                                                       _violationsArray = _violationManager.violations;
+                                                                                                       [cell hideActivityLoader];
                                                                                                    }];
                                                                       }
                                                                   }];
@@ -410,14 +396,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
 
     if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2 && [_violationManager canViolationUploadAuto:YES]) {
-        [cell showLoaderWithText:nil
-              andBackgroundColor:CellBackgroundColorTypeBlue
-                         forTime:300];
-
+        [cell showActivityLoader];
+        
         [_violationManager uploadViolation:cell.violation
                                 inAutoMode:YES
                                  onSuccess:^(BOOL isSuccess) {
-                                     [cell hideLoader];
+                                     [cell hideActivityLoader];
                                  }];
     }
     
@@ -489,7 +473,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
    
-    [cell showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:10];
+    [cell showActivityLoader];
+//    [cell showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:10];
     
     [assetsLibrary writeImageToSavedPhotosAlbum:chosenImage.CGImage
                                     orientation:(ALAssetOrientation)chosenImage.imageOrientation
@@ -514,6 +499,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                            
                                                                            [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
                                                                            [_violationManager saveViolationsToFile:_violationManager.violations];
+                                                                           [cell hideActivityLoader];
                                                                        }];
                                                    }
                                                   failureBlock:^(NSError *error) { }];

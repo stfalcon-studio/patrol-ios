@@ -10,7 +10,6 @@
 #import "UIColor+HexColor.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "UIImage+ChangeOriginalImage.h"
-//#import "HRPViolationManager.h"
 
 
 @implementation HRPViolationCell {
@@ -18,11 +17,9 @@
 }
 
 #pragma mark - Actions -
-
-// DELETE AFTER TESTING
 - (IBAction)handlerUploadStateButtonTap:(HRPButton *)sender {
     if (_violation.state != HRPViolationStateDone) {
-        [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
+        [self showActivityLoader];
 
         _uploadStateButton.didButtonPress(_violation);
     }
@@ -32,11 +29,11 @@
 #pragma mark - Methods -
 - (void)customizeCellStyle {
     if (_violation.isUploading) {
-        [self showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:300];
+        [self showActivityLoader];
     }
     
     else {
-        [self hideLoader];
+        [self hideActivityLoader];
     }
     
     switch (_violation.state) {
@@ -114,52 +111,17 @@
     }
 }
 
-- (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration {
-    NSString *colorString = nil;
-    _sleepDuration = duration;
-    
-    switch (colorType) {
-        case CellBackgroundColorTypeBlue:
-            colorString = @"05A9F4";
-            break;
-            
-        case CellBackgroundColorTypeBlack:
-            colorString = @"000000";
-            break;
-    }
-    
-    _HUD = [[MBProgressHUD alloc] initWithView:self];
-    _HUD.labelText = text;
-    _HUD.yOffset = 0.f;
-    _HUD.color = [UIColor colorWithHexString:colorString alpha:0.6f];
-    
-    [self addSubview:_HUD];
-    [_HUD showWhileExecuting:@selector(sleepTask) onTarget:self withObject:nil animated:YES];
+- (void)showActivityLoader {
+    [_activityLoader startAnimating];
 }
 
-- (void)hideLoader {
-    [MBProgressHUD hideAllHUDsForView:self animated:YES];
-    _HUD = nil;
+- (void)hideActivityLoader {
+    [_activityLoader stopAnimating];
 }
 
 - (void)sleepTask {
     // Do something usefull in here instead of sleeping ...
     sleep(_sleepDuration);
-}
-
-- (void)getPhotoFromAlbumAtURL:(NSURL *)assetsURL
-                     onSuccess:(void(^)(UIImage *image))success {
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-    
-    [library assetForURL:assetsURL
-             resultBlock:^(ALAsset *asset) {
-                 UIImage *image = [UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]
-                                                      scale:1.f
-                                                orientation:UIImageOrientationUp];
-                 
-                 success(image);
-             }
-            failureBlock:^(NSError *error) { }];
 }
 
 @end

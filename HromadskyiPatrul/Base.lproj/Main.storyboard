@@ -246,6 +246,10 @@
                                                         <constraint firstAttribute="height" constant="44" id="W8R-Mf-Pjw"/>
                                                     </constraints>
                                                 </imageView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Rwh-3g-Rum">
+                                                    <rect key="frame" x="61" y="60" width="37" height="37"/>
+                                                    <color key="color" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
@@ -253,6 +257,8 @@
                                             <constraint firstItem="g2J-pk-qCv" firstAttribute="top" secondItem="rXR-mn-0lx" secondAttribute="top" id="6YN-kq-hNg"/>
                                             <constraint firstAttribute="trailing" secondItem="OaA-9P-2qT" secondAttribute="trailing" id="7DJ-YL-G7D"/>
                                             <constraint firstAttribute="bottom" secondItem="g2J-pk-qCv" secondAttribute="bottom" id="9kR-dH-Bhj"/>
+                                            <constraint firstItem="Rwh-3g-Rum" firstAttribute="centerY" secondItem="rXR-mn-0lx" secondAttribute="centerY" id="A2e-Fj-eSi"/>
+                                            <constraint firstItem="Rwh-3g-Rum" firstAttribute="centerX" secondItem="rXR-mn-0lx" secondAttribute="centerX" id="KXN-Gv-N7O"/>
                                             <constraint firstAttribute="centerX" secondItem="DEh-uv-RHa" secondAttribute="centerX" id="LuO-jo-AMW"/>
                                             <constraint firstItem="g2J-pk-qCv" firstAttribute="leading" secondItem="rXR-mn-0lx" secondAttribute="leading" id="Rcb-vc-Lgg"/>
                                             <constraint firstAttribute="centerY" secondItem="DEh-uv-RHa" secondAttribute="centerY" id="YsS-4b-MOI"/>
@@ -263,6 +269,7 @@
                                         </constraints>
                                         <size key="customSize" width="158" height="158"/>
                                         <connections>
+                                            <outlet property="activityLoader" destination="Rwh-3g-Rum" id="6Nb-Of-4Et"/>
                                             <outlet property="photoImageView" destination="g2J-pk-qCv" id="GoT-4o-wb4"/>
                                             <outlet property="playVideoImageView" destination="DEh-uv-RHa" id="UsP-Tm-aRe"/>
                                             <outlet property="uploadStateButton" destination="Y8d-oq-ydh" id="HeN-KR-WJf"/>

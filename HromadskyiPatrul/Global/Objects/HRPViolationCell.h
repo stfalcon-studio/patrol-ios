@@ -24,12 +24,13 @@ typedef NS_ENUM (NSInteger, CellBackgroundColorType) {
 @property (strong, nonatomic) IBOutlet UIImageView *photoImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *playVideoImageView;
 @property (strong, nonatomic) IBOutlet HRPButton *uploadStateButton;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityLoader;
 
 @property (strong, nonatomic) MBProgressHUD *HUD;
 
 - (void)customizeCellStyle;
 - (void)uploadImage:(NSIndexPath *)indexPath inImages:(NSMutableArray *)images;
-- (void)showLoaderWithText:(NSString *)text andBackgroundColor:(CellBackgroundColorType)colorType forTime:(unsigned int)duration;
-- (void)hideLoader;
+- (void)showActivityLoader;
+- (void)hideActivityLoader;
 
 @end
