@@ -41,19 +41,11 @@
 		B10721451C6B33F10054443A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B10721461C6B33F10054443A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
 		B10721471C6B33F10054443A /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
-		B10721491C6B33F10054443A /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805601C257C120058BAC8 /* 5.png */; };
-		B107214A1C6B33F10054443A /* 7.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805621C257C120058BAC8 /* 7.png */; };
-		B107214B1C6B33F10054443A /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055B1C257C120058BAC8 /* 0.png */; };
 		B107214C1C6B33F10054443A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
-		B107214D1C6B33F10054443A /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055D1C257C120058BAC8 /* 2.png */; };
-		B107214E1C6B33F10054443A /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055E1C257C120058BAC8 /* 3.png */; };
 		B107214F1C6B33F10054443A /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
-		B10721501C6B33F10054443A /* 6.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805611C257C120058BAC8 /* 6.png */; };
 		B10721511C6B33F10054443A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B10721521C6B33F10054443A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
 		B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
-		B10721541C6B33F10054443A /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055F1C257C120058BAC8 /* 4.png */; };
-		B10721551C6B33F10054443A /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055C1C257C120058BAC8 /* 1.png */; };
 		B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1669E1C1BD657C500C4156D /* MediaPlayer.framework */; };
 		B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
 		B12805231C25781A0058BAC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
@@ -74,14 +66,6 @@
 		B12805501C257AD40058BAC8 /* HRPSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B128054F1C257AD40058BAC8 /* HRPSettingsViewController.m */; };
 		B12805551C257B240058BAC8 /* HRPPhotoPreviewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805521C257B240058BAC8 /* HRPPhotoPreviewViewController.m */; };
 		B12805561C257B240058BAC8 /* HRPVideoPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805541C257B240058BAC8 /* HRPVideoPlayerViewController.m */; };
-		B12805631C257C120058BAC8 /* 0.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055B1C257C120058BAC8 /* 0.png */; };
-		B12805641C257C120058BAC8 /* 1.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055C1C257C120058BAC8 /* 1.png */; };
-		B12805651C257C120058BAC8 /* 2.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055D1C257C120058BAC8 /* 2.png */; };
-		B12805661C257C120058BAC8 /* 3.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055E1C257C120058BAC8 /* 3.png */; };
-		B12805671C257C120058BAC8 /* 4.png in Resources */ = {isa = PBXBuildFile; fileRef = B128055F1C257C120058BAC8 /* 4.png */; };
-		B12805681C257C120058BAC8 /* 5.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805601C257C120058BAC8 /* 5.png */; };
-		B12805691C257C120058BAC8 /* 6.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805611C257C120058BAC8 /* 6.png */; };
-		B128056A1C257C120058BAC8 /* 7.png in Resources */ = {isa = PBXBuildFile; fileRef = B12805621C257C120058BAC8 /* 7.png */; };
 		B12805701C2582950058BAC8 /* UIViewController+NavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */; };
 		B12805731C258B6A0058BAC8 /* HRPVideoRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805721C258B6A0058BAC8 /* HRPVideoRecordViewController.m */; };
 		B12805761C2591F60058BAC8 /* HRPLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805751C2591F60058BAC8 /* HRPLabel.m */; };
@@ -162,14 +146,6 @@
 		B12805521C257B240058BAC8 /* HRPPhotoPreviewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPPhotoPreviewViewController.m; sourceTree = "<group>"; };
 		B12805531C257B240058BAC8 /* HRPVideoPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoPlayerViewController.h; sourceTree = "<group>"; };
 		B12805541C257B240058BAC8 /* HRPVideoPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPlayerViewController.m; sourceTree = "<group>"; };
-		B128055B1C257C120058BAC8 /* 0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 0.png; sourceTree = "<group>"; };
-		B128055C1C257C120058BAC8 /* 1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 1.png; sourceTree = "<group>"; };
-		B128055D1C257C120058BAC8 /* 2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 2.png; sourceTree = "<group>"; };
-		B128055E1C257C120058BAC8 /* 3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 3.png; sourceTree = "<group>"; };
-		B128055F1C257C120058BAC8 /* 4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 4.png; sourceTree = "<group>"; };
-		B12805601C257C120058BAC8 /* 5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 5.png; sourceTree = "<group>"; };
-		B12805611C257C120058BAC8 /* 6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 6.png; sourceTree = "<group>"; };
-		B12805621C257C120058BAC8 /* 7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 7.png; sourceTree = "<group>"; };
 		B128056E1C2582950058BAC8 /* UIViewController+NavigationBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+NavigationBar.h"; sourceTree = "<group>"; };
 		B128056F1C2582950058BAC8 /* UIViewController+NavigationBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+NavigationBar.m"; sourceTree = "<group>"; };
 		B12805711C258B6A0058BAC8 /* HRPVideoRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordViewController.h; sourceTree = "<group>"; };
@@ -307,27 +283,11 @@
 		B12805101C2576AA0058BAC8 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B128055A1C257BF50058BAC8 /* Images */,
 				B12805221C25781A0058BAC8 /* Images.xcassets */,
 				B1AC898F1B879A07009D12D6 /* Main.storyboard */,
 				B1AC89941B879A07009D12D6 /* LaunchScreen.xib */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		B128055A1C257BF50058BAC8 /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				B128055B1C257C120058BAC8 /* 0.png */,
-				B128055C1C257C120058BAC8 /* 1.png */,
-				B128055D1C257C120058BAC8 /* 2.png */,
-				B128055E1C257C120058BAC8 /* 3.png */,
-				B128055F1C257C120058BAC8 /* 4.png */,
-				B12805601C257C120058BAC8 /* 5.png */,
-				B12805611C257C120058BAC8 /* 6.png */,
-				B12805621C257C120058BAC8 /* 7.png */,
-			);
-			path = Images;
 			sourceTree = "<group>";
 		};
 		B180FDC41C76FFE5004FF855 /* Model */ = {
@@ -740,19 +700,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B10721491C6B33F10054443A /* 5.png in Resources */,
-				B107214A1C6B33F10054443A /* 7.png in Resources */,
-				B107214B1C6B33F10054443A /* 0.png in Resources */,
 				B107214C1C6B33F10054443A /* Images.xcassets in Resources */,
-				B107214D1C6B33F10054443A /* 2.png in Resources */,
-				B107214E1C6B33F10054443A /* 3.png in Resources */,
 				B107214F1C6B33F10054443A /* Builds in Resources */,
-				B10721501C6B33F10054443A /* 6.png in Resources */,
 				B10721511C6B33F10054443A /* Localizable.strings in Resources */,
 				B10721521C6B33F10054443A /* Main.storyboard in Resources */,
 				B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */,
-				B10721541C6B33F10054443A /* 4.png in Resources */,
-				B10721551C6B33F10054443A /* 1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -760,19 +712,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B12805681C257C120058BAC8 /* 5.png in Resources */,
-				B128056A1C257C120058BAC8 /* 7.png in Resources */,
-				B12805631C257C120058BAC8 /* 0.png in Resources */,
 				B12805231C25781A0058BAC8 /* Images.xcassets in Resources */,
-				B12805651C257C120058BAC8 /* 2.png in Resources */,
-				B12805661C257C120058BAC8 /* 3.png in Resources */,
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
-				B12805691C257C120058BAC8 /* 6.png in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
-				B12805671C257C120058BAC8 /* 4.png in Resources */,
-				B12805641C257C120058BAC8 /* 1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1161,7 +1105,7 @@
 			baseConfigurationReference = 500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Stepan Tanasiychuk (LEV354M4R3)";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1183,7 +1127,7 @@
 			baseConfigurationReference = 789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Stepan Tanasiychuk (HU8ZS7UX2R)";
 				DEPLOYMENT_POSTPROCESSING = YES;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1197,6 +1141,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stfalcon.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
