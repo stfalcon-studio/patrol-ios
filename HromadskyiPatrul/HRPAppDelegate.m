@@ -10,8 +10,9 @@
 #import "AFNetworking.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
-//#import "HRPCameraManager.h"
 #import "HRPVideoRecordViewController.h"
+#import <CoreTelephony/CTCallCenter.h>
+#import <CoreTelephony/CTCall.h>
 
 
 #if TARGET_IPHONE_SIMULATOR
@@ -22,12 +23,14 @@ NSString const *DeviceMode = @"Device";
 
 
 @interface HRPAppDelegate ()
+
 @end
 
 
 @implementation HRPAppDelegate {
     UIViewController *_presentedVC;
     HRPVideoRecordViewController *_videoRecordVC;
+    CTCallCenter *_callCenter;
     
     int _modeVC;
 }
@@ -47,6 +50,21 @@ NSString const *DeviceMode = @"Device";
 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 
+    // Incoming Call Handler
+    _callCenter = [[CTCallCenter alloc] init];
+    __weak __typeof(self)weakSelf = self;
+    
+    [_callCenter setCallEventHandler:^(CTCall *call) {
+        if ([call.callState isEqualToString: CTCallStateIncoming]) {
+            [weakSelf appDidHide];
+        }
+
+        else if ([call.callState isEqualToString: CTCallStateConnected] ||
+                 [call.callState isEqualToString: CTCallStateDisconnected]) {
+             [weakSelf appDidShow];
+         }
+     }];
+    
     return YES;
 }
 
@@ -58,6 +76,27 @@ NSString const *DeviceMode = @"Device";
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    [self appDidHide];
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    [self appDidShow];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+}
+
+- (void)applicationWillTerminate:(UIApplication *)application {
+    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    // Saves changes in the application's managed object context before the application terminates.
+    [self saveContext];
+}
+
+
+#pragma mark - Methods -
+- (void)appDidHide {
     _presentedVC = self.window.rootViewController;
     
     // HRPVideoRecordViewController
@@ -72,20 +111,12 @@ NSString const *DeviceMode = @"Device";
         _videoRecordVC = nil;
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+- (void)appDidShow {
     if ([_videoRecordVC isKindOfClass:[HRPVideoRecordViewController class]]) {
         _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
         
         if (_modeVC == NSTimerVideoSessionModeStream) {
             [_videoRecordVC startVideoRecord];
-
-            /*
-            if (!_videoRecordVC.cameraManager.timer)
-                [_videoRecordVC.cameraManager createTimerWithLabel:_videoRecordVC.cameraManager.timerLabel];
-            
-            [_videoRecordVC.cameraManager startStreamVideoRecording];
-             */
         }
         
         else {
@@ -103,31 +134,13 @@ NSString const *DeviceMode = @"Device";
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *action) {
                                                                  [_videoRecordVC startVideoRecord];
-
-                                                                 /*
-                                                                 if (!_videoRecordVC.cameraManager.timer)
-                                                                     [_videoRecordVC.cameraManager createTimerWithLabel:_videoRecordVC.cameraManager.timerLabel];
-                                                                 
-                                                                 [_videoRecordVC.cameraManager.captureSession startRunning];
-                                                                 [_videoRecordVC.cameraManager startStreamVideoRecording];
-                                                                  */
-                                                             }];
+                                                            }];
             
             [alert addAction:actionOk];
             
             [_videoRecordVC presentViewController:alert animated:YES completion:nil];
         }
     }
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    // Saves changes in the application's managed object context before the application terminates.
-    [self saveContext];
 }
 
 

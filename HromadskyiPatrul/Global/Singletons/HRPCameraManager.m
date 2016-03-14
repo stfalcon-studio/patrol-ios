@@ -345,9 +345,9 @@
 }
 
 - (void)readAllFolderFile {
-    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
-    
-    DebugLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
+//    NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
+//    
+//    DebugLog(@"HRPVideoRecordViewController (335): FOLDER FILES = %@", allFolderFiles);
 }
 
 - (void)removeOldVideoFile {

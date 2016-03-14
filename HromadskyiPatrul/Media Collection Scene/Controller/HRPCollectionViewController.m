@@ -392,15 +392,16 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     }
      */
     
-
-    if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2 && [_violationManager canViolationUploadAuto:YES]) {
-        [cell showActivityLoader];
-        
-        [_violationManager uploadViolation:cell.violation
-                                inAutoMode:YES
-                                 onSuccess:^(BOOL isSuccess) {
-                                     [cell hideActivityLoader];
-                                 }];
+    if (_violationManager.isNetworkAvailable) {
+        if (cell.violation.state != HRPViolationStateDone && !cell.violation.isUploading && _violationManager.uploadingCount < 2 && [_violationManager canViolationUploadAuto:YES]) {
+            [cell showActivityLoader];
+            
+            [_violationManager uploadViolation:cell.violation
+                                    inAutoMode:YES
+                                     onSuccess:^(BOOL isSuccess) {
+                                         [cell hideActivityLoader];
+                                     }];
+        }
     }
     
     return cell;

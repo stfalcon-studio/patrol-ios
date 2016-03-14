@@ -99,6 +99,7 @@
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
+		B1C827761C946C4600AAEE4E /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1C827751C946C4600AAEE4E /* CoreTelephony.framework */; };
 		B1D9BA401C27072D00A98EEB /* HRPCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */; };
 		B1DFDBB51C36B9A000883D90 /* HRPSettingsViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B1DFDBB41C36B9A000883D90 /* HRPSettingsViewModel.m */; };
 		B1E751341C340E040034FCC6 /* HRPVideoPreview.m in Sources */ = {isa = PBXBuildFile; fileRef = B1E751331C340E040034FCC6 /* HRPVideoPreview.m */; };
@@ -200,6 +201,7 @@
 		B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		B1C07F031C21DD98002868F9 /* HRPVideoRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPVideoRecordView.h; sourceTree = "<group>"; };
 		B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoRecordView.m; sourceTree = "<group>"; };
+		B1C827751C946C4600AAEE4E /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		B1D9BA3E1C27072D00A98EEB /* HRPCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HRPCollectionViewController.h; sourceTree = "<group>"; };
 		B1D9BA3F1C27072D00A98EEB /* HRPCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPCollectionViewController.m; sourceTree = "<group>"; };
 		B1DFDBB31C36B9A000883D90 /* HRPSettingsViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HRPSettingsViewModel.h; path = "HromadskyiPatrul/Record Video Scene/Model/HRPSettingsViewModel.h"; sourceTree = SOURCE_ROOT; };
@@ -228,6 +230,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1C827761C946C4600AAEE4E /* CoreTelephony.framework in Frameworks */,
 				B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */,
 				B18F75B01B95A3B600143338 /* SystemConfiguration.framework in Frameworks */,
 				B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */,
@@ -250,6 +253,7 @@
 		866BE91730CC59D56766BD2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B1C827751C946C4600AAEE4E /* CoreTelephony.framework */,
 				B1669E1C1BD657C500C4156D /* MediaPlayer.framework */,
 				B11B928A1B9A118E00F03266 /* Foundation.framework */,
 				B11B92881B9A118600F03266 /* CoreGraphics.framework */,
@@ -688,10 +692,20 @@
 				TargetAttributes = {
 					B10721231C6B33F10054443A = {
 						DevelopmentTeam = HU8ZS7UX2R;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					B1AC897E1B879A06009D12D6 = {
 						CreatedOnToolsVersion = 6.4;
 						DevelopmentTeam = HU8ZS7UX2R;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					B1AC899A1B879A07009D12D6 = {
 						CreatedOnToolsVersion = 6.4;

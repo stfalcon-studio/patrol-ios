@@ -47,6 +47,10 @@
 	<string>This app will log your location into a database</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app will display your current location</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
