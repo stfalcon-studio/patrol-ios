@@ -36,11 +36,11 @@
 
 - (BOOL)isEnabled {
     if ([CLLocationManager locationServicesEnabled]) {
-        self.manager = [[CLLocationManager alloc] init];
+        _manager = [[CLLocationManager alloc] init];
         
-        if ([self.manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
+        if ([_manager respondsToSelector:@selector(requestWhenInUseAuthorization)]) {
             // Request for foreground location use
-            [self.manager requestWhenInUseAuthorization];
+            [_manager requestWhenInUseAuthorization];
             
             /*
              // Request for background location use
@@ -48,13 +48,13 @@
              */
         }
         
-        [self.manager startUpdatingLocation];
+        [_manager startUpdatingLocation];
         
         return YES;
     }
     
     else {
-        self.isLocationCorrect = NO;
+        _isLocationCorrect = NO;
         
         [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
                           andMessage:NSLocalizedString(@"Alert GPS error message", nil)];

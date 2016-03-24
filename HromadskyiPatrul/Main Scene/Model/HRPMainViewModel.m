@@ -36,10 +36,14 @@
 }
 
 - (NSString *)selectNextSceneStoryboardID {
-    NSString *selectedVC = @"VideoRecordVC";
+    NSString *selectedVC = @"CollectionVC";
+    BOOL isStartAsRecorder = [_userApp boolForKey:@"appStartStatus"];
     
     if (![_userApp objectForKey:@"userAppEmail"])
         selectedVC = @"LoginVC";
+    
+    else if (isStartAsRecorder)
+        selectedVC = @"VideoRecordVC";
     
     return selectedVC;
 }

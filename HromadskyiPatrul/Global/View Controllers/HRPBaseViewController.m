@@ -27,9 +27,16 @@
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"3AA6F4" alpha:1.f]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
+    
+    UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
+    [statusView setBackgroundColor:[UIColor colorWithHexString:@"2774BD" alpha:1.f]];
+    
+    [[UINavigationBar appearance] addSubview:statusView];
+
+//    [self customizeStatusBar];
 }
 
 

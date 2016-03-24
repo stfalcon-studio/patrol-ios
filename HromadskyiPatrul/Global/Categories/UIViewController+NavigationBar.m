@@ -32,16 +32,16 @@
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     [self.navigationController.navigationBar setBarStyle:UIBarStyleBlack];
-    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
+    [self.navigationController.navigationBar setBarTintColor:[UIColor colorWithHexString:@"3AA6F4" alpha:1.f]];
     [self.navigationController.navigationBar setTranslucent:YES];
 }
 
 - (UIView *)customizeStatusBar {
-    UIView *statusView  =   [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), 20.f)];
+    UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
     
-    [statusView setBackgroundColor:[UIColor colorWithHexString:@"0477BD" alpha:1.f]];
+    [statusView setBackgroundColor:[UIColor colorWithHexString:@"2774BD" alpha:1.f]];
     
-    [self.view addSubview:statusView];
+    [self.navigationController.navigationBar addSubview:statusView];
     
     return statusView;
 }

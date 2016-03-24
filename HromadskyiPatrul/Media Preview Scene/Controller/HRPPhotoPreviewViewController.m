@@ -51,7 +51,7 @@
     
     // Set Status Bar
     UIView *statusBarView = [[UIView alloc] initWithFrame:CGRectMake(0.f, 0.f, CGRectGetWidth(self.view.frame), 20.f)];
-    statusBarView.backgroundColor = [UIColor colorWithHexString:@"0477BD" alpha:1.f];
+    statusBarView.backgroundColor = [UIColor colorWithHexString:@"3AA6F4" alpha:1.f];
     [self.navigationController.navigationBar addSubview:statusBarView];
 }
 

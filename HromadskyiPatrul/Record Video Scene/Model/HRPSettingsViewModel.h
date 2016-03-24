@@ -16,5 +16,6 @@
 - (void)logout;
 - (void)changeSendingType:(BOOL)type;
 - (void)changeNetworkType:(BOOL)type;
+- (void)changeAppStartScene:(BOOL)type;
 
 @end

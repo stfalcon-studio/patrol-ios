@@ -17,6 +17,8 @@
 @property (strong, nonatomic) IBOutlet UILabel *sendingTypeLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *networkSwitch;
 @property (strong, nonatomic) IBOutlet UILabel *networkLabel;
+@property (weak, nonatomic) IBOutlet UISwitch *startSwitch;
+@property (weak, nonatomic) IBOutlet UILabel *startLabel;
 @property (strong, nonatomic) IBOutlet UIButton *logoutButton;
 
 @end
@@ -43,6 +45,8 @@
     _sendingTypeLabel.text = NSLocalizedString(@"Switch sending title", nil);
     _networkSwitch.on = [_settingsViewModel.userApp boolForKey:@"networkStatus"];
     _networkLabel.text = NSLocalizedString(@"Switch network title", nil);
+    _startSwitch.on = [_settingsViewModel.userApp boolForKey:@"appStartStatus"];
+    _startLabel.text = NSLocalizedString(@"Start from Recorder", nil);
     
     [_logoutButton setTitle:NSLocalizedString(@"Logout", nil) forState:UIControlStateNormal];
 }
@@ -78,14 +82,32 @@
     [_settingsViewModel changeNetworkType:sender.on];
 }
 
+- (IBAction)actionStartSwitchChangeValue:(UISwitch *)sender {
+    [_settingsViewModel changeAppStartScene:sender.on];
+}
+
+
+#pragma mark - UITableViewDataSource -
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+- (nullable NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 1) {
+        return [_settingsViewModel.userApp valueForKey:@"userAppEmail"];
+    }
+    
+    return nil;
+}
+
 
 #pragma mark - UITableViewDelegate -
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 0.f;
+    return (section == 1) ? 54.f : 0.f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
-    return 0.001f;
+    return (section == 0) ? 0.f: 0.001f;
 }
 
 @end

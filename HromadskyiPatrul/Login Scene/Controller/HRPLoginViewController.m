@@ -8,7 +8,7 @@
 
 #import "HRPLoginViewController.h"
 #import "HRPCollectionViewController.h"
-#import "HRPVideoRecordViewController.h"
+//#import "HRPVideoRecordViewController.h"
 #import "HRPButton.h"
 #import "UIColor+HexColor.h"
 #import <NSString+Email.h>
@@ -129,10 +129,10 @@
                                       onSuccess:^(NSDictionary *successResult) {
                                           [_emailTextField resignFirstResponder];
 
-                                          // Transition to VideoRecord scene
-                                          HRPVideoRecordViewController *videoRecordVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+                                          // Transition to Collection scene
+                                          HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
                                           
-                                          [self.navigationController pushViewController:videoRecordVC animated:YES];
+                                          [self.navigationController pushViewController:collectionVC animated:YES];
                                           [sender setUserInteractionEnabled:YES];
                                       }
                                       orFailure:^(AFHTTPRequestOperation *failureOperation) {

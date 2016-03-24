@@ -24,16 +24,16 @@
 #import "HRPCameraManager.h"
 #import "HRPViolationManager.h"
 #import "HRPViolation.h"
+#import "HRPCameraController.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
 typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
-@interface HRPCollectionViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate>
+@interface HRPCollectionViewController () <UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 @property (strong, nonatomic) HRPViolationManager *violationManager;
-@property (strong, nonatomic) UIImagePickerController *imagePickerController;
-@property (strong, nonatomic) IBOutlet HRPButton *cameraButton;
+@property (strong, nonatomic) HRPCameraController *imagePickerController;
 @property (strong, nonatomic) IBOutlet UICollectionView *violationsCollectionView;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *userNameBarButton;
 
@@ -61,12 +61,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     // Only for Debug mode
     //[_violationManager removeViolationsFromFile];
     
-    _userNameBarButton.title = [_violationManager.userApp valueForKey:@"userAppEmail"];
+    _userNameBarButton.title = NSLocalizedString(@"Public patrol", nil);
     
     [self customizeNavigationBarWithTitle:nil
                      andLeftBarButtonText:_userNameBarButton.title
                         withActionEnabled:NO
-                   andRightBarButtonImage:[UIImage imageNamed:@"icon-settings"]
+                   andRightBarButtonImage:[UIImage imageNamed:@"icon-settings-white"]
                         withActionEnabled:YES];
 
     // Add Notification Observers
@@ -95,6 +95,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -127,88 +131,156 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [self.navigationController pushViewController:settingsTVC animated:YES];
 }
 
-- (IBAction)actionCameraButtonTap:(HRPButton *)sender {
-    [UIView animateWithDuration:0.05f
-                     animations:^{
-                         sender.fillColor = [UIColor colorWithHexString:@"05A9F4" alpha:0.5f];
-                     } completion:^(BOOL finished) {
-                         sender.fillColor = [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
-                     }];
-    
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:nil
-                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:nil];
-    
-
-    // RECOMMENT IF NEED WORK WITH PHOTO
-    /*
-    UIAlertAction *actionTakePhoto          =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Photo", nil)
-                                                                         style:UIAlertActionStyleDefault
-                                                                       handler:^(UIAlertAction *action) {
-                                                                           if (isLocationServiceEnabled) {
-                                                                               dispatch_async(dispatch_get_main_queue(), ^{
-                                                                                   // Use device camera
-                                                                                   if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-                                                                                            UIImagePickerController *cameraVC       =   [[UIImagePickerController alloc] init];
-                                                                                       
-                                                                                            cameraVC.sourceType     =   UIImagePickerControllerSourceTypeCamera;
-                                                                                       
-                                                                                            cameraVC.mediaTypes     =   [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
-                                                                                       
-                                                                                            cameraVC.cameraCaptureMode  =   UIImagePickerControllerCameraCaptureModePhoto;
-                                                                                       
-                                                                                            cameraVC.allowsEditing  =   NO;
-                                                                                            cameraVC.delegate       =   self;
-                                                                                               
-                                                                                            cameraVC.modalPresentationStyle         =   UIModalPresentationCurrentContext;
-                                                                                       
-                                                                                            self.imagePickerController  =   cameraVC;
-                                                                                               
-                                                                                            if (![self.imagePickerController isBeingPresented])
-                                                                                                [self.navigationController presentViewController:self.imagePickerController animated:YES completion:nil];
-                                                                                            }
-                                                                                   
-                                                                                            else
-                                                                                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
-                                                                                                                            message:NSLocalizedString(@"Camera is not available", nil)
-                                                                                                                          delegate:nil
-                                                                                                                 cancelButtonTitle:nil
-                                                                                                                 otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-                                                                                            });
-                                                                                        }
-                                                                           
-                                                                                        else if ([locationsService isEnabled]) {
-                                                                                            locationsService.manager.delegate   =   self;
-                                                                                            isLocationServiceEnabled            =   YES;
-                                                                                       
-                                                                                            [self actionCameraButtonTap:self.cameraButton];
-                                                                                        }
-                                                                                    }];
-*/
-    
-    UIAlertAction *actionTakeVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
-                                                              style:UIAlertActionStyleDefault
-                                                            handler:^(UIAlertAction *action) {
-                                                                self.view.userInteractionEnabled = NO;
-                                                                _violationManager.isCollectionShow = NO;
-                                                                
-                                                                [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
-                                                                      andBackgroundColor:BackgroundColorTypeBlue
-                                                                                 forTime:300];
-                                                                
-                                                                [self.navigationController popViewControllerAnimated:YES];
-                                                            }];
-    
-    [alertController addAction:actionTakeVideo];
-//    [alertController addAction:actionTakePhoto];
-    [alertController addAction:actionCancel];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
+- (IBAction)handlerAlbumButtonTap:(UIButton *)sender {
+    // Use device Album
+    dispatch_async(dispatch_get_main_queue(), ^{
+        HRPCameraController *libraryVC = [[HRPCameraController alloc] init];
+        libraryVC.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        libraryVC.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeMovie];
+        libraryVC.allowsEditing = YES;
+        libraryVC.delegate = self;
+        
+        libraryVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+        _imagePickerController = libraryVC;
+        
+        if (![_imagePickerController isBeingPresented])
+            [self.navigationController presentViewController:_imagePickerController animated:YES completion:nil];
+    });
 }
+
+- (IBAction)handlerRecordButtonTap:(UIButton *)sender {
+    self.view.userInteractionEnabled = NO;
+    _violationManager.isCollectionShow = NO;
+
+    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+          andBackgroundColor:BackgroundColorTypeBlue
+                     forTime:300];
+    
+    if (_violationManager.isAllowedStartAsRecorder)
+        [self.navigationController popViewControllerAnimated:YES];
+    
+    else {
+        HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+        
+        [self.navigationController pushViewController:nextVC animated:YES];
+    }
+}
+
+- (IBAction)handlerCameraButtonTap:(UIButton *)sender {
+    // Use device camera
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([HRPCameraController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+            HRPCameraController *cameraVC = [[HRPCameraController alloc] init];
+            cameraVC.sourceType = UIImagePickerControllerSourceTypeCamera;
+            cameraVC.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeMovie];
+            cameraVC.videoQuality = UIImagePickerControllerQualityTypeHigh;
+            cameraVC.videoMaximumDuration = 15.0f;
+            cameraVC.allowsEditing = YES;
+            cameraVC.delegate = self;
+            
+            cameraVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+            _imagePickerController = cameraVC;
+            
+            if (![_imagePickerController isBeingPresented])
+                [self.navigationController presentViewController:_imagePickerController
+                                                        animated:YES
+                                                      completion:^{
+                                                          [cameraVC startUpdateLocations];
+                                                      }];
+        }
+        
+        else
+            [self showAlertViewWithTitle:NSLocalizedString(@"Error", nil) andMessage:NSLocalizedString(@"Camera is not available", nil)];
+    });
+}
+
+
+
+
+// DELETE AFTER TESTING
+///*
+//- (IBAction)actionCameraButtonTap:(HRPButton *)sender {
+//    [UIView animateWithDuration:0.05f
+//                     animations:^{
+//                         sender.fillColor = [UIColor colorWithHexString:@"05A9F4" alpha:0.5f];
+//                     } completion:^(BOOL finished) {
+//                         sender.fillColor = [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
+//                     }];
+//    
+//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+//                                                                             message:nil
+//                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
+//    
+//    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
+//                                                           style:UIAlertActionStyleCancel
+//                                                         handler:nil];
+//    
+//
+//    // RECOMMENT IF NEED WORK WITH PHOTO
+//    /*
+//    UIAlertAction *actionTakePhoto          =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Photo", nil)
+//                                                                         style:UIAlertActionStyleDefault
+//                                                                       handler:^(UIAlertAction *action) {
+//                                                                           if (isLocationServiceEnabled) {
+//                                                                               dispatch_async(dispatch_get_main_queue(), ^{
+//                                                                                   // Use device camera
+//                                                                                   if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+//                                                                                            UIImagePickerController *cameraVC       =   [[UIImagePickerController alloc] init];
+//                                                                                       
+//                                                                                            cameraVC.sourceType     =   UIImagePickerControllerSourceTypeCamera;
+//                                                                                       
+//                                                                                            cameraVC.mediaTypes     =   [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
+//                                                                                       
+//                                                                                            cameraVC.cameraCaptureMode  =   UIImagePickerControllerCameraCaptureModePhoto;
+//                                                                                       
+//                                                                                            cameraVC.allowsEditing  =   NO;
+//                                                                                            cameraVC.delegate       =   self;
+//                                                                                               
+//                                                                                            cameraVC.modalPresentationStyle         =   UIModalPresentationCurrentContext;
+//                                                                                       
+//                                                                                            self.imagePickerController  =   cameraVC;
+//                                                                                               
+//                                                                                            if (![self.imagePickerController isBeingPresented])
+//                                                                                                [self.navigationController presentViewController:self.imagePickerController animated:YES completion:nil];
+//                                                                                            }
+//                                                                                   
+//                                                                                            else
+//                                                                                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
+//                                                                                                                            message:NSLocalizedString(@"Camera is not available", nil)
+//                                                                                                                          delegate:nil
+//                                                                                                                 cancelButtonTitle:nil
+//                                                                                                                 otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
+//                                                                                            });
+//                                                                                        }
+//                                                                           
+//                                                                                        else if ([locationsService isEnabled]) {
+//                                                                                            locationsService.manager.delegate   =   self;
+//                                                                                            isLocationServiceEnabled            =   YES;
+//                                                                                       
+//                                                                                            [self actionCameraButtonTap:self.cameraButton];
+//                                                                                        }
+//                                                                                    }];
+//*/
+//    
+//    UIAlertAction *actionTakeVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
+//                                                              style:UIAlertActionStyleDefault
+//                                                            handler:^(UIAlertAction *action) {
+//                                                                self.view.userInteractionEnabled = NO;
+//                                                                _violationManager.isCollectionShow = NO;
+//                                                                
+//                                                                [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+//                                                                      andBackgroundColor:BackgroundColorTypeBlue
+//                                                                                 forTime:300];
+//                                                                
+//                                                                [self.navigationController popViewControllerAnimated:YES];
+//                                                            }];
+//    
+//    [alertController addAction:actionTakeVideo];
+////    [alertController addAction:actionTakePhoto];
+//    [alertController addAction:actionCancel];
+//    
+//    [self presentViewController:alertController animated:YES completion:nil];
+//}
 
 
 #pragma mark - NSNotification -
@@ -430,18 +502,26 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? 0.f : -20.f, size.width, 20.f);
-    
     [_violationManager modifyCellSize:size];
 }
 
 
 #pragma mark - UIImagePickerControllerDelegate -
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+- (void)imagePickerController:(HRPCameraController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     if (_violationManager.violations.count > 0)
         [_violationsCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
                                           atScrollPosition:UICollectionViewScrollPositionTop
                                                   animated:YES];
+    
+    [picker.locationsService.manager stopUpdatingLocation];
+
+    NSURL *videoURL = [info objectForKey:@"UIImagePickerControllerMediaURL"];
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
+    
+    NSTimeInterval durationInSeconds = 0.0;
+    
+    if (asset)
+        durationInSeconds = CMTimeGetSeconds(asset.duration);
     
     UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
     ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
@@ -505,12 +585,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                 }];
 }
 
-- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+- (void)imagePickerControllerDidCancel:(HRPCameraController *)picker {
     [picker dismissViewControllerAnimated:YES
                                completion:^{ }];
     
+    [picker.locationsService.manager stopUpdatingLocation];
+
     picker = nil;
-    self.imagePickerController = nil;
+    _imagePickerController = nil;
 }
 
 @end
