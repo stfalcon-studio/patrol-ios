@@ -49,7 +49,8 @@
 "Alert add still image error message"           =   "Не вдалося добавити зображення до поточної сесії";
 "Alert API Upload error message"                =   "Не вдалося відправити відео на сервер. Будь ласка, спробуйте ще раз";
 "Alert Location error message"                  =   "Це порушення не має координат.";
-"Alert GPS error message"                       =   "Please turn on GPS sensor to shoot video";
+"Alert GPS error message"                       =   "Щоб скористатися функцією зйомки відео, включіть датчик GPS";
+"Alert error video add"                         =   "Це відео вже існує!";
 
 "Open a Photo"                                  =   "Переглянути фото";
 "Open a Video"                                  =   "Переглянути відео";

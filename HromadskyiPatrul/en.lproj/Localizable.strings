@@ -50,6 +50,7 @@
 "Alert API Upload error message"                =   "Could not upload video file to server. Please try again";
 "Alert Location error message"                  =   "This violation has no coordinates.";
 "Alert GPS error message"                       =   "Please turn on GPS sensor to shoot video";
+"Alert error video add"                         =   "This video already exists!";
 
 "Open a Photo"                                  =   "Open a Photo";
 "Open a Video"                                  =   "Open a Video";

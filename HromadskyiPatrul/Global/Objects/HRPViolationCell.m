@@ -64,7 +64,7 @@
     __block UIImage *imageViolation = [UIImage imageNamed:@"icon-no-image"];
     _photoImageView.image = imageViolation;
     
-    id imageFromCache = images[indexPath.row];
+    id imageFromCache = (images.count > 0) ? images[indexPath.row] : nil;
     
     if (imageFromCache && ![imageFromCache isEqual:@"777"]) {
         [UIView transitionWithView:self
@@ -78,7 +78,7 @@
                         }];
     }
     
-    else {
+    else if ([imageFromCache isEqual:@"777"]) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
             ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
             

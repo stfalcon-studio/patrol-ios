@@ -50,6 +50,7 @@
 "Alert API Upload error message"                =   "Не удалось отправить видео на сервер. Пожалуйста, попробуйте еще раз";
 "Alert Location error message"                  =   "Это нарушение не имеет координат.";
 "Alert GPS error message"                       =   "Чтобы воспользоваться функцией съемки видео, включите датчик GPS";
+"Alert error video add"                         =   "Это видео уже существует!";
 
 "Open a Photo"                                  =   "Просмотреть фото";
 "Open a Video"                                  =   "Просмотреть видео";

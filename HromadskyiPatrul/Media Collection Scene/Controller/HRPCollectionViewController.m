@@ -55,7 +55,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     _statusView = [self customizeStatusBar];
 
     // Create Manager & Violations data source
-    _violationManager = [HRPViolationManager sharedManager];
+    _violationManager = [HRPViolationManager sharedManager];    
     
     // Remove local file with violations array
     // Only for Debug mode
@@ -508,81 +508,114 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIImagePickerControllerDelegate -
 - (void)imagePickerController:(HRPCameraController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    BOOL isContinueOn = YES;
+    
+    // Scroll to first Violation
     if (_violationManager.violations.count > 0)
         [_violationsCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
                                           atScrollPosition:UICollectionViewScrollPositionTop
                                                   animated:YES];
     
+    // Stop Geolocation service
     [picker.locationsService.manager stopUpdatingLocation];
 
-    NSURL *videoURL = [info objectForKey:@"UIImagePickerControllerMediaURL"];
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:videoURL options:nil];
-    
-    NSTimeInterval durationInSeconds = 0.0;
-    
-    if (asset)
-        durationInSeconds = CMTimeGetSeconds(asset.duration);
-    
-    UIImage *chosenImage = [info objectForKey:UIImagePickerControllerOriginalImage];
-    ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    picker = nil;
-    self.imagePickerController = nil;
+    _imagePickerController = nil;
+
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
     
-    HRPViolation *violation = [[HRPViolation alloc] init];
-    HRPImage *image = [[HRPImage alloc] init];
-    image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
-
-    [_violationsCollectionView performBatchUpdates:^{
-        NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
-
-        for (int i = 0; i <= _violationManager.violations.count; i++) {
-            [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    // Handler Video from Library
+    if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
+        NSString *videoURL = [[info valueForKey:UIImagePickerControllerReferenceURL] absoluteString];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.assetsVideoURL contains[cd] %@", videoURL];
+        NSMutableArray *existingVideos = [NSMutableArray arrayWithArray:[_violationManager.violations filteredArrayUsingPredicate:predicate]];
+        
+        if (existingVideos.count > 0) {
+            [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
+                              andMessage:NSLocalizedString(@"Alert error video add", nil)];
+            
+            isContinueOn = NO;
         }
-        
-        (_violationManager.violations.count == 0) ? [_violationManager.violations addObject:violation] :
-                                                    [_violationManager.violations insertObject:violation atIndex:0];
-        
-        [_violationsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
     }
-                                        completion:nil];
-   
-    if  (_violationManager.violations.count == 1)
-        [_violationsCollectionView reloadData];
-    
-    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-   
-    [cell showActivityLoader];
-//    [cell showLoaderWithText:nil andBackgroundColor:CellBackgroundColorTypeBlue forTime:10];
-    
-    [assetsLibrary writeImageToSavedPhotosAlbum:chosenImage.CGImage
-                                    orientation:(ALAssetOrientation)chosenImage.imageOrientation
-                                completionBlock:^(NSURL *assetURL, NSError *error) {
-                                    ALAssetsLibrary *libraryAssets = [[ALAssetsLibrary alloc] init];
-                                    [libraryAssets assetForURL:assetURL
-                                                   resultBlock:^(ALAsset *asset) {
-                                                       violation.assetsPhotoURL = [assetURL absoluteString];
-                                                       image.imageOriginalURL = [assetURL absoluteString];
-                                                       image.imageAvatar = [image resizeImage:chosenImage
-                                                                                       toSize:_violationManager.cellSize
-                                                                              andCropInCenter:YES];
-                                                       
-                                                       [UIView transitionWithView:cell.photoImageView
-                                                                         duration:0.5f
-                                                                          options:UIViewAnimationOptionTransitionCrossDissolve
-                                                                       animations:^{
-                                                                           cell.photoImageView.image = image.imageAvatar;
-                                                                       }
-                                                                       completion:^(BOOL finished) {
-                                                                           violation.type = HRPViolationTypePhoto;
-                                                                           
-                                                                           [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
-                                                                           [_violationManager saveViolationsToFile:_violationManager.violations];
-                                                                           [cell hideActivityLoader];
-                                                                       }];
-                                                   }
-                                                  failureBlock:^(NSError *error) { }];
-                                }];
+
+    if (isContinueOn) {
+        HRPViolation *violation = [[HRPViolation alloc] init];
+        HRPImage *image = [[HRPImage alloc] init];
+        image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
+        
+        // Prepare data source
+        [_violationsCollectionView performBatchUpdates:^{
+            NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
+            
+            for (int i = 0; i <= _violationManager.violations.count; i++) {
+                [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
+            
+            (_violationManager.violations.count == 0) ? [_violationManager.violations addObject:violation] :
+            [_violationManager.violations insertObject:violation atIndex:0];
+            
+            [_violationsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
+        }
+                                            completion:nil];
+        
+        if  (_violationManager.violations.count == 1)
+            [_violationsCollectionView reloadData];
+        
+        HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+        
+        [cell showActivityLoader];
+        
+        // Save Video to Library
+        [library writeVideoAtPathToSavedPhotosAlbum:[info objectForKey:UIImagePickerControllerMediaURL]
+                                    completionBlock:^(NSURL *assetVideoURL, NSError *error) {
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            if (error)
+                                                [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
+                                                                  andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
+                                            
+                                            else {
+                                                // Get Photo from Video
+                                                NSError *err = NULL;
+                                                AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:assetVideoURL options:nil];
+                                                AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:videoAsset];
+                                                imageGenerator.appliesPreferredTrackTransform = YES;
+                                                CMTime time = CMTimeMake(1, 2);
+                                                CGImageRef oneRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&err];
+                                                UIImage *photoFromVideo = [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:UIImageOrientationUp];
+                                                
+                                                // Save Photo from Video to Library
+                                                [library writeImageToSavedPhotosAlbum:photoFromVideo.CGImage
+                                                                          orientation:(ALAssetOrientation)photoFromVideo.imageOrientation
+                                                                      completionBlock:^(NSURL *assetPhotoURL, NSError *error) {
+                                                                          // Modify Violation item
+                                                                          violation.assetsVideoURL = [assetVideoURL absoluteString];
+                                                                          violation.assetsPhotoURL = [assetPhotoURL absoluteString];
+                                                                          image.imageOriginalURL = [assetPhotoURL absoluteString];
+                                                                          image.imageAvatar = [image resizeImage:photoFromVideo
+                                                                                                          toSize:_violationManager.cellSize
+                                                                                                 andCropInCenter:YES];
+                                                                          
+                                                                          [UIView transitionWithView:cell.photoImageView
+                                                                                            duration:0.5f
+                                                                                             options:UIViewAnimationOptionTransitionCrossDissolve
+                                                                                          animations:^{
+                                                                                              cell.photoImageView.image = image.imageAvatar;
+                                                                                          }
+                                                                                          completion:^(BOOL finished) {
+                                                                                              violation.type = HRPViolationTypeVideo;
+                                                                                              violation.latitude = (picker.sourceType == UIImagePickerControllerSourceTypeCamera) ? picker.latitude : 0.f;
+                                                                                              violation.longitude = (picker.sourceType == UIImagePickerControllerSourceTypeCamera) ? picker.longitude : 0.f;
+                                                                                              violation.date = [NSDate date];
+                                                                                              
+                                                                                              [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
+                                                                                              [_violationManager saveViolationsToFile:_violationManager.violations];
+                                                                                              [cell hideActivityLoader];
+                                                                                          }];
+                                                                      }];
+                                            }
+                                        });
+                                    }];
+    }
 }
 
 - (void)imagePickerControllerDidCancel:(HRPCameraController *)picker {
