@@ -174,7 +174,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             cameraVC.sourceType = UIImagePickerControllerSourceTypeCamera;
             cameraVC.mediaTypes = [NSArray arrayWithObject:(NSString *)kUTTypeMovie];
             cameraVC.videoQuality = UIImagePickerControllerQualityTypeHigh;
-            cameraVC.videoMaximumDuration = 15.0f;
+            cameraVC.videoMaximumDuration = 60.0f; // 1 min
             cameraVC.allowsEditing = YES;
             cameraVC.delegate = self;
             
