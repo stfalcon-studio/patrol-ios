@@ -216,7 +216,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-no-image" translatesAutoresizingMaskIntoConstraints="NO" id="g2J-pk-qCv" userLabel="Photo Image View">
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon-no-image" translatesAutoresizingMaskIntoConstraints="NO" id="g2J-pk-qCv" userLabel="Photo Image View">
                                                     <rect key="frame" x="0.0" y="0.0" width="158" height="158"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shadow" translatesAutoresizingMaskIntoConstraints="NO" id="OaA-9P-2qT" userLabel="Shadow Image View">

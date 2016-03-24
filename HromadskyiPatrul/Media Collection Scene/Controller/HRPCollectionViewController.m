@@ -508,6 +508,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIImagePickerControllerDelegate -
 - (void)imagePickerController:(HRPCameraController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    NSString *videoURL = [[info valueForKey:UIImagePickerControllerReferenceURL] absoluteString];
     BOOL isContinueOn = YES;
     
     // Scroll to first Violation
@@ -520,13 +521,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [picker.locationsService.manager stopUpdatingLocation];
 
     [picker dismissViewControllerAnimated:YES completion:NULL];
-    _imagePickerController = nil;
-
-    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    _imagePickerController = picker;
     
     // Handler Video from Library
     if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
-        NSString *videoURL = [[info valueForKey:UIImagePickerControllerReferenceURL] absoluteString];
         NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.assetsVideoURL contains[cd] %@", videoURL];
         NSMutableArray *existingVideos = [NSMutableArray arrayWithArray:[_violationManager.violations filteredArrayUsingPredicate:predicate]];
         
@@ -540,8 +538,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
     if (isContinueOn) {
         HRPViolation *violation = [[HRPViolation alloc] init];
-        HRPImage *image = [[HRPImage alloc] init];
-        image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
         
         // Prepare data source
         [_violationsCollectionView performBatchUpdates:^{
@@ -552,7 +548,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             }
             
             (_violationManager.violations.count == 0) ? [_violationManager.violations addObject:violation] :
-            [_violationManager.violations insertObject:violation atIndex:0];
+                                                        [_violationManager.violations insertObject:violation atIndex:0];
+
+            (_violationManager.images.count == 0) ? [_violationManager.images addObject:[UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage]] : [_violationManager.images insertObject:[UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage] atIndex:0];
             
             [_violationsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
         }
@@ -561,61 +559,79 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         if  (_violationManager.violations.count == 1)
             [_violationsCollectionView reloadData];
         
-        HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-        
-        [cell showActivityLoader];
-        
         // Save Video to Library
-        [library writeVideoAtPathToSavedPhotosAlbum:[info objectForKey:UIImagePickerControllerMediaURL]
-                                    completionBlock:^(NSURL *assetVideoURL, NSError *error) {
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            if (error)
-                                                [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
-                                                                  andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
-                                            
-                                            else {
-                                                // Get Photo from Video
-                                                NSError *err = NULL;
-                                                AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:assetVideoURL options:nil];
-                                                AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:videoAsset];
-                                                imageGenerator.appliesPreferredTrackTransform = YES;
-                                                CMTime time = CMTimeMake(1, 2);
-                                                CGImageRef oneRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&err];
-                                                UIImage *photoFromVideo = [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:UIImageOrientationUp];
-                                                
-                                                // Save Photo from Video to Library
-                                                [library writeImageToSavedPhotosAlbum:photoFromVideo.CGImage
-                                                                          orientation:(ALAssetOrientation)photoFromVideo.imageOrientation
-                                                                      completionBlock:^(NSURL *assetPhotoURL, NSError *error) {
-                                                                          // Modify Violation item
-                                                                          violation.assetsVideoURL = [assetVideoURL absoluteString];
-                                                                          violation.assetsPhotoURL = [assetPhotoURL absoluteString];
-                                                                          image.imageOriginalURL = [assetPhotoURL absoluteString];
-                                                                          image.imageAvatar = [image resizeImage:photoFromVideo
-                                                                                                          toSize:_violationManager.cellSize
-                                                                                                 andCropInCenter:YES];
-                                                                          
-                                                                          [UIView transitionWithView:cell.photoImageView
-                                                                                            duration:0.5f
-                                                                                             options:UIViewAnimationOptionTransitionCrossDissolve
-                                                                                          animations:^{
-                                                                                              cell.photoImageView.image = image.imageAvatar;
-                                                                                          }
-                                                                                          completion:^(BOOL finished) {
-                                                                                              violation.type = HRPViolationTypeVideo;
-                                                                                              violation.latitude = (picker.sourceType == UIImagePickerControllerSourceTypeCamera) ? picker.latitude : 0.f;
-                                                                                              violation.longitude = (picker.sourceType == UIImagePickerControllerSourceTypeCamera) ? picker.longitude : 0.f;
-                                                                                              violation.date = [NSDate date];
-                                                                                              
-                                                                                              [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
-                                                                                              [_violationManager saveViolationsToFile:_violationManager.violations];
-                                                                                              [cell hideActivityLoader];
-                                                                                          }];
-                                                                      }];
-                                            }
-                                        });
-                                    }];
+        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera)
+            [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
+        
+        else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
+            [self updateViolation:violation atAssetURL:[NSURL URLWithString:videoURL]];
     }
+}
+
+- (void)writeViolation:(HRPViolation *)violation atAssetURL:(NSURL *)videoURL {
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    
+    [library writeVideoAtPathToSavedPhotosAlbum:videoURL
+                                completionBlock:^(NSURL *assetVideoURL, NSError *error) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        if (error)
+                                            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
+                                                              andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
+                                        
+                                        else
+                                            [self updateViolation:violation atAssetURL:assetVideoURL];
+                                    });
+                                }];
+}
+
+- (void)updateViolation:(HRPViolation *)violation atAssetURL:(NSURL *)assetVideoURL {
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    HRPImage *image = [[HRPImage alloc] init];
+    image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
+
+    HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
+    [cell showActivityLoader];
+    
+    NSError *err = NULL;
+    AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:assetVideoURL options:nil];
+    AVAssetImageGenerator *imageGenerator = [[AVAssetImageGenerator alloc] initWithAsset:videoAsset];
+    imageGenerator.appliesPreferredTrackTransform = YES;
+    CMTime time = CMTimeMake(1, 2);
+    CGImageRef oneRef = [imageGenerator copyCGImageAtTime:time actualTime:NULL error:&err];
+    UIImage *photoFromVideo = [[UIImage alloc] initWithCGImage:oneRef scale:1.f orientation:UIImageOrientationUp];
+    
+    // Save Photo from Video to Library
+    [library writeImageToSavedPhotosAlbum:photoFromVideo.CGImage
+                              orientation:(ALAssetOrientation)photoFromVideo.imageOrientation
+                          completionBlock:^(NSURL *assetPhotoURL, NSError *error) {
+                              // Modify Violation item
+                              violation.assetsVideoURL = [assetVideoURL absoluteString];
+                              violation.assetsPhotoURL = [assetPhotoURL absoluteString];
+                              image.imageOriginalURL = [assetPhotoURL absoluteString];
+                              image.imageAvatar = [image resizeImage:photoFromVideo
+                                                              toSize:_violationManager.cellSize
+                                                     andCropInCenter:YES];
+                              
+                              [UIView transitionWithView:cell.photoImageView
+                                                duration:0.5f
+                                                 options:UIViewAnimationOptionTransitionCrossDissolve
+                                              animations:^{
+                                                  cell.photoImageView.image = image.imageAvatar;
+                                                  cell.playVideoImageView.alpha = 1.f;
+                                              }
+                                              completion:^(BOOL finished) {
+                                                  violation.type = HRPViolationTypeVideo;
+                                                  violation.latitude = (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) ? _imagePickerController.latitude : 0.f;
+                                                  violation.longitude = (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) ? _imagePickerController.longitude : 0.f;
+                                                  violation.date = [NSDate date];
+                                                  
+                                                  [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
+                                                  [_violationManager.images replaceObjectAtIndex:0 withObject:image.imageAvatar];
+                                                  [_violationManager saveViolationsToFile:_violationManager.violations];
+                                                  [cell hideActivityLoader];
+                                                  _imagePickerController = nil;
+                                              }];
+                          }];
 }
 
 - (void)imagePickerControllerDidCancel:(HRPCameraController *)picker {
