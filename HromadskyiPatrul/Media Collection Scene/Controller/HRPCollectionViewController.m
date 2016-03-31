@@ -55,7 +55,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     _statusView = [self customizeStatusBar];
 
     // Create Manager & Violations data source
-    _violationManager = [HRPViolationManager sharedManager];    
+    _violationManager = [HRPViolationManager sharedManager];
+    
+    [_violationManager customizeManagerSuccess:^(BOOL isSuccess) {
+        if (isSuccess)
+            [_violationsCollectionView reloadData];
+        
+        [self hideLoader];
+    }];
     
     // Remove local file with violations array
     // Only for Debug mode
@@ -83,8 +90,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [self setRightBarButtonEnable:YES];
     CGSize size = [[UIScreen mainScreen] bounds].size;
     [_violationManager modifyCellSize:size];
-    
-    [self hideLoader];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -564,7 +569,26 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
         
         else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
-            [self updateViolation:violation atAssetURL:[NSURL URLWithString:videoURL]];
+            [self readMetaDataFromVideoFile:[NSURL URLWithString:videoURL] forViolation:violation];
+    }
+}
+
+- (void)readMetaDataFromVideoFile:(NSURL *)videoURL forViolation:(HRPViolation *)violation {
+    if (videoURL) {
+        ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+
+        ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *videoAsset) {
+            CLLocation *location = [videoAsset valueForProperty:ALAssetPropertyLocation];
+            violation.latitude = (location.coordinate.latitude == 0.f) ? -0.1f : location.coordinate.latitude;
+            violation.longitude = (location.coordinate.longitude == 0.f) ? -0.1f : location.coordinate.longitude;
+            violation.duration = [[videoAsset valueForProperty:ALAssetPropertyDuration] floatValue];
+            
+            [self updateViolation:violation atAssetURL:videoURL];
+        };
+        
+        ALAssetsLibraryAccessFailureBlock failureblock = ^(NSError *myerror) { };
+        
+        [library assetForURL:videoURL resultBlock:resultblock failureBlock:failureblock];
     }
 }
 
@@ -621,9 +645,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                               }
                                               completion:^(BOOL finished) {
                                                   violation.type = HRPViolationTypeVideo;
-                                                  violation.latitude = (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) ? _imagePickerController.latitude : 0.f;
-                                                  violation.longitude = (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) ? _imagePickerController.longitude : 0.f;
                                                   violation.date = [NSDate date];
+                                                  
+                                                  if (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
+                                                      violation.latitude = _imagePickerController.latitude;
+                                                      violation.longitude = _imagePickerController.longitude;
+                                                  }
                                                   
                                                   [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
                                                   [_violationManager.images replaceObjectAtIndex:0 withObject:image.imageAvatar];

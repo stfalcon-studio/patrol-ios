@@ -44,11 +44,6 @@
     else if (isStartAsRecorder)
         selectedVC = @"VideoRecordVC";
     
-    if ([selectedVC isEqualToString:@"CollectionVC"]) {
-        // Create violations array
-        [[HRPViolationManager sharedManager] customizeManager];
-    }
-    
     return selectedVC;
 }
 

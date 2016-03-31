@@ -457,6 +457,7 @@
         CMTime start = CMTimeMakeWithSeconds(_violationTime - 20, 600);
         CMTime duration = CMTimeMakeWithSeconds(30.0, 600);
         range_0 = CMTimeRangeMake(start, duration);
+        range_1 = range_0;
     }
     
     // Case 2 - get violation from two video & audio snippets: violation take in first (0) snippet
@@ -469,6 +470,7 @@
         CMTime start = CMTimeMakeWithSeconds(0, 600);
         CMTime duration = CMTimeMakeWithSeconds(_sessionDuration, 600);
         range_0 = CMTimeRangeMake(start, duration);
+        range_1 = range_0;
     }
     
     // Case 3 - get violation from two video & audio snippets: violation take in second (1) snippet

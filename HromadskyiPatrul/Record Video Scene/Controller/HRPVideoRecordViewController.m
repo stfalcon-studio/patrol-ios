@@ -31,7 +31,9 @@
     _cameraManager = [HRPCameraManager sharedManager];
 
     // Create violations array
-    [[HRPViolationManager sharedManager] customizeManager];
+    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
+        [self startVideoRecord];
+    }];
     
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -47,8 +49,6 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [self startVideoRecord];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

@@ -8,11 +8,11 @@
 
 #import "HRPLoginViewController.h"
 #import "HRPCollectionViewController.h"
-//#import "HRPVideoRecordViewController.h"
 #import "HRPButton.h"
 #import "UIColor+HexColor.h"
 #import <NSString+Email.h>
 #import "HRPLoginViewModel.h"
+#import "HRPViolationManager.h"
 
 
 @interface HRPLoginViewController () <UITextFieldDelegate>
