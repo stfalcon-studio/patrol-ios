@@ -402,6 +402,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         [alertController addAction:actionUploadViolation];
         [alertController addAction:actionRemoveViolation];
     }
+    
+    else
+        [alertController addAction:actionRemoveViolation];
 
     // ADD WHEN NEED
     /*

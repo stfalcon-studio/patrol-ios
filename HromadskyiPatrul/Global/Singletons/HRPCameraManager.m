@@ -597,8 +597,7 @@
 
     [[NSFileManager defaultManager] createFileAtPath:_arrayPath
                                             contents:arrayData
-                                          attributes:nil];
-    
+                                          attributes:nil];    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"startVideoSession"
                                                         object:nil
