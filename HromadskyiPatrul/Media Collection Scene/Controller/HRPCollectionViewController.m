@@ -515,7 +515,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)imagePickerController:(HRPCameraController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSString *videoURL = [[info valueForKey:UIImagePickerControllerReferenceURL] absoluteString];
     BOOL isContinueOn = YES;
-    
+
     // Scroll to first Violation
     if (_violationManager.violations.count > 0)
         [_violationsCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
@@ -530,7 +530,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     // Handler Video from Library
     if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary) {
-        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.assetsVideoURL contains[cd] %@", videoURL];
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.assetsVideoURL contains[cd] %@ OR SELF.assetsVideoURLOriginal contains[cd] %@", videoURL, videoURL];
         NSMutableArray *existingVideos = [NSMutableArray arrayWithArray:[_violationManager.violations filteredArrayUsingPredicate:predicate]];
         
         if (existingVideos.count > 0) {
@@ -538,6 +538,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                               andMessage:NSLocalizedString(@"Alert error video add", nil)];
             
             isContinueOn = NO;
+        }
+        
+        else {
+            // Get Video size, Mb
+            [_violationManager getVideoSizeFromInfo:info];
+            
+            // Check Video file size
+            [_violationManager checkVideoFileSize];
         }
     }
 
