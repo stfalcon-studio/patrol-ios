@@ -26,6 +26,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Hide Back bar button
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
+                                                                             style:UIBarButtonItemStylePlain
+                                                                            target:nil
+                                                                            action:nil];
+
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     _cameraManager = [HRPCameraManager sharedManager];

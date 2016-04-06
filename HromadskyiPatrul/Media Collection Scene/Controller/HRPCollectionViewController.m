@@ -166,7 +166,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     else {
         HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
-        
+                
         [self.navigationController pushViewController:nextVC animated:YES];
     }
 }
