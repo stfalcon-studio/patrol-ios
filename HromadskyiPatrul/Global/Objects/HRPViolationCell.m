@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Monastyrskiy Sergey. All rights reserved.
 //
 
+
 #import "HRPViolationCell.h"
 #import "UIColor+HexColor.h"
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -15,6 +16,7 @@
 @implementation HRPViolationCell {
     unsigned int _sleepDuration;
 }
+
 
 #pragma mark - Actions -
 - (IBAction)handlerUploadStateButtonTap:(HRPButton *)sender {
