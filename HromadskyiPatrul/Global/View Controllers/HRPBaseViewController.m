@@ -26,17 +26,16 @@
 
 
 - (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"3AA6F4" alpha:1.f]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
-    
-    UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
-    [statusView setBackgroundColor:[UIColor colorWithHexString:@"2774BD" alpha:1.f]];
-    
-    [[UINavigationBar appearance] addSubview:statusView];
-
-//    [self customizeStatusBar];
+    if ([NSStringFromClass(viewController.class) isEqualToString:@"PUUIAlbumListViewController"]) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"3AA6F4" alpha:1.f]];
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
+        
+        UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
+        [statusView setBackgroundColor:[UIColor colorWithHexString:@"2774BD" alpha:1.f]];
+        [navigationController.navigationBar addSubview:statusView];
+    }
 }
 
 
@@ -63,7 +62,7 @@
     _HUD.labelText = text;
     _HUD.yOffset = 0.f;
     _HUD.color = [UIColor colorWithHexString:colorString alpha:0.6f];
-
+    
     [self.view addSubview:_HUD];
     [_HUD showWhileExecuting:@selector(sleepTask) onTarget:self withObject:nil animated:YES];
 }
