@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
+		673EB6479D50FE84CF33EE89 /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E8C21E313C5334C2BBACEEA3 /* libPods-HromadskyiPatrul.a */; };
+		9897FCA0EDC16D3B613DD63A /* libPods-HromadskyiPatrulTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 483C14FA6781744CC76DAEB7 /* libPods-HromadskyiPatrulTests.a */; };
 		B10721261C6B33F10054443A /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
 		B10721271C6B33F10054443A /* HRPLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B128052B1C25795C0058BAC8 /* HRPLoginViewController.m */; };
 		B10721281C6B33F10054443A /* UIImage+ChangeOriginalImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B12805421C257A370058BAC8 /* UIImage+ChangeOriginalImage.m */; };
@@ -40,7 +41,6 @@
 		B10721441C6B33F10054443A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */; };
 		B10721451C6B33F10054443A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B10721461C6B33F10054443A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
-		B10721471C6B33F10054443A /* libPods-HromadskyiPatrul.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */; };
 		B107214C1C6B33F10054443A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
 		B107214F1C6B33F10054443A /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B10721511C6B33F10054443A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
@@ -104,9 +104,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
-		60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
+		17331305462B632536EF9B7E /* Pods-HromadskyiPatrulTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrulTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrulTests/Pods-HromadskyiPatrulTests.release.xcconfig"; sourceTree = "<group>"; };
+		483C14FA6781744CC76DAEB7 /* libPods-HromadskyiPatrulTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrulTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6CDB1756BF9665FEF6FF3184 /* Pods-HromadskyiPatrulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrulTests/Pods-HromadskyiPatrulTests.debug.xcconfig"; sourceTree = "<group>"; };
+		84C64129C340FCE21C51E73A /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		B107215C1C6B33F10054443A /* HromadskyiPatrul-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HromadskyiPatrul-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B107215D1C6B33F10054443A /* HromadskyiPatrul-Dev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HromadskyiPatrul-Dev-Info.plist"; path = "/Users/msm72/Projects/STFalcon/hromadskyi-patrul-app-ios/HromadskyiPatrul-Dev-Info.plist"; sourceTree = "<absolute>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -190,6 +191,8 @@
 		B1E751331C340E040034FCC6 /* HRPVideoPreview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HRPVideoPreview.m; sourceTree = "<group>"; };
 		B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		E0ED6ECDBFFA890FDAEC0C44 /* Pods-HromadskyiPatrul.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.release.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.release.xcconfig"; sourceTree = "<group>"; };
+		E8C21E313C5334C2BBACEEA3 /* libPods-HromadskyiPatrul.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-HromadskyiPatrul.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,7 +205,6 @@
 				B10721441C6B33F10054443A /* MobileCoreServices.framework in Frameworks */,
 				B10721451C6B33F10054443A /* CoreLocation.framework in Frameworks */,
 				B10721461C6B33F10054443A /* AssetsLibrary.framework in Frameworks */,
-				B10721471C6B33F10054443A /* libPods-HromadskyiPatrul.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,7 +218,7 @@
 				B1EE06CB1B8F878B00CD3A03 /* MobileCoreServices.framework in Frameworks */,
 				B1EE06C41B8F621C00CD3A03 /* CoreLocation.framework in Frameworks */,
 				B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */,
-				A1BC5C24503B1AE9AC17118E /* libPods-HromadskyiPatrul.a in Frameworks */,
+				673EB6479D50FE84CF33EE89 /* libPods-HromadskyiPatrul.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,12 +226,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9897FCA0EDC16D3B613DD63A /* libPods-HromadskyiPatrulTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		12966E4CF585B6D71C1345E3 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				84C64129C340FCE21C51E73A /* Pods-HromadskyiPatrul.debug.xcconfig */,
+				E0ED6ECDBFFA890FDAEC0C44 /* Pods-HromadskyiPatrul.release.xcconfig */,
+				6CDB1756BF9665FEF6FF3184 /* Pods-HromadskyiPatrulTests.debug.xcconfig */,
+				17331305462B632536EF9B7E /* Pods-HromadskyiPatrulTests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		866BE91730CC59D56766BD2F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -243,18 +257,10 @@
 				B1EE06CA1B8F878B00CD3A03 /* MobileCoreServices.framework */,
 				B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */,
 				B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */,
-				60376B1ED92CF1FBE689ABEA /* libPods-HromadskyiPatrul.a */,
+				E8C21E313C5334C2BBACEEA3 /* libPods-HromadskyiPatrul.a */,
+				483C14FA6781744CC76DAEB7 /* libPods-HromadskyiPatrulTests.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		888F1DF95E2DFDDC51107D6B /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */,
-				789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		B12804F71C25425B0058BAC8 /* Login Scene */ = {
@@ -444,8 +450,8 @@
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
 				B1AC89801B879A06009D12D6 /* Products */,
-				888F1DF95E2DFDDC51107D6B /* Pods */,
 				866BE91730CC59D56766BD2F /* Frameworks */,
+				12966E4CF585B6D71C1345E3 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -591,13 +597,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B10721591C6B33F10054443A /* Build configuration list for PBXNativeTarget "HromadskyiPatrul-Dev" */;
 			buildPhases = (
-				B10721241C6B33F10054443A /* Check Pods Manifest.lock */,
 				B10721251C6B33F10054443A /* Sources */,
 				B10721411C6B33F10054443A /* Frameworks */,
 				B10721481C6B33F10054443A /* Resources */,
-				B10721561C6B33F10054443A /* Copy Pods Resources */,
 				B10721571C6B33F10054443A /* ShellScript */,
-				B10721581C6B33F10054443A /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -612,13 +615,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1AC89A51B879A07009D12D6 /* Build configuration list for PBXNativeTarget "HromadskyiPatrul" */;
 			buildPhases = (
-				24F9545FDF23C14556E72BD9 /* Check Pods Manifest.lock */,
+				B2699AE7A748D7E58C3CA593 /* 📦 Check Pods Manifest.lock */,
 				B1AC897B1B879A06009D12D6 /* Sources */,
 				B1AC897C1B879A06009D12D6 /* Frameworks */,
 				B1AC897D1B879A06009D12D6 /* Resources */,
-				35CBCA4EEABE08B1EF8D2842 /* Copy Pods Resources */,
 				B1AD29321B99F0340079D583 /* ShellScript */,
-				45467B192DD5F6BBCCB4635D /* Embed Pods Frameworks */,
+				40880576BA588D796B9C8A25 /* 📦 Embed Pods Frameworks */,
+				0430EB2259565E0001CD0179 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -633,9 +636,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B1AC89A81B879A07009D12D6 /* Build configuration list for PBXNativeTarget "HromadskyiPatrulTests" */;
 			buildPhases = (
+				616F15EB7EA8D7430075AADE /* 📦 Check Pods Manifest.lock */,
 				B1AC89971B879A07009D12D6 /* Sources */,
 				B1AC89981B879A07009D12D6 /* Frameworks */,
 				B1AC89991B879A07009D12D6 /* Resources */,
+				0E9E904F48C1AA8EF3AB469C /* 📦 Embed Pods Frameworks */,
+				3250A67658616A1665CDD8F5 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -736,29 +742,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		24F9545FDF23C14556E72BD9 /* Check Pods Manifest.lock */ = {
+		0430EB2259565E0001CD0179 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		35CBCA4EEABE08B1EF8D2842 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -766,14 +757,44 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		45467B192DD5F6BBCCB4635D /* Embed Pods Frameworks */ = {
+		0E9E904F48C1AA8EF3AB469C /* 📦 Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrulTests/Pods-HromadskyiPatrulTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3250A67658616A1665CDD8F5 /* 📦 Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrulTests/Pods-HromadskyiPatrulTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		40880576BA588D796B9C8A25 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -781,34 +802,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		B10721241C6B33F10054443A /* Check Pods Manifest.lock */ = {
+		616F15EB7EA8D7430075AADE /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		B10721561C6B33F10054443A /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		B10721571C6B33F10054443A /* ShellScript */ = {
@@ -824,21 +830,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" b7ba58a3e64c5ff0d9fbc4faebb86c28b1bc40b9 0850a80e9c8d0f2bc357260b8b8c799b27dc7885123bce99ef22e59c196ea124";
 		};
-		B10721581C6B33F10054443A /* Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		B1AD29321B99F0340079D583 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -851,6 +842,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" b7ba58a3e64c5ff0d9fbc4faebb86c28b1bc40b9 0850a80e9c8d0f2bc357260b8b8c799b27dc7885123bce99ef22e59c196ea124";
+		};
+		B2699AE7A748D7E58C3CA593 /* 📦 Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -982,7 +988,6 @@
 /* Begin XCBuildConfiguration section */
 		B107215A1C6B33F10054443A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1005,7 +1010,6 @@
 		};
 		B107215B1C6B33F10054443A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1110,7 +1114,7 @@
 		};
 		B1AC89A61B879A07009D12D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 500B3C870051FB8D469BD022 /* Pods-HromadskyiPatrul.debug.xcconfig */;
+			baseConfigurationReference = 84C64129C340FCE21C51E73A /* Pods-HromadskyiPatrul.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1132,7 +1136,7 @@
 		};
 		B1AC89A71B879A07009D12D6 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 789869B3BADE9EB6EB88D5DC /* Pods-HromadskyiPatrul.release.xcconfig */;
+			baseConfigurationReference = E0ED6ECDBFFA890FDAEC0C44 /* Pods-HromadskyiPatrul.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -1155,6 +1159,7 @@
 		};
 		B1AC89A91B879A07009D12D6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6CDB1756BF9665FEF6FF3184 /* Pods-HromadskyiPatrulTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1172,6 +1177,7 @@
 		};
 		B1AC89AA1B879A07009D12D6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 17331305462B632536EF9B7E /* Pods-HromadskyiPatrulTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
