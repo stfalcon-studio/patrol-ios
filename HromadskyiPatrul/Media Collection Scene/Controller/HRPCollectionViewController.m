@@ -51,9 +51,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
           andBackgroundColor:BackgroundColorTypeBlack
                      forTime:300];
-
+    
     _statusView = [self customizeStatusBar];
-
+    [[UINavigationBar appearance] addSubview:_statusView];
+    
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
     
@@ -75,7 +76,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                         withActionEnabled:NO
                    andRightBarButtonImage:[UIImage imageNamed:@"icon-settings-white"]
                         withActionEnabled:YES];
-
+    
     // Add Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerViolationSuccessUpload:)
@@ -85,7 +86,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-
+    
     _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
     CGSize size = [[UIScreen mainScreen] bounds].size;
@@ -156,7 +157,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (IBAction)handlerRecordButtonTap:(UIButton *)sender {
     self.view.userInteractionEnabled = NO;
     _violationManager.isCollectionShow = NO;
-
+    
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:300];
@@ -166,7 +167,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     else {
         HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
-                
+        
         [self.navigationController pushViewController:nextVC animated:YES];
     }
 }
@@ -200,94 +201,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 
-
-
-// DELETE AFTER TESTING
-///*
-//- (IBAction)actionCameraButtonTap:(HRPButton *)sender {
-//    [UIView animateWithDuration:0.05f
-//                     animations:^{
-//                         sender.fillColor = [UIColor colorWithHexString:@"05A9F4" alpha:0.5f];
-//                     } completion:^(BOOL finished) {
-//                         sender.fillColor = [UIColor colorWithHexString:@"05A9F4" alpha:1.f];
-//                     }];
-//    
-//    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-//                                                                             message:nil
-//                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
-//    
-//    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
-//                                                           style:UIAlertActionStyleCancel
-//                                                         handler:nil];
-//    
-//
-//    // RECOMMENT IF NEED WORK WITH PHOTO
-//    /*
-//    UIAlertAction *actionTakePhoto          =   [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Photo", nil)
-//                                                                         style:UIAlertActionStyleDefault
-//                                                                       handler:^(UIAlertAction *action) {
-//                                                                           if (isLocationServiceEnabled) {
-//                                                                               dispatch_async(dispatch_get_main_queue(), ^{
-//                                                                                   // Use device camera
-//                                                                                   if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
-//                                                                                            UIImagePickerController *cameraVC       =   [[UIImagePickerController alloc] init];
-//                                                                                       
-//                                                                                            cameraVC.sourceType     =   UIImagePickerControllerSourceTypeCamera;
-//                                                                                       
-//                                                                                            cameraVC.mediaTypes     =   [[NSArray alloc] initWithObjects: (NSString *) kUTTypeImage, nil];
-//                                                                                       
-//                                                                                            cameraVC.cameraCaptureMode  =   UIImagePickerControllerCameraCaptureModePhoto;
-//                                                                                       
-//                                                                                            cameraVC.allowsEditing  =   NO;
-//                                                                                            cameraVC.delegate       =   self;
-//                                                                                               
-//                                                                                            cameraVC.modalPresentationStyle         =   UIModalPresentationCurrentContext;
-//                                                                                       
-//                                                                                            self.imagePickerController  =   cameraVC;
-//                                                                                               
-//                                                                                            if (![self.imagePickerController isBeingPresented])
-//                                                                                                [self.navigationController presentViewController:self.imagePickerController animated:YES completion:nil];
-//                                                                                            }
-//                                                                                   
-//                                                                                            else
-//                                                                                                [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Alert error email title", nil)
-//                                                                                                                            message:NSLocalizedString(@"Camera is not available", nil)
-//                                                                                                                          delegate:nil
-//                                                                                                                 cancelButtonTitle:nil
-//                                                                                                                 otherButtonTitles:NSLocalizedString(@"Alert error button Ok", nil), nil] show];
-//                                                                                            });
-//                                                                                        }
-//                                                                           
-//                                                                                        else if ([locationsService isEnabled]) {
-//                                                                                            locationsService.manager.delegate   =   self;
-//                                                                                            isLocationServiceEnabled            =   YES;
-//                                                                                       
-//                                                                                            [self actionCameraButtonTap:self.cameraButton];
-//                                                                                        }
-//                                                                                    }];
-//*/
-//    
-//    UIAlertAction *actionTakeVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Take a Video", nil)
-//                                                              style:UIAlertActionStyleDefault
-//                                                            handler:^(UIAlertAction *action) {
-//                                                                self.view.userInteractionEnabled = NO;
-//                                                                _violationManager.isCollectionShow = NO;
-//                                                                
-//                                                                [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
-//                                                                      andBackgroundColor:BackgroundColorTypeBlue
-//                                                                                 forTime:300];
-//                                                                
-//                                                                [self.navigationController popViewControllerAnimated:YES];
-//                                                            }];
-//    
-//    [alertController addAction:actionTakeVideo];
-////    [alertController addAction:actionTakePhoto];
-//    [alertController addAction:actionCancel];
-//    
-//    [self presentViewController:alertController animated:YES completion:nil];
-//}
-
-
 #pragma mark - NSNotification -
 - (void)handlerViolationSuccessUpload:(NSNotification *)notification {
     HRPViolation *violation = notification.userInfo[@"violation"];
@@ -298,7 +211,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [_violationManager.violations replaceObjectAtIndex:indexPath.row withObject:violation];
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
-
+    
     [cell customizeCellStyle];
     [cell uploadImage:indexPath inImages:_violationManager.images];
     [cell hideActivityLoader];
@@ -327,9 +240,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         [_violationManager.images removeObjectAtIndex:indexPath.row];
         [_violationsCollectionView deleteItemsAtIndexPaths:@[indexPath]];
     }
-                                            completion:^(BOOL finished) {
-                                                [_violationManager saveViolationsToFile:_violationManager.violations];
-                                            }];
+                                        completion:^(BOOL finished) {
+                                            [_violationManager saveViolationsToFile:_violationManager.violations];
+                                        }];
 }
 
 - (void)showAlertController:(NSIndexPath *)indexPath {
@@ -348,9 +261,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                        style:UIAlertActionStyleDefault
                                                                      handler:^(UIAlertAction *action) {
                                                                          HRPPhotoPreviewViewController *photoPreviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
-                                                                                   
+                                                                         
                                                                          photoPreviewVC.violation = violation;
-                                                                                   
+                                                                         
                                                                          [self presentViewController:photoPreviewVC animated:YES completion:nil];
                                                                      }];
     
@@ -358,10 +271,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                        style:UIAlertActionStyleDefault
                                                                      handler:^(UIAlertAction *action) {
                                                                          HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
-
+                                                                         
                                                                          videoPlayerVC.videoURL = [NSURL URLWithString:violation.assetsVideoURL];
                                                                          _violationManager.isCollectionShow = NO;
-          
+                                                                         
                                                                          [self presentViewController:videoPlayerVC animated:YES completion:^{}];
                                                                      }];
     
@@ -370,7 +283,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                   handler:^(UIAlertAction *action) {
                                                                       [self removeViolationFromCollection:indexPath];
                                                                   }];
-
+    
     UIAlertAction *actionUploadViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload a Video" : @"Upload a Photo", nil)
                                                                     style:UIAlertActionStyleDefault
                                                                   handler:^(UIAlertAction *action) {
@@ -383,14 +296,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                                                    }];
                                                                       }
                                                                   }];
-
+    
     // ADD WHEN NEED
     /*
-    UIAlertAction *actionUploadViolations = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload Videos" : @"Upload Photos", nil)
-                                                                     style:UIAlertActionStyleDefault
-                                                                   handler:^(UIAlertAction *action) {
-                                                                       [_violationManager uploadViolations:_violationsCollectionView];
-                                                                   }];
+     UIAlertAction *actionUploadViolations = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload Videos" : @"Upload Photos", nil)
+     style:UIAlertActionStyleDefault
+     handler:^(UIAlertAction *action) {
+     [_violationManager uploadViolations:_violationsCollectionView];
+     }];
      */
     
     if (violation.type == HRPViolationTypeVideo)
@@ -405,11 +318,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     else
         [alertController addAction:actionRemoveViolation];
-
+    
     // ADD WHEN NEED
     /*
-    if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
-        [alertController addAction:actionUploadViolations];
+     if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
+     [alertController addAction:actionUploadViolations];
      */
     
     
@@ -432,44 +345,44 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     static NSString *cellIdentifier = @"ViolationCell";
     HRPViolationCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
     HRPViolation *violation = _violationManager.violations[indexPath.row];
-
+    
     if (_violationManager.uploadingCount == 0 && violation.isUploading) {
-        violation.isUploading = NO;        
+        violation.isUploading = NO;
         [_violationManager.violations replaceObjectAtIndex:indexPath.row withObject:violation];
     }
     
     cell.violation = violation;
-
+    
     [cell customizeCellStyle];
     [cell uploadImage:indexPath inImages:_violationManager.images];
     
     
     // SET USERACTIVITY IN STORYBOARD - NOW IT DISABLED
     /*
-    [cell.uploadStateButton setDidButtonPress:^(id item) {
-        [_violationManager uploadViolation:item];
-    }];
+     [cell.uploadStateButton setDidButtonPress:^(id item) {
+     [_violationManager uploadViolation:item];
+     }];
      */
     
     
     // ADD PAGINATION IF IT NEED
     /*
-    // Set pagination
-    if (indexPath.row == _violationsDataSource.count - 2) {
-        isPaginationRun = YES;
-        
-        [self showLoaderWithText:NSLocalizedString(@"Upload title", nil)
-              andBackgroundColor:BackgroundColorTypeBlue
-                         forTime:10];
-
-        [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
-            if (isFinished) {
-                _violationsDataSource = [NSMutableArray arrayWithArray:_violationManager.violations];
-                
-                [_violationsCollectionView reloadData];
-            }
-        }];
-    }
+     // Set pagination
+     if (indexPath.row == _violationsDataSource.count - 2) {
+     isPaginationRun = YES;
+     
+     [self showLoaderWithText:NSLocalizedString(@"Upload title", nil)
+     andBackgroundColor:BackgroundColorTypeBlue
+     forTime:10];
+     
+     [_violationManager readViolationsFromFileSuccess:^(BOOL isFinished) {
+     if (isFinished) {
+     _violationsDataSource = [NSMutableArray arrayWithArray:_violationManager.violations];
+     
+     [_violationsCollectionView reloadData];
+     }
+     }];
+     }
      */
     
     if (_violationManager.isNetworkAvailable) {
@@ -510,6 +423,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
+    [[UIApplication sharedApplication] setStatusBarHidden:(size.width < size.height) ? NO : YES];
+    
     [_violationManager modifyCellSize:size];
 }
 
@@ -518,7 +433,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)imagePickerController:(HRPCameraController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     NSString *videoURL = [[info valueForKey:UIImagePickerControllerReferenceURL] absoluteString];
     BOOL isContinueOn = YES;
-
+    
     // Scroll to first Violation
     if (_violationManager.violations.count > 0)
         [_violationsCollectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]
@@ -527,7 +442,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     // Stop Geolocation service
     [picker.locationsService.manager stopUpdatingLocation];
-
+    
     [picker dismissViewControllerAnimated:YES completion:NULL];
     _imagePickerController = picker;
     
@@ -551,7 +466,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             [_violationManager checkVideoFileSize];
         }
     }
-
+    
     if (isContinueOn) {
         HRPViolation *violation = [[HRPViolation alloc] init];
         
@@ -564,8 +479,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             }
             
             (_violationManager.violations.count == 0) ? [_violationManager.violations addObject:violation] :
-                                                        [_violationManager.violations insertObject:violation atIndex:0];
-
+            [_violationManager.violations insertObject:violation atIndex:0];
+            
             (_violationManager.images.count == 0) ? [_violationManager.images addObject:[UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage]] : [_violationManager.images insertObject:[UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage] atIndex:0];
             
             [_violationsCollectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0]]];
@@ -587,7 +502,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)readMetaDataFromVideoFile:(NSURL *)videoURL forViolation:(HRPViolation *)violation {
     if (videoURL) {
         ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-
+        
         ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *videoAsset) {
             CLLocation *location = [videoAsset valueForProperty:ALAssetPropertyLocation];
             violation.latitude = (location.coordinate.latitude == 0.f) ? -0.1f : location.coordinate.latitude;
@@ -623,7 +538,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
     HRPImage *image = [[HRPImage alloc] init];
     image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
-
+    
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
     [cell showActivityLoader];
     
@@ -677,7 +592,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                completion:^{ }];
     
     [picker.locationsService.manager stopUpdatingLocation];
-
+    
     picker = nil;
     _imagePickerController = nil;
 }
