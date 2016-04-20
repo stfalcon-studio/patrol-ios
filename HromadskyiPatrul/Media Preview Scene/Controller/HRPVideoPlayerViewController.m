@@ -25,8 +25,8 @@
     
     self.navigationItem.title = NSLocalizedString(@"Preview a Video", nil);
     
-    _statusViewTopConstraint.constant = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
-                                                    0.f : -20.f;
+    //    _statusViewTopConstraint.constant = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
+    //                                                    0.f : -20.f;
     
     self.player = [AVPlayer playerWithURL:_videoURL];
     self.player.volume = [[AVAudioSession sharedInstance] outputVolume];

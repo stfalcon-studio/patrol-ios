@@ -31,11 +31,11 @@
                                                                              style:UIBarButtonItemStylePlain
                                                                             target:nil
                                                                             action:nil];
-
+    
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-
+    
     _cameraManager = [HRPCameraManager sharedManager];
-
+    
     // Create violations array
     [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
         [self startVideoRecord];
@@ -46,7 +46,7 @@
                                              selector:@selector(handlerStartVideoSession:)
                                                  name:@"startVideoSession"
                                                object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerMergeAndSaveVideo:)
                                                  name:@"showMergeAndSaveAlertMessage"
@@ -79,7 +79,7 @@
     // Stop Video Record Session
     [_cameraManager stopVideoSession];
     [_cameraManager.videoPreviewLayer removeFromSuperlayer];
-   
+    
     // Transition to Collection Scene
     HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
     
@@ -113,7 +113,7 @@
 - (IBAction)tapGesture:(id)sender {
     if ([_cameraManager.locationsService isEnabled]) {
         _cameraManager.locationsService.manager.delegate = _cameraManager;
-
+        
         [_cameraManager.locationsService.manager startUpdatingLocation];
         
         if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
@@ -164,7 +164,7 @@
     
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
     
-    _statusView = [self customizeStatusBar];
+    //    _statusView = [self customizeStatusBar];
     [self customizeViewStyle];
     
     _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
