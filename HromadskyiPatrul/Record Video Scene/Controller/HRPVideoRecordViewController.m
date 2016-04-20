@@ -55,6 +55,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    _violationLabel.hidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {

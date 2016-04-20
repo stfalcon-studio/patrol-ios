@@ -84,16 +84,17 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
-        _statusView = [self customizeStatusBar];
-        [[UINavigationBar appearance] addSubview:_statusView];
-        [[UIApplication sharedApplication] setStatusBarHidden:NO];
-    }
-
     _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
     CGSize size = [[UIScreen mainScreen] bounds].size;
     [_violationManager modifyCellSize:size];
+    
+    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ||
+        ([[UIDevice currentDevice] orientation] == UIDeviceOrientationFaceUp && size.width < size.height)) {
+        _statusView = [self customizeStatusBar];
+        [[UINavigationBar appearance] addSubview:_statusView];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
