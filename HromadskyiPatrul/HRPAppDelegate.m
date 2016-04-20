@@ -113,9 +113,9 @@ NSString const *DeviceMode = @"Device";
 
 - (void)appDidShow {
     if ([_videoRecordVC isKindOfClass:[HRPVideoRecordViewController class]]) {
-        _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+        _videoRecordVC.cameraManager.videoSessionMode = _modeVC;
         
-        if (_modeVC == NSTimerVideoSessionModeStream) {
+        if (!_videoRecordVC.cameraManager.videoImageOriginal && _modeVC == NSTimerVideoSessionModeStream) {
             [_videoRecordVC startVideoRecord];
         }
         
@@ -133,6 +133,12 @@ NSString const *DeviceMode = @"Device";
             UIAlertAction *actionOk = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Ok", nil)
                                                                style:UIAlertActionStyleDefault
                                                              handler:^(UIAlertAction *action) {
+                                                                 if (_videoRecordVC.cameraManager.videoImageOriginal) {
+                                                                     _videoRecordVC.cameraManager.videoImageOriginal = nil;
+                                                                     [_videoRecordVC.cameraManager removeAllFolderMediaTempFiles];
+                                                                     [_videoRecordVC hideLoader];
+                                                                 }
+
                                                                  [_videoRecordVC startVideoRecord];
                                                             }];
             

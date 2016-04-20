@@ -1,4 +1,4 @@
-                              //
+//
 //  HRPViolationManager.m
 //  HromadskyiPatrul
 //
@@ -56,6 +56,7 @@
 #pragma mark - Methods -
 - (void)customizeManagerSuccess:(void(^)(BOOL isSuccess))success {
     _userApp = [NSUserDefaults standardUserDefaults];
+    _isAllowedStartAsRecorder = [_userApp boolForKey:@"appStartStatus"];    
     CGRect viewFrame = [[UIScreen mainScreen] bounds];
     CGFloat side = 0.f;
     
@@ -261,50 +262,16 @@
         success(NO);
 }
 
-
-// DELETE AFTER TESTING
-/*
-- (void)uploadVideoWithParameters:(NSDictionary *)parameters
-                        onSuccess:(void(^)(NSDictionary *successResult))success
-                        orFailure:(void(^)(NSError *error))failure {
-    NSString *urlString = @"http://patrol.stfalcon.com/";
-    NSDate *start = [NSDate date];
-
-    AFHTTPRequestOperationManager *requestOperationDomainManager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:urlString]];
-    NSString *pathAPI = [NSString stringWithFormat:@"api/%@/violation-video/create", [_userApp objectForKey:@"userAppID"]];
-    
-    [requestOperationDomainManager.requestSerializer setTimeoutInterval:5];
-    
-    [requestOperationDomainManager POST:pathAPI
-                             parameters:parameters
-              constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-                  [formData appendPartWithFileData:parameters[@"video"]
-                                              name:@"video"
-                                          fileName:@"video.mov"
-                                          mimeType:@"video/quicktime"];
-              }
-                                success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                                    NSLog(@"API run time = %f sec", -([start timeIntervalSinceNow]));
-
-                                    if (operation.response.statusCode != 200)
-                                        success(responseObject);
-                                }
-                                failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                                    failure(error);
-                                }];
-}
-*/
-
-
 - (void)uploadVideoWithParameters:(NSDictionary *)parameters
                         onSuccess:(void(^)(NSDictionary *successResult))success
                         orFailure:(void(^)(NSError *error))failure {
     AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
     NSError *error = nil;
 //    NSDate *start = [NSDate date];
+    NSString *stringURL = [NSString stringWithFormat:@"http://patrol.stfalcon.com/api/%@/violation-video/create", [_userApp objectForKey:@"userAppID"]];
     
     NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
-                                                                    URLString:@"http://patrol.stfalcon.com/"
+                                                                    URLString:stringURL
                                                                    parameters:parameters
                                                     constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
                                                         [formData appendPartWithFileData:parameters[@"video"]

@@ -23,7 +23,6 @@
     NSString *_arrayPath;
     NSString *_mediaFolderPath;
     NSURL *_videoAssetURL;
-    UIImage *_videoImageOriginal;
     CGRect _previewRect;
     
     CGFloat _latitude;
@@ -281,11 +280,14 @@
 - (void)stopAudioRecording {
     if (_audioRecorder.recording) {
         [_audioRecorder stop];
+        _videoSessionMode = NSTimerVideoSessionModeStream;
     }
 }
 
 - (void)setVideoPreviewLayerOrientation:(CGSize)newSize {
     _videoPreviewLayer.frame = CGRectMake(0.f, 0.f, newSize.width, newSize.height);
+    
+    [self setVideoSessionOrientation];
 }
 
 - (void)setVideoSessionOrientation {

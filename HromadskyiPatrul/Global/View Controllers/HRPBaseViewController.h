@@ -20,6 +20,8 @@ typedef NS_ENUM (NSInteger, BackgroundColorType) {
 @interface HRPBaseViewController : UIViewController
 
 @property (strong, nonatomic) MBProgressHUD *HUD;
+@property (assign, nonatomic) BOOL isStartAsRecorder;
+
 
 - (void)showAlertViewWithTitle:(NSString *)titleText andMessage:(NSString *)messageText;
 - (void)showLoaderWithText:(NSString *)text andBackgroundColor:(BackgroundColorType)colorType forTime:(unsigned int)duration;

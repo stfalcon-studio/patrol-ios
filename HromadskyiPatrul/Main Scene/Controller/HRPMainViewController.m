@@ -55,6 +55,8 @@
     HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:
                                      [_mainViewModel selectNextSceneStoryboardID]];
     
+    nextVC.isStartAsRecorder = YES;
+    
     [self.navigationController pushViewController:nextVC animated:YES];
 }
 

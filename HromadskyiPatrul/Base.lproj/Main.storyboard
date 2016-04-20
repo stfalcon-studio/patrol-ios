@@ -82,7 +82,7 @@
                                                     </userDefinedRuntimeAttribute>
                                                 </userDefinedRuntimeAttributes>
                                                 <connections>
-                                                    <action selector="actionLoginButtonTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="edu-SI-Zll"/>
+                                                    <action selector="actionLoginButtonTap:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="EOu-aB-N3a"/>
                                                 </connections>
                                             </button>
                                             <label hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Version" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="VkU-Dc-vJw" userLabel="Version Label">
@@ -168,7 +168,7 @@
                         <outlet property="contentViewHeightConstraint" destination="yXg-RB-R4R" id="KxZ-1b-kvd"/>
                         <outlet property="contentViewWidthConstraint" destination="aJr-fQ-akO" id="HEe-n5-jJv"/>
                         <outlet property="emailTextField" destination="UtF-qY-cYQ" id="Afb-9y-iZX"/>
-                        <outlet property="loginButton" destination="vtA-en-wcx" id="yp7-AX-DoI"/>
+                        <outlet property="loginButton" destination="vtA-en-wcx" id="sAh-gc-wdd"/>
                         <outlet property="logoImageView" destination="fKl-Qy-dED" id="4M5-Wq-d6i"/>
                         <outlet property="logoLabel" destination="VsS-C1-4dJ" id="tkm-2l-pVD"/>
                         <outlet property="madeByLabel" destination="ghQ-OR-u9t" id="mHh-xJ-H7f"/>

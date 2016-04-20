@@ -21,6 +21,7 @@
 
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     self.layer.cornerRadius = cornerRadius;
+    self.clipsToBounds = true;
 }
 
 - (void)setBorderWidth:(CGFloat)borderWidth {

@@ -109,7 +109,6 @@
 		6CDB1756BF9665FEF6FF3184 /* Pods-HromadskyiPatrulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrulTests/Pods-HromadskyiPatrulTests.debug.xcconfig"; sourceTree = "<group>"; };
 		84C64129C340FCE21C51E73A /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		B107215C1C6B33F10054443A /* HromadskyiPatrul-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HromadskyiPatrul-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B107215D1C6B33F10054443A /* HromadskyiPatrul-Dev-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "HromadskyiPatrul-Dev-Info.plist"; path = "/Users/msm72/Projects/STFalcon/hromadskyi-patrul-app-ios/HromadskyiPatrul-Dev-Info.plist"; sourceTree = "<absolute>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -303,10 +302,10 @@
 		B180FDC41C76FFE5004FF855 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				B19B180E1CC75230008D9110 /* HRPViolationManager.m */,
-				B19B180F1CC75230008D9110 /* HRPViolationManager.h */,
-				B19B18101CC75230008D9110 /* HRPViolation.m */,
 				B19B18111CC75230008D9110 /* HRPViolation.h */,
+				B19B18101CC75230008D9110 /* HRPViolation.m */,
+				B19B180F1CC75230008D9110 /* HRPViolationManager.h */,
+				B19B180E1CC75230008D9110 /* HRPViolationManager.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -488,7 +487,6 @@
 			isa = PBXGroup;
 			children = (
 				B1AC89831B879A06009D12D6 /* Info.plist */,
-				B107215D1C6B33F10054443A /* HromadskyiPatrul-Dev-Info.plist */,
 				B1AC89841B879A06009D12D6 /* main.m */,
 				B1AC89B31B879C8B009D12D6 /* Localizable.strings */,
 			);

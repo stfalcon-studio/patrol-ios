@@ -130,7 +130,9 @@
                                            [_emailTextField resignFirstResponder];
                                            
                                            // Transition to Collection scene
-                                           HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+                                           HRPCollectionViewController *collectionVC = nil;
+                                           collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+                                           collectionVC.isStartAsRecorder = YES;
                                            
                                            [self.navigationController pushViewController:collectionVC animated:YES];
                                            [sender setUserInteractionEnabled:YES];

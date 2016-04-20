@@ -36,11 +36,6 @@
     
     _cameraManager = [HRPCameraManager sharedManager];
     
-    // Create violations array
-    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
-        [self startVideoRecord];
-    }];
-    
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(handlerStartVideoSession:)
@@ -56,6 +51,19 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     _violationLabel.hidden = YES;
+    CGSize size = [[UIScreen mainScreen] bounds].size;
+    
+    // Create violations array
+    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
+        [self startVideoRecord];
+    }];
+    
+    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ||
+        ([[UIDevice currentDevice] orientation] == UIDeviceOrientationFaceUp && size.width < size.height)) {
+        _statusView = [self customizeStatusBar];
+        [[UINavigationBar appearance] addSubview:_statusView];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -82,9 +90,14 @@
     [_cameraManager.videoPreviewLayer removeFromSuperlayer];
     
     // Transition to Collection Scene
-    HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+    if (self.isStartAsRecorder) {
+        HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+        
+        [self.navigationController pushViewController:collectionVC animated:YES];
+    }
     
-    [self.navigationController pushViewController:collectionVC animated:YES];
+    else
+        [self.navigationController popViewControllerAnimated:YES];
 }
 
 
@@ -193,7 +206,16 @@
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
-    _statusView.frame = CGRectMake(0.f, (size.width < size.height) ? -20.f : -20.f, size.width, 20.f);
+    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ||
+        ([[UIDevice currentDevice] orientation] == UIDeviceOrientationFaceUp && size.width < size.height)) {
+        _statusView = [self customizeStatusBar];
+        [[UINavigationBar appearance] addSubview:_statusView];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }
+    
+    else {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+    }
     
     [_cameraManager setVideoPreviewLayerOrientation:size];
     

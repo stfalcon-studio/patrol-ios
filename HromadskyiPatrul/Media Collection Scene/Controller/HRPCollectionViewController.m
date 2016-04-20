@@ -86,6 +86,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
+    self.view.userInteractionEnabled = YES;
     CGSize size = [[UIScreen mainScreen] bounds].size;
     [_violationManager modifyCellSize:size];
     
@@ -105,6 +106,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    
+    _violationManager.violations = nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
@@ -166,7 +170,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:300];
     
-    if (_violationManager.isAllowedStartAsRecorder)
+    if (!self.isStartAsRecorder)
         [self.navigationController popViewControllerAnimated:YES];
     
     else {
@@ -177,11 +181,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             self.view.userInteractionEnabled = YES;
         }
 
-            else {
-                HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
-        
-                [self.navigationController pushViewController:nextVC animated:YES];
-            }
+        else {
+            HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+
+            [self.navigationController pushViewController:nextVC animated:YES];
+        }
     }
 }
 
