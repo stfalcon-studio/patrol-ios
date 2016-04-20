@@ -52,9 +52,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
           andBackgroundColor:BackgroundColorTypeBlack
                      forTime:300];
     
-    _statusView = [self customizeStatusBar];
-    [[UINavigationBar appearance] addSubview:_statusView];
-    
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
     
@@ -87,6 +84,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation])) {
+        _statusView = [self customizeStatusBar];
+        [[UINavigationBar appearance] addSubview:_statusView];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
+    }
+
     _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
     CGSize size = [[UIScreen mainScreen] bounds].size;
@@ -166,9 +169,18 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         [self.navigationController popViewControllerAnimated:YES];
     
     else {
-        HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+        if (TARGET_IPHONE_SIMULATOR) {
+            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil) andMessage:NSLocalizedString(@"Camera is not available", nil)];
+            
+            [self hideLoader];
+            self.view.userInteractionEnabled = YES;
+        }
+
+            else {
+                HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
         
-        [self.navigationController pushViewController:nextVC animated:YES];
+                [self.navigationController pushViewController:nextVC animated:YES];
+            }
     }
 }
 
@@ -196,7 +208,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         }
         
         else
-            [self showAlertViewWithTitle:NSLocalizedString(@"Error", nil) andMessage:NSLocalizedString(@"Camera is not available", nil)];
+            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil) andMessage:NSLocalizedString(@"Camera is not available", nil)];
     });
 }
 

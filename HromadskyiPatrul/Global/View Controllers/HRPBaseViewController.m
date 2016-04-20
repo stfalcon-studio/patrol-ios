@@ -25,20 +25,6 @@
 }
 
 
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    if ([NSStringFromClass(viewController.class) isEqualToString:@"PUUIAlbumListViewController"]) {
-        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
-        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"3AA6F4" alpha:1.f]];
-        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-        [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
-        
-        UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
-        [statusView setBackgroundColor:[UIColor colorWithHexString:@"2774BD" alpha:1.f]];
-        [navigationController.navigationBar addSubview:statusView];
-    }
-}
-
-
 #pragma mark - Methods -
 - (void)setRightBarButtonEnable:(BOOL)enable {
     self.navigationItem.rightBarButtonItem.enabled = enable;
@@ -98,6 +84,21 @@
 
 - (BOOL)isServerURLLocal {
     return [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"isLocalServerURL"] boolValue];
+}
+
+
+#pragma mark - UIViewControllerRotation -
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if ([NSStringFromClass(viewController.class) isEqualToString:@"PUUIAlbumListViewController"]) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"3AA6F4" alpha:1.f]];
+        [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+        [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName:[UIColor whiteColor] }];
+        
+        UIView *statusView = [[UIView alloc] initWithFrame:CGRectMake(0.f, -20.f, CGRectGetWidth(self.view.frame), 20.f)];
+        [statusView setBackgroundColor:[UIColor colorWithHexString:@"2774BD" alpha:1.f]];
+        [navigationController.navigationBar addSubview:statusView];
+    }
 }
 
 @end
