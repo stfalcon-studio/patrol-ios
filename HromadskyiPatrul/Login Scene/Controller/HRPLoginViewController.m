@@ -51,8 +51,8 @@
     
     [self hideNavigationBar];
     
-    _statusView = [self customizeStatusBar];
-
+    //    _statusView = [self customizeStatusBar];
+    
     // Create model
     _loginViewModel = [[HRPLoginViewModel alloc] init];
     
@@ -84,11 +84,11 @@
         _emailTextField.text = [_loginViewModel.userApp objectForKey:@"userAppEmail"];
     
     _screenSize = CGSizeMake(CGRectGetWidth([[UIScreen mainScreen] bounds]), CGRectGetHeight([[UIScreen mainScreen] bounds]));
-
+    
     // Set Scroll View constraints
     _contentViewWidthConstraint.constant = _screenSize.width;
     _contentViewHeightConstraint.constant = _screenSize.height;
-
+    
     if (UIInterfaceOrientationIsLandscape([[UIApplication sharedApplication] statusBarOrientation])) {
         _contentViewHeightConstraint.constant = _screenSize.width;
         _statusView.frame = CGRectMake(0.f, -20.f, _screenSize.width, 20.f);
@@ -126,21 +126,21 @@
                              forTime:100];
             
             [_loginViewModel userLoginParameters:_emailTextField.text
-                                      onSuccess:^(NSDictionary *successResult) {
-                                          [_emailTextField resignFirstResponder];
-
-                                          // Transition to Collection scene
-                                          HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
-                                          
-                                          [self.navigationController pushViewController:collectionVC animated:YES];
-                                          [sender setUserInteractionEnabled:YES];
-                                      }
-                                      orFailure:^(AFHTTPRequestOperation *failureOperation) {
-                                          [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
-                                                            andMessage:NSLocalizedString(@"Alert error API message", nil)];
-                                          
-                                          [sender setUserInteractionEnabled:YES];
-                                      }];
+                                       onSuccess:^(NSDictionary *successResult) {
+                                           [_emailTextField resignFirstResponder];
+                                           
+                                           // Transition to Collection scene
+                                           HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+                                           
+                                           [self.navigationController pushViewController:collectionVC animated:YES];
+                                           [sender setUserInteractionEnabled:YES];
+                                       }
+                                       orFailure:^(AFHTTPRequestOperation *failureOperation) {
+                                           [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
+                                                             andMessage:NSLocalizedString(@"Alert error API message", nil)];
+                                           
+                                           [sender setUserInteractionEnabled:YES];
+                                       }];
         }
     }
     
