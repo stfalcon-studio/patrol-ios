@@ -284,7 +284,7 @@
 - (void)stopAudioRecording {
     if (_audioRecorder.recording) {
         [_audioRecorder stop];
-        _videoSessionMode = NSTimerVideoSessionModeStream;
+        //_videoSessionMode = NSTimerVideoSessionModeStream;
     }
 }
 
@@ -295,7 +295,7 @@
         BOOL success = [flashLight lockForConfiguration:nil];
         
         if (success) {
-            [flashLight setTorchMode:AVCaptureTorchModeOff /*([flashLight isTorchActive]) ? AVCaptureTorchModeOff : AVCaptureTorchModeOn*/];
+            [flashLight setTorchMode:AVCaptureTorchModeOff];
             [flashLight unlockForConfiguration];
         }
     }
