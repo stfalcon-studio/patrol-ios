@@ -94,10 +94,13 @@
         HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
         
         [self.navigationController pushViewController:collectionVC animated:YES];
+        NSLog(@"1. CollectionVC pushed");
     }
     
-    else
+    else {
         [self.navigationController popViewControllerAnimated:YES];
+        NSLog(@"1. RecordVC poped");
+    }
 }
 
 

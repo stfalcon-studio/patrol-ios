@@ -170,8 +170,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:300];
     
-    if (!self.isStartAsRecorder)
+    if (!self.isStartAsRecorder) {
         [self.navigationController popViewControllerAnimated:YES];
+        NSLog(@"2. CollectionVC poped");
+    }
     
     else {
         if (TARGET_IPHONE_SIMULATOR) {
@@ -185,6 +187,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
 
             [self.navigationController pushViewController:nextVC animated:YES];
+            NSLog(@"2. RecordVC pushed");
         }
     }
 }

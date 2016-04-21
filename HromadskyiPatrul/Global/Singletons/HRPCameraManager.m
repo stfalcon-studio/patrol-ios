@@ -147,6 +147,8 @@
 - (void)createCaptureSession {
     NSError *error;
     
+    [self checkFlashLightState];
+    
     // Initialize the Session object
     _captureSession = [[AVCaptureSession alloc] init];
     _captureSession.sessionPreset = AVCaptureSessionPresetHigh;
@@ -192,6 +194,7 @@
     if ([_captureSession canAddOutput:_videoFileOutput])
         [_captureSession addOutput:_videoFileOutput];
     
+    /*
     // Set Connection
     AVCaptureConnection *videoConnection = nil;
     
@@ -201,6 +204,7 @@
                 videoConnection = connection;
         }
     }
+    */
     
     // Create StillImageOutput
     AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
@@ -281,6 +285,19 @@
     if (_audioRecorder.recording) {
         [_audioRecorder stop];
         _videoSessionMode = NSTimerVideoSessionModeStream;
+    }
+}
+
+- (void)checkFlashLightState {
+    AVCaptureDevice *flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    if ([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn]) {
+        BOOL success = [flashLight lockForConfiguration:nil];
+        
+        if (success) {
+            [flashLight setTorchMode:AVCaptureTorchModeOff /*([flashLight isTorchActive]) ? AVCaptureTorchModeOff : AVCaptureTorchModeOn*/];
+            [flashLight unlockForConfiguration];
+        }
     }
 }
 

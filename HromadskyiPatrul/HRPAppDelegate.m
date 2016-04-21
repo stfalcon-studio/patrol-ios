@@ -47,6 +47,8 @@ NSString const *DeviceMode = @"Device";
 
     // Crashlytics SDK
     [Fabric with:@[CrashlyticsKit]];
+//    [Fabric with:@[[Crashlytics class]]];
+
 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 
