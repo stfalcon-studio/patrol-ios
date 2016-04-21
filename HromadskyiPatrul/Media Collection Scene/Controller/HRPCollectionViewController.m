@@ -269,86 +269,88 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     HRPViolation *violation = _violationManager.violations[indexPath.row];
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
-                                                                             message:nil
-                                                                      preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
-                                                           style:UIAlertActionStyleCancel
-                                                         handler:nil];
-    
-    UIAlertAction *actionOpenViolationPhoto = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
-                                                                       style:UIAlertActionStyleDefault
-                                                                     handler:^(UIAlertAction *action) {
-                                                                         HRPPhotoPreviewViewController *photoPreviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
-                                                                         
-                                                                         photoPreviewVC.violation = violation;
-                                                                         
-                                                                         [self presentViewController:photoPreviewVC animated:YES completion:nil];
-                                                                     }];
-    
-    UIAlertAction *actionOpenViolationVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
-                                                                       style:UIAlertActionStyleDefault
-                                                                     handler:^(UIAlertAction *action) {
-                                                                         HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
-                                                                         
-                                                                         videoPlayerVC.videoURL = [NSURL URLWithString:violation.assetsVideoURL];
-                                                                         _violationManager.isCollectionShow = NO;
-                                                                         
-                                                                         [self presentViewController:videoPlayerVC animated:YES completion:^{}];
-                                                                     }];
-    
-    UIAlertAction *actionRemoveViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Remove a Video" : @"Remove a Photo", nil)
-                                                                    style:UIAlertActionStyleDestructive
-                                                                  handler:^(UIAlertAction *action) {
-                                                                      [self removeViolationFromCollection:indexPath];
-                                                                  }];
-    
-    UIAlertAction *actionUploadViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload a Video" : @"Upload a Photo", nil)
-                                                                    style:UIAlertActionStyleDefault
-                                                                  handler:^(UIAlertAction *action) {
-                                                                      if (violation.state != HRPViolationStateDone) {
-                                                                          [cell showActivityLoader];
-                                                                          [_violationManager uploadViolation:violation
-                                                                                                  inAutoMode:NO
-                                                                                                   onSuccess:^(BOOL isSuccess) {
-                                                                                                       [cell hideActivityLoader];
-                                                                                                   }];
-                                                                      }
-                                                                  }];
-    
-    // ADD WHEN NEED
-    /*
-     UIAlertAction *actionUploadViolations = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload Videos" : @"Upload Photos", nil)
-     style:UIAlertActionStyleDefault
-     handler:^(UIAlertAction *action) {
-     [_violationManager uploadViolations:_violationsCollectionView];
-     }];
-     */
-    
-    if (violation.type == HRPViolationTypeVideo)
-        [alertController addAction:actionOpenViolationVideo];
-    else
-        [alertController addAction:actionOpenViolationPhoto];
-    
-    if (violation.state != HRPViolationStateDone && !violation.isUploading && _violationManager.uploadingCount < 2) {
-        [alertController addAction:actionUploadViolation];
-        [alertController addAction:actionRemoveViolation];
+    if (cell.activityLoader.hidden) {
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil
+                                                                                 message:nil
+                                                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Cancel", nil)
+                                                               style:UIAlertActionStyleCancel
+                                                             handler:nil];
+        
+        UIAlertAction *actionOpenViolationPhoto = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
+                                                                           style:UIAlertActionStyleDefault
+                                                                         handler:^(UIAlertAction *action) {
+                                                                             HRPPhotoPreviewViewController *photoPreviewVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PhotoPreviewVC"];
+                                                                             
+                                                                             photoPreviewVC.violation = violation;
+                                                                             
+                                                                             [self presentViewController:photoPreviewVC animated:YES completion:nil];
+                                                                         }];
+        
+        UIAlertAction *actionOpenViolationVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
+                                                                           style:UIAlertActionStyleDefault
+                                                                         handler:^(UIAlertAction *action) {
+                                                                             HRPVideoPlayerViewController *videoPlayerVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoPlayerVC"];
+                                                                             
+                                                                             videoPlayerVC.videoURL = [NSURL URLWithString:violation.assetsVideoURL];
+                                                                             _violationManager.isCollectionShow = NO;
+                                                                             
+                                                                             [self presentViewController:videoPlayerVC animated:YES completion:^{}];
+                                                                         }];
+        
+        UIAlertAction *actionRemoveViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Remove a Video" : @"Remove a Photo", nil)
+                                                                        style:UIAlertActionStyleDestructive
+                                                                      handler:^(UIAlertAction *action) {
+                                                                          [self removeViolationFromCollection:indexPath];
+                                                                      }];
+        
+        UIAlertAction *actionUploadViolation = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload a Video" : @"Upload a Photo", nil)
+                                                                        style:UIAlertActionStyleDefault
+                                                                      handler:^(UIAlertAction *action) {
+                                                                          if (violation.state != HRPViolationStateDone) {
+                                                                              [cell showActivityLoader];
+                                                                              [_violationManager uploadViolation:violation
+                                                                                                      inAutoMode:NO
+                                                                                                       onSuccess:^(BOOL isSuccess) {
+                                                                                                           [cell hideActivityLoader];
+                                                                                                       }];
+                                                                          }
+                                                                      }];
+        
+        // ADD WHEN NEED
+        /*
+         UIAlertAction *actionUploadViolations = [UIAlertAction actionWithTitle:NSLocalizedString((violation.type == HRPViolationTypeVideo) ? @"Upload Videos" : @"Upload Photos", nil)
+         style:UIAlertActionStyleDefault
+         handler:^(UIAlertAction *action) {
+         [_violationManager uploadViolations:_violationsCollectionView];
+         }];
+         */
+        
+        if (violation.type == HRPViolationTypeVideo)
+            [alertController addAction:actionOpenViolationVideo];
+        else
+            [alertController addAction:actionOpenViolationPhoto];
+        
+        if (violation.state != HRPViolationStateDone && !violation.isUploading && _violationManager.uploadingCount < 2) {
+            [alertController addAction:actionUploadViolation];
+            [alertController addAction:actionRemoveViolation];
+        }
+        
+        else
+            [alertController addAction:actionRemoveViolation];
+        
+        // ADD WHEN NEED
+        /*
+         if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
+         [alertController addAction:actionUploadViolations];
+         */
+        
+        
+        [alertController addAction:actionCancel];
+        
+        [self presentViewController:alertController animated:YES completion:nil];
     }
-    
-    else
-        [alertController addAction:actionRemoveViolation];
-    
-    // ADD WHEN NEED
-    /*
-     if (_violationManager.violationsNeedUpload.count > 0 && violation.type == HRPViolationTypePhoto)
-     [alertController addAction:actionUploadViolations];
-     */
-    
-    
-    [alertController addAction:actionCancel];
-    
-    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 

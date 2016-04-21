@@ -25,9 +25,6 @@
     
     self.navigationItem.title = NSLocalizedString(@"Preview a Video", nil);
     
-    //    _statusViewTopConstraint.constant = ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait) ?
-    //                                                    0.f : -20.f;
-    
     self.player = [AVPlayer playerWithURL:_videoURL];
     self.player.volume = [[AVAudioSession sharedInstance] outputVolume];
     
@@ -50,7 +47,7 @@
     
     for(AVAssetTrack *track in audioTracks){
         AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters] ;
-        [audioInputParams setVolume:2.f atTime:kCMTimeZero] ;
+        [audioInputParams setVolume:12.f atTime:kCMTimeZero] ;
         [audioInputParams setTrackID:[track trackID]] ;
         [allAudioParams addObject:audioInputParams];
     }
