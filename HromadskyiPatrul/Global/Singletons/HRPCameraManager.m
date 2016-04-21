@@ -106,6 +106,7 @@
 - (void)createTimerWithLabel:(UILabel *)label {
     _sessionDuration = 120; // 2 minutes
     _violationTime = 0;
+    _currentTimerValue = 0;
     _timerLabel = label;
     _timerLabel.text = [self formattedTime:_currentTimerValue];
     
@@ -274,6 +275,7 @@
     [_timer invalidate];
     _timer = nil;
     _currentTimerValue = 0;
+//    _timerLabel.text = [self formattedTime:_currentTimerValue];
 }
 
 - (void)stopVideoRecording {

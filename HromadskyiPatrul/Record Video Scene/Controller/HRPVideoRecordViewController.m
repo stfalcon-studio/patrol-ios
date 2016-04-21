@@ -26,6 +26,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    _cameraManager = [HRPCameraManager sharedManager];
+
     // Create violations array
     [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
         [self startVideoRecord];
@@ -38,8 +40,6 @@
                                                                             action:nil];
     
     [UIApplication sharedApplication].idleTimerDisabled = YES;
-    
-    _cameraManager = [HRPCameraManager sharedManager];
     
     // Set Notification Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -84,27 +84,27 @@
 
 #pragma mark - Actions -
 - (void)handlerRightBarButtonTap:(UIBarButtonItem *)sender {
+    [self showLoaderWithText:NSLocalizedString(@"Close", nil)
+          andBackgroundColor:BackgroundColorTypeBlue
+                     forTime:100.f];
+    
     sender.enabled = NO;
     
-    // Stop Video Record Session
-    [_cameraManager stopVideoSession];
-    [_cameraManager.videoPreviewLayer removeFromSuperlayer];
-    
     [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
-        if (isSuccess) {
-            // Transition to Collection Scene
-            if (self.isStartAsRecorder) {
-                HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
-                _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
-                
-                [self.navigationController pushViewController:collectionVC animated:YES];
-                NSLog(@"1. CollectionVC pushed");
-            }
+        // Transition to Collection Scene
+        if (self.isStartAsRecorder) {
+            HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+            _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
             
-            else {
-                [self.navigationController popViewControllerAnimated:YES];
-                NSLog(@"1. RecordVC poped");
-            }
+            [self.navigationController pushViewController:collectionVC animated:YES];
+            [self hideLoader];
+            NSLog(@"1. CollectionVC pushed");
+        }
+        
+        else {
+            [self.navigationController popViewControllerAnimated:YES];
+            [self hideLoader];
+            NSLog(@"1. RecordVC poped");
         }
     }];
 }
@@ -187,7 +187,6 @@
     
     [self.view.layer insertSublayer:_cameraManager.videoPreviewLayer below:_violationLabel.layer];
     
-    //    _statusView = [self customizeStatusBar];
     [self customizeViewStyle];
     
     _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;

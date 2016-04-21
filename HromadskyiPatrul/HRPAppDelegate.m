@@ -46,9 +46,8 @@ NSString const *DeviceMode = @"Device";
     [UIApplication sharedApplication].idleTimerDisabled = YES;
 
     // Crashlytics SDK
-    [Fabric with:@[CrashlyticsKit]];
-//    [Fabric with:@[[Crashlytics class]]];
-
+//    [Fabric with:@[CrashlyticsKit]];
+    [Fabric with:@[[Crashlytics class]]];
 
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 
@@ -61,7 +60,7 @@ NSString const *DeviceMode = @"Device";
             [weakSelf appDidHide];
         }
 
-        else if ([call.callState isEqualToString: CTCallStateConnected] ||
+        else if (/*[call.callState isEqualToString: CTCallStateConnected] ||*/
                  [call.callState isEqualToString: CTCallStateDisconnected]) {
              [weakSelf appDidShow];
          }
@@ -114,41 +113,44 @@ NSString const *DeviceMode = @"Device";
 }
 
 - (void)appDidShow {
-    if ([_videoRecordVC isKindOfClass:[HRPVideoRecordViewController class]]) {
-        _videoRecordVC.cameraManager.videoSessionMode = _modeVC;
-        
-        if (!_videoRecordVC.cameraManager.videoImageOriginal && _modeVC == NSTimerVideoSessionModeStream) {
-            [_videoRecordVC startVideoRecord];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([_videoRecordVC isKindOfClass:[HRPVideoRecordViewController class]]) {
+            _videoRecordVC.cameraManager.videoSessionMode = _modeVC;
+            
+            if (!_videoRecordVC.cameraManager.videoImageOriginal && _modeVC == NSTimerVideoSessionModeStream && !_callCenter) {
+                [_videoRecordVC startVideoRecord];
+            }
+            
+            else {
+                _videoRecordVC.violationLabel.text = nil;
+                _videoRecordVC.violationLabel.isLabelFlashing = NO;
+                _videoRecordVC.navigationItem.rightBarButtonItem.enabled = YES;
+                _videoRecordVC.cameraManager.isVideoSaving = NO;
+                _videoRecordVC.cameraManager.timer = nil;
+                _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+                
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Alert info title", nil)
+                                                                               message:NSLocalizedString(@"Alert error sleep message", nil)
+                                                                        preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *actionOk = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Ok", nil)
+                                                                   style:UIAlertActionStyleDefault
+                                                                 handler:^(UIAlertAction *action) {
+                                                                     if (_videoRecordVC.cameraManager.videoImageOriginal) {
+                                                                         _videoRecordVC.cameraManager.videoImageOriginal = nil;
+                                                                         [_videoRecordVC.cameraManager removeAllFolderMediaTempFiles];
+                                                                         [_videoRecordVC hideLoader];
+                                                                     }
+                                                                     
+                                                                     [_videoRecordVC startVideoRecord];
+                                                                 }];
+                
+                [alert addAction:actionOk];
+                
+                [_videoRecordVC presentViewController:alert animated:YES completion:nil];
+            }
         }
-        
-        else {
-            _videoRecordVC.violationLabel.text = nil;
-            _videoRecordVC.violationLabel.isLabelFlashing = NO;
-            _videoRecordVC.navigationItem.rightBarButtonItem.enabled = YES;
-            _videoRecordVC.cameraManager.isVideoSaving = NO;
-            _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
-            
-            UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Alert info title", nil)
-                                                                           message:NSLocalizedString(@"Alert error sleep message", nil)
-                                                                    preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *actionOk = [UIAlertAction actionWithTitle:NSLocalizedString(@"Alert error button Ok", nil)
-                                                               style:UIAlertActionStyleDefault
-                                                             handler:^(UIAlertAction *action) {
-                                                                 if (_videoRecordVC.cameraManager.videoImageOriginal) {
-                                                                     _videoRecordVC.cameraManager.videoImageOriginal = nil;
-                                                                     [_videoRecordVC.cameraManager removeAllFolderMediaTempFiles];
-                                                                     [_videoRecordVC hideLoader];
-                                                                 }
-
-                                                                 [_videoRecordVC startVideoRecord];
-                                                            }];
-            
-            [alert addAction:actionOk];
-            
-            [_videoRecordVC presentViewController:alert animated:YES completion:nil];
-        }
-    }
+    });
 }
 
 

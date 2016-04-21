@@ -99,6 +99,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         [[UINavigationBar appearance] addSubview:_statusView];
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
+    
+    [[HRPCameraManager sharedManager] stopVideoSession];
+    [[HRPCameraManager sharedManager].videoPreviewLayer removeFromSuperlayer];
 }
 
 - (void)didReceiveMemoryWarning {

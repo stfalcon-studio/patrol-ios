@@ -143,7 +143,7 @@
             }
             
             if (arrayRead.count == 0)
-                success(NO);
+                success(YES);
         }
         
         else
