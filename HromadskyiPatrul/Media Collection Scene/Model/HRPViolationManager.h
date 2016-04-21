@@ -38,6 +38,7 @@
 - (BOOL)canViolationUploadAuto:(BOOL)isAutoUpload;
 
 - (void)saveViolationsToFile:(NSMutableArray *)violations;
+- (void)readViolationsFromFileSuccess:(void(^)(BOOL isSuccess))success;
 
 - (void)getVideoSizeFromInfo:(NSDictionary *)info;
 - (void)checkVideoFileSize;

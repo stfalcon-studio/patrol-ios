@@ -30,7 +30,7 @@
     _isLabelFlashing = YES;
     self.alpha = 1.f;
     
-    [UIView animateWithDuration:0.10f
+    [UIView animateWithDuration:0.30f
                           delay:0.f
                         options:UIViewAnimationOptionCurveEaseInOut |
                                 UIViewAnimationOptionRepeat         |

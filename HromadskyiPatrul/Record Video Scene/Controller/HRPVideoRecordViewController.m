@@ -26,6 +26,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Create violations array
+    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
+        [self startVideoRecord];
+    }];
+
     // Hide Back bar button
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@""
                                                                              style:UIBarButtonItemStylePlain
@@ -50,13 +55,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     _violationLabel.hidden = YES;
     CGSize size = [[UIScreen mainScreen] bounds].size;
-    
-    // Create violations array
-    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
-        [self startVideoRecord];
-    }];
     
     if (UIDeviceOrientationIsPortrait([[UIDevice currentDevice] orientation]) ||
         ([[UIDevice currentDevice] orientation] == UIDeviceOrientationFaceUp && size.width < size.height)) {
@@ -89,18 +90,23 @@
     [_cameraManager stopVideoSession];
     [_cameraManager.videoPreviewLayer removeFromSuperlayer];
     
-    // Transition to Collection Scene
-    if (self.isStartAsRecorder) {
-        HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
-        
-        [self.navigationController pushViewController:collectionVC animated:YES];
-        NSLog(@"1. CollectionVC pushed");
-    }
-    
-    else {
-        [self.navigationController popViewControllerAnimated:YES];
-        NSLog(@"1. RecordVC poped");
-    }
+    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
+        if (isSuccess) {
+            // Transition to Collection Scene
+            if (self.isStartAsRecorder) {
+                HRPCollectionViewController *collectionVC = [self.storyboard instantiateViewControllerWithIdentifier:@"CollectionVC"];
+                _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+                
+                [self.navigationController pushViewController:collectionVC animated:YES];
+                NSLog(@"1. CollectionVC pushed");
+            }
+            
+            else {
+                [self.navigationController popViewControllerAnimated:YES];
+                NSLog(@"1. RecordVC poped");
+            }
+        }
+    }];
 }
 
 

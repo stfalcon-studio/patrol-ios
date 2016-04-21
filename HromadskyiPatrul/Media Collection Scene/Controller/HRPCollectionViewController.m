@@ -25,6 +25,7 @@
 #import "HRPViolationManager.h"
 #import "HRPViolation.h"
 #import "HRPCameraController.h"
+#import "HRPVideoRecordViewController.h"
 
 
 typedef void (^ALAssetsLibraryAssetForURLResultBlock)(ALAsset *asset);
@@ -48,20 +49,22 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
-          andBackgroundColor:BackgroundColorTypeBlack
-                     forTime:300];
-    
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
     
-    [_violationManager customizeManagerSuccess:^(BOOL isSuccess) {
-        if (isSuccess)
-            [_violationsCollectionView reloadData];
-        
-        [self hideLoader];
-    }];
+    if (self.isStartAsRecorder) {
+        [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
+              andBackgroundColor:BackgroundColorTypeBlack
+                         forTime:300];
     
+        [_violationManager customizeManagerSuccess:^(BOOL isSuccess) {
+            if (isSuccess)
+                [_violationsCollectionView reloadData];
+            
+            [self hideLoader];
+        }];
+    }
+
     // Remove local file with violations array
     // Only for Debug mode
     //[_violationManager removeViolationsFromFile];
@@ -170,26 +173,30 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:300];
     
-    if (!self.isStartAsRecorder) {
-        [self.navigationController popViewControllerAnimated:YES];
-        NSLog(@"2. CollectionVC poped");
-    }
-    
-    else {
-        if (TARGET_IPHONE_SIMULATOR) {
-            [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil) andMessage:NSLocalizedString(@"Camera is not available", nil)];
-            
-            [self hideLoader];
-            self.view.userInteractionEnabled = YES;
+    // Create violations array
+    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
+        if (!self.isStartAsRecorder) {
+            [self.navigationController popViewControllerAnimated:YES];
+            [(HRPVideoRecordViewController *)[self.navigationController.viewControllers lastObject] startVideoRecord];
+            NSLog(@"2. CollectionVC poped");
         }
-
+        
         else {
-            HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
-
-            [self.navigationController pushViewController:nextVC animated:YES];
-            NSLog(@"2. RecordVC pushed");
+            if (TARGET_IPHONE_SIMULATOR) {
+                [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil) andMessage:NSLocalizedString(@"Camera is not available", nil)];
+                
+                [self hideLoader];
+                self.view.userInteractionEnabled = YES;
+            }
+            
+            else {
+                HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
+                
+                [self.navigationController pushViewController:nextVC animated:YES];
+                NSLog(@"2. RecordVC pushed");
+            }
         }
-    }
+    }];
 }
 
 - (IBAction)handlerCameraButtonTap:(UIButton *)sender {
