@@ -38,6 +38,12 @@
     [super didReceiveMemoryWarning];
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    self.player = nil;
+    self.playerView = nil;
+}
 
 #pragma mark - Methods -
 - (void)setAudioVolume {
@@ -45,9 +51,9 @@
     NSArray *audioTracks = [avAsset tracksWithMediaType:AVMediaTypeAudio] ;
     NSMutableArray *allAudioParams = [NSMutableArray array] ;
     
-    for(AVAssetTrack *track in audioTracks){
+    for (AVAssetTrack *track in audioTracks) {
         AVMutableAudioMixInputParameters *audioInputParams = [AVMutableAudioMixInputParameters audioMixInputParameters] ;
-        [audioInputParams setVolume:12.f atTime:kCMTimeZero] ;
+        [audioInputParams setVolume:1.f atTime:kCMTimeZero] ;
         [audioInputParams setTrackID:[track trackID]] ;
         [allAudioParams addObject:audioInputParams];
     }

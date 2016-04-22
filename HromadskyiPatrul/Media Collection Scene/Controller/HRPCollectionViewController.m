@@ -220,6 +220,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             cameraVC.modalPresentationStyle = UIModalPresentationCurrentContext;
             _imagePickerController = cameraVC;
             
+            [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+
             if (![_imagePickerController isBeingPresented])
                 [self.navigationController presentViewController:_imagePickerController
                                                         animated:YES
@@ -309,6 +311,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                              videoPlayerVC.videoURL = [NSURL URLWithString:violation.assetsVideoURL];
                                                                              _violationManager.isCollectionShow = NO;
                                                                              
+                                                                             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:nil];
+
                                                                              [self presentViewController:videoPlayerVC animated:YES completion:^{}];
                                                                          }];
         
@@ -531,6 +535,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         
         else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
             [self readMetaDataFromVideoFile:[NSURL URLWithString:videoURL] forViolation:violation];
+        
+        _imagePickerController = nil;
     }
 }
 

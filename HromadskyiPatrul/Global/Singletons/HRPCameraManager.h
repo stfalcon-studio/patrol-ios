@@ -44,6 +44,7 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (strong, nonatomic) NSMutableArray *violations;
 @property (strong, nonatomic) NSMutableArray *images;
 @property (strong, nonatomic) UIImage *videoImageOriginal;
+@property (strong, nonatomic) AVAudioSession *audioSession;
 
 @property (strong, nonatomic) NSURL *videoFileURL;
 @property (strong, nonatomic) UILabel *timerLabel;

@@ -89,6 +89,7 @@
                      forTime:100.f];
     
     sender.enabled = NO;
+    [_cameraManager stopVideoSession];
     
     [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
         // Transition to Collection Scene

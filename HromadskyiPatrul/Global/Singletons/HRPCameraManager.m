@@ -16,7 +16,6 @@
 @implementation HRPCameraManager {
     AVAudioRecorder *_audioRecorder;
     AVAudioPlayer *_audioPlayer;
-    AVAudioSession *_audioSession;
     AVMutableComposition *_composition;
 
     NSDictionary *_audioRecordSettings;
@@ -232,9 +231,12 @@
         NSError *error = nil;
         _audioSession = [AVAudioSession sharedInstance];
         
-        [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+        [_audioSession setCategory:AVAudioSessionCategoryPlayAndRecord error:&error];
         [_audioSession setActive:YES withOptions:0 error:nil];
         
+        if (error)
+            NSLog(@"error setting audio: %@", error);
+
         _snippetAudioFileName = ([_snippetAudioFileName isEqualToString:@"snippet_audio_1.caf"] || _snippetAudioFileName == nil) ?
                                     @"snippet_audio_0.caf" : @"snippet_audio_1.caf";
         
@@ -275,7 +277,6 @@
     [_timer invalidate];
     _timer = nil;
     _currentTimerValue = 0;
-//    _timerLabel.text = [self formattedTime:_currentTimerValue];
 }
 
 - (void)stopVideoRecording {
@@ -286,7 +287,6 @@
 - (void)stopAudioRecording {
     if (_audioRecorder.recording) {
         [_audioRecorder stop];
-        //_videoSessionMode = NSTimerVideoSessionModeStream;
     }
 }
 
