@@ -598,11 +598,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                               // Modify Violation item
                               violation.assetsVideoURL = [assetVideoURL absoluteString];
                               violation.assetsPhotoURL = [assetPhotoURL absoluteString];
-                              image.imageOriginalURL = [assetPhotoURL absoluteString];
-                              image.imageAvatar = [image resizeImage:photoFromVideo
-                                                              toSize:_violationManager.cellSize
-                                                     andCropInCenter:YES];
-                              
+                              image.imageOriginalURL = [assetPhotoURL absoluteString];                              
+                              image.imageAvatar = [image squareImageFromImage:photoFromVideo scaledToSize:_violationManager.cellSize.width];
+
                               [UIView transitionWithView:cell.photoImageView
                                                 duration:0.5f
                                                  options:UIViewAnimationOptionTransitionCrossDissolve
