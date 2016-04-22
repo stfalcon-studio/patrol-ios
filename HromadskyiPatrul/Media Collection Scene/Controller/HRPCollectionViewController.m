@@ -87,6 +87,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if (self.isStartAsRecorder)
+        [_violationsCollectionView reloadData];
+    
     _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
     self.view.userInteractionEnabled = YES;
