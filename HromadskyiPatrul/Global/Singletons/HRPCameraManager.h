@@ -74,6 +74,7 @@ typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
 @property (assign, nonatomic) NSTimerVideoSessionMode videoSessionMode;
 
 - (void)timerTicked:(NSTimer *)timer;
-- (void)createTimerWithLabel:(UILabel *)label;
+- (void)createTimer; //WithLabel:(UILabel *)label;
+//- (void)createTimerWithLabel:(UILabel *)label;
 
 @end

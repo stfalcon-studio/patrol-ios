@@ -27,6 +27,7 @@
     [super viewDidLoad];
     
     _cameraManager = [HRPCameraManager sharedManager];
+    _cameraManager.timerLabel = _timerLabel;
 
     // Create violations array
     [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
@@ -118,8 +119,8 @@
     
     [_cameraManager startStreamVideoRecording];
     
-    if (!_cameraManager.timer)
-        [_cameraManager createTimerWithLabel:_timerLabel];
+    if (!_cameraManager.timer.isValid)
+        [_cameraManager createTimer];
     
     if (self.HUD.alpha)
         [self hideLoader];
@@ -202,7 +203,7 @@
     _violationLabel.hidden = YES;
     
     if (!_cameraManager.timer)
-        [_cameraManager createTimerWithLabel:_timerLabel];
+        [_cameraManager createTimer];
 }
 
 

@@ -102,11 +102,11 @@
 
 
 #pragma mark - Timer Methods -
-- (void)createTimerWithLabel:(UILabel *)label {
+- (void)createTimer {
     _sessionDuration = 120; // 2 minutes
     _violationTime = 0;
     _currentTimerValue = 0;
-    _timerLabel = label;
+    //createTimer_timerLabel = label;
     _timerLabel.text = [self formattedTime:_currentTimerValue];
     
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.f
@@ -658,7 +658,7 @@
         _currentTimerValue = 0;
     
     if (!_timer)
-        [self createTimerWithLabel:_timerLabel];
+        [self createTimer];
 }
 
 - (void)captureOutput:(AVCaptureFileOutput *)captureOutput didFinishRecordingToOutputFileAtURL:(NSURL *)outputFileURL
