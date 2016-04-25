@@ -43,6 +43,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 @implementation HRPCollectionViewController {
     UIView *_statusView;
+    BOOL _isCameraRun;
 }
 
 #pragma mark - Constructors -
@@ -51,6 +52,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
+    _isCameraRun = NO;
     
     if (self.isStartAsRecorder) {
         [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
@@ -87,8 +89,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (self.isStartAsRecorder)
+    if (self.isStartAsRecorder || _isCameraRun) {
         [_violationsCollectionView reloadData];
+        
+        if (_isCameraRun == 1)
+            _isCameraRun = NO;
+    }
     
     _violationManager.isCollectionShow = YES;
     [self setRightBarButtonEnable:YES];
@@ -174,13 +180,18 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 - (IBAction)handlerRecordButtonTap:(UIButton *)sender {
     self.view.userInteractionEnabled = NO;
     _violationManager.isCollectionShow = NO;
+    _isCameraRun = YES;
     
     [self showLoaderWithText:NSLocalizedString(@"Launch text", nil)
           andBackgroundColor:BackgroundColorTypeBlue
                      forTime:300];
     
+    // Save current violations state to file
+    _violationManager = [HRPViolationManager sharedManager];
+    [_violationManager saveViolationsToFile:_violationManager.violations];
+    
     // Create violations array
-    [[HRPViolationManager sharedManager] customizeManagerSuccess:^(BOOL isSuccess) {
+    [_violationManager customizeManagerSuccess:^(BOOL isSuccess) {
         if (!self.isStartAsRecorder) {
             [self.navigationController popViewControllerAnimated:YES];
             [(HRPVideoRecordViewController *)[self.navigationController.viewControllers lastObject] startVideoRecord];
@@ -246,6 +257,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [_violationManager.violations replaceObjectAtIndex:indexPath.row withObject:violation];
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:indexPath];
+    cell.violation = violation;
     
     [cell customizeCellStyle];
     [cell uploadImage:indexPath inImages:_violationManager.images];

@@ -41,6 +41,8 @@
     
     if (self) {
         _isNetworkAvailable = YES;
+        _uploadingCount = 0;
+        _isUploading = NO;
         
         // Set Reachability Observer
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -67,8 +69,6 @@
         side = (viewFrame.size.width - 8.f) / 3;
     
     _cellSize = CGSizeMake(side, side);
-    _uploadingCount = 0;
-    _isUploading = NO;
     
     // Create violations array
     [self readViolationsFromFileSuccess:^(BOOL isSuccess) {
@@ -310,8 +310,11 @@
     _uploadingCount--;
     violation.isUploading = NO;
     violation.state = (success) ? HRPViolationStateDone : HRPViolationStateRepeat;
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.assetsVideoURL contains[cd] %@", violation.assetsVideoURL];
+    NSUInteger violationIndex = [_violations indexOfObject:[[_violations filteredArrayUsingPredicate:predicate] lastObject]];
+    NSLog(@"violationIndex = %li", (long)violationIndex);
     
-    [_violations replaceObjectAtIndex:[_violations indexOfObject:violation]
+    [_violations replaceObjectAtIndex:violationIndex //[_violations indexOfObject:violation]
                            withObject:violation];
     
     [self saveViolationsToFile:_violations];
