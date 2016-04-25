@@ -118,7 +118,7 @@
 
 - (void)timerTicked:(NSTimer *)timer {
     _currentTimerValue++;
-    
+            
     if (_currentTimerValue == _sessionDuration) {
         if (_videoSessionMode == NSTimerVideoSessionModeStream)
             _currentTimerValue = 0;

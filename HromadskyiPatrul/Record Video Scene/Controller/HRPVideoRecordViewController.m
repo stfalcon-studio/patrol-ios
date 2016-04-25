@@ -117,7 +117,9 @@
     _cameraManager.isVideoSaving = NO;
     
     [_cameraManager startStreamVideoRecording];
-    [_cameraManager createTimerWithLabel:_timerLabel];
+    
+    if (!_cameraManager.timer)
+        [_cameraManager createTimerWithLabel:_timerLabel];
     
     if (self.HUD.alpha)
         [self hideLoader];
@@ -199,7 +201,8 @@
 - (void)customizeViewStyle {
     _violationLabel.hidden = YES;
     
-    [_cameraManager createTimerWithLabel:_timerLabel];
+    if (!_cameraManager.timer)
+        [_cameraManager createTimerWithLabel:_timerLabel];
 }
 
 
