@@ -150,6 +150,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [self setRightBarButtonEnable:NO];
     HRPSettingsViewController *settingsTVC = [self.storyboard instantiateViewControllerWithIdentifier:@"SettingsTVC"];
     
+    [_violationManager saveViolationsToFile:_violationManager.violations];
+
     // Handler change Auto upload item
     [settingsTVC setDidChangeAutoUploadItem:^(id item) {
         if ([item boolValue] == YES) {
@@ -171,7 +173,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         
         libraryVC.modalPresentationStyle = UIModalPresentationCurrentContext;
         _imagePickerController = libraryVC;
-        
+
+        [_violationManager saveViolationsToFile:_violationManager.violations];
+
         if (![_imagePickerController isBeingPresented])
             [self.navigationController presentViewController:_imagePickerController animated:YES completion:nil];
     });
@@ -232,6 +236,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             _imagePickerController = cameraVC;
             
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+
+            [_violationManager saveViolationsToFile:_violationManager.violations];
 
             if (![_imagePickerController isBeingPresented])
                 [self.navigationController presentViewController:_imagePickerController
@@ -389,6 +395,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 }
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+    if (_violationManager.violations.count == 0)
+        [self hideLoader];
+    
     return _violationManager.violations.count;
 }
 
@@ -542,6 +551,11 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             [_violationsCollectionView reloadData];
         
         // Save Video to Library
+        if (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
+            violation.latitude = _imagePickerController.latitude;
+            violation.longitude = _imagePickerController.longitude;
+        }
+
 //        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera)
             [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
         
@@ -558,8 +572,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         
         ALAssetsLibraryAssetForURLResultBlock resultblock = ^(ALAsset *videoAsset) {
             CLLocation *location = [videoAsset valueForProperty:ALAssetPropertyLocation];
-            violation.latitude = (location.coordinate.latitude == 0.f) ? -0.1f : location.coordinate.latitude;
-            violation.longitude = (location.coordinate.longitude == 0.f) ? -0.1f : location.coordinate.longitude;
+            
+            if (violation.latitude == 0)
+                violation.latitude = (location.coordinate.latitude == 0.f) ? -0.1f : location.coordinate.latitude;
+            
+            if (violation.longitude == 0)
+                violation.longitude = (location.coordinate.longitude == 0.f) ? -0.1f : location.coordinate.longitude;
+            
             violation.duration = [[videoAsset valueForProperty:ALAssetPropertyDuration] floatValue];
             
             [self updateViolation:violation atAssetURL:videoURL];
@@ -582,7 +601,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                               andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
                                         
                                         else
-                                            [self updateViolation:violation atAssetURL:assetVideoURL];
+                                            [self readMetaDataFromVideoFile:videoURL forViolation:violation];
                                     });
                                 }];
 }
@@ -624,13 +643,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                   violation.type = HRPViolationTypeVideo;
                                                   violation.date = [NSDate date];
                                                   
-//                                                  if (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
-//                                                      violation.latitude = _imagePickerController.latitude;
-//                                                      violation.longitude = _imagePickerController.longitude;
-//                                                  }
-                                                  [self readMetaDataFromVideoFile:assetPhotoURL /*[NSURL URLWithString:videoURL]*/ forViolation:violation];
-                                                  
-
                                                   [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
                                                   [_violationManager.images replaceObjectAtIndex:0 withObject:image.imageAvatar];
                                                   [_violationManager saveViolationsToFile:_violationManager.violations];

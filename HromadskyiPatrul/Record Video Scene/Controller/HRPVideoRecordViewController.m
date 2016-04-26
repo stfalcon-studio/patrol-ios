@@ -125,6 +125,8 @@
     
     if (self.HUD.alpha)
         [self hideLoader];
+    
+    self.view.userInteractionEnabled = YES;
 }
 
 - (void)handlerMergeAndSaveVideo:(NSNotification *)notification {
@@ -154,6 +156,7 @@
             self.navigationItem.rightBarButtonItem.enabled = NO;
             
             [_violationLabel startFlashing];
+            self.view.userInteractionEnabled = NO;
         }
     }
 }

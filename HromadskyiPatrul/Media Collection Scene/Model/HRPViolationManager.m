@@ -312,7 +312,7 @@
     violation.state = (success) ? HRPViolationStateDone : HRPViolationStateRepeat;
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.assetsVideoURL contains[cd] %@", violation.assetsVideoURL];
     NSUInteger violationIndex = [_violations indexOfObject:[[_violations filteredArrayUsingPredicate:predicate] lastObject]];
-    // NSLog(@"violationIndex = %li", (long)violationIndex);
+    NSLog(@"violationIndex = %li", (long)violationIndex);
     
     [_violations replaceObjectAtIndex:violationIndex withObject:violation];
     [self saveViolationsToFile:_violations];
