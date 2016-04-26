@@ -122,6 +122,21 @@ NSString const *DeviceMode = @"Device";
             }
             
             else {
+                _videoRecordVC.violationLabel.text = nil;
+                _videoRecordVC.violationLabel.isLabelFlashing = NO;
+                _videoRecordVC.navigationItem.rightBarButtonItem.enabled = YES;
+                _videoRecordVC.cameraManager.isVideoSaving = NO;
+                _videoRecordVC.cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
+                _videoRecordVC.cameraManager.videoImageOriginal = nil;
+                
+                [_videoRecordVC.cameraManager removeAllFolderMediaTempFiles];
+                [_videoRecordVC hideLoader];
+                [_videoRecordVC startVideoRecord];
+        }
+            
+            
+                // DELETE AFTER TESTING
+                /*
                 UIAlertController *alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Alert info title", nil)
                                                                                message:NSLocalizedString(@"Alert error sleep message", nil)
                                                                         preferredStyle:UIAlertControllerStyleAlert];
@@ -148,7 +163,9 @@ NSString const *DeviceMode = @"Device";
                 [alert addAction:actionOk];
                 
                 [_videoRecordVC presentViewController:alert animated:YES completion:nil];
+                 
             }
+            */
         }
     });
 }

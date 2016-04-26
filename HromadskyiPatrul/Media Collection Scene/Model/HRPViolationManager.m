@@ -40,7 +40,7 @@
     self = [super init];
     
     if (self) {
-        _isNetworkAvailable = YES;
+        _isNetworkAvailable = [[AFNetworkReachabilityManager sharedManager] isReachable];
         _uploadingCount = 0;
         _isUploading = NO;
         
@@ -254,8 +254,12 @@
             });
         }
         
-        else
+        else {
+//            if (![self canViolationUploadAuto:isAutoMode])
+//                [self showAlertViewWithMessage:NSLocalizedString(@"Alert error internet message", nil)];
+            
             success(NO);
+        }
     }
 
     else
@@ -372,7 +376,8 @@
 
 - (void)reachabilityDidChange:(NSNotification *)notification {
     if (notification.userInfo[@"AFNetworkingReachabilityNotificationStatusItem"]) {
-        _isNetworkAvailable = [self canViolationUploadAuto:_isAllowedUploadViolationsAutomatically];
+        _isNetworkAvailable = [[AFNetworkReachabilityManager sharedManager] isReachable];
+//        _isNetworkAvailable = [self canViolationUploadAuto:_isAllowedUploadViolationsAutomatically];
     }
 }
 
