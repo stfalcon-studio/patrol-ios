@@ -27,6 +27,7 @@ typedef NS_ENUM (NSInteger, HRPCameraManagerSetupResult) {
 typedef NS_ENUM (NSInteger, NSTimerVideoSessionMode) {
     NSTimerVideoSessionModeStream,
     NSTimerVideoSessionModeViolation,
+    NSTimerVideoSessionModeMergeAndSave,
     NSTimerVideoSessionModeDismissed
 };
 

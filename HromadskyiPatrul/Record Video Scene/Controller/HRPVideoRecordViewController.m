@@ -201,6 +201,7 @@
     
     [_cameraManager.captureSession startRunning];
     [_cameraManager startStreamVideoRecording];
+    self.view.userInteractionEnabled = YES;
 }
 
 - (void)customizeViewStyle {

@@ -237,7 +237,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
 
-            [_violationManager saveViolationsToFile:_violationManager.violations];
+//            [_violationManager saveViolationsToFile:_violationManager.violations];
 
             if (![_imagePickerController isBeingPresented])
                 [self.navigationController presentViewController:_imagePickerController
@@ -311,6 +311,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                style:UIAlertActionStyleCancel
                                                              handler:nil];
         
+        /*
         UIAlertAction *actionOpenViolationPhoto = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Photo", nil)
                                                                            style:UIAlertActionStyleDefault
                                                                          handler:^(UIAlertAction *action) {
@@ -320,6 +321,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                              
                                                                              [self presentViewController:photoPreviewVC animated:YES completion:nil];
                                                                          }];
+         */
         
         UIAlertAction *actionOpenViolationVideo = [UIAlertAction actionWithTitle:NSLocalizedString(@"Open a Video", nil)
                                                                            style:UIAlertActionStyleDefault
@@ -360,12 +362,16 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
          handler:^(UIAlertAction *action) {
          [_violationManager uploadViolations:_violationsCollectionView];
          }];
-         */
+         
         
         if (violation.type == HRPViolationTypeVideo)
             [alertController addAction:actionOpenViolationVideo];
         else
             [alertController addAction:actionOpenViolationPhoto];
+         */
+        
+        
+        [alertController addAction:actionOpenViolationVideo];
         
         if (violation.state != HRPViolationStateDone && !violation.isUploading && _violationManager.uploadingCount < 2) {
             [alertController addAction:actionUploadViolation];
@@ -557,7 +563,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         }
 
 //        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera)
-            [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
+        [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
         
 //        else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
 //            [self readMetaDataFromVideoFile:[NSURL URLWithString:videoURL] forViolation:violation];
@@ -601,7 +607,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                               andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
                                         
                                         else
-                                            [self readMetaDataFromVideoFile:videoURL forViolation:violation];
+                                            [self readMetaDataFromVideoFile:assetVideoURL forViolation:violation];
                                     });
                                 }];
 }
