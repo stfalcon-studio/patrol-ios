@@ -671,7 +671,7 @@
     // Violation mode
     else if (_videoSessionMode == NSTimerVideoSessionModeViolation) {
         // Finish Record Violation Video
-        //_videoSessionMode = NSTimerVideoSessionModeStream;
+        _videoSessionMode = NSTimerVideoSessionModeStream;
         //_currentTimerValue = 0;
         //_timer = nil;
         
