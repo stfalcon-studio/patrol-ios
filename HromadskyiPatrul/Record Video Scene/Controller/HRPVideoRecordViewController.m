@@ -116,6 +116,7 @@
 - (void)handlerStartVideoSession:(NSNotification *)notification {
     self.navigationItem.rightBarButtonItem.enabled = YES;
     _cameraManager.isVideoSaving = NO;
+    _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
     
     [_cameraManager startStreamVideoRecording];
     

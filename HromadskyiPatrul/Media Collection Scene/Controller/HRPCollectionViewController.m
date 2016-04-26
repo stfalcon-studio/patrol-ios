@@ -542,12 +542,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             [_violationsCollectionView reloadData];
         
         // Save Video to Library
-        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera)
+//        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera)
             [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
         
-        else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
-            [self readMetaDataFromVideoFile:[NSURL URLWithString:videoURL] forViolation:violation];
-        
+//        else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
+//            [self readMetaDataFromVideoFile:[NSURL URLWithString:videoURL] forViolation:violation];
+//        
         _imagePickerController = nil;
     }
 }
@@ -624,11 +624,13 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                   violation.type = HRPViolationTypeVideo;
                                                   violation.date = [NSDate date];
                                                   
-                                                  if (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
-                                                      violation.latitude = _imagePickerController.latitude;
-                                                      violation.longitude = _imagePickerController.longitude;
-                                                  }
+//                                                  if (_imagePickerController.sourceType == UIImagePickerControllerSourceTypeCamera) {
+//                                                      violation.latitude = _imagePickerController.latitude;
+//                                                      violation.longitude = _imagePickerController.longitude;
+//                                                  }
+                                                  [self readMetaDataFromVideoFile:assetPhotoURL /*[NSURL URLWithString:videoURL]*/ forViolation:violation];
                                                   
+
                                                   [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
                                                   [_violationManager.images replaceObjectAtIndex:0 withObject:image.imageAvatar];
                                                   [_violationManager saveViolationsToFile:_violationManager.violations];
