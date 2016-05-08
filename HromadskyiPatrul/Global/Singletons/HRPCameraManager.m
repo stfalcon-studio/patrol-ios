@@ -106,7 +106,6 @@
     _sessionDuration = 120; // 2 minutes
     _violationTime = 0;
     _currentTimerValue = 0;
-    //createTimer_timerLabel = label;
     _timerLabel.text = [self formattedTime:_currentTimerValue];
     
     _timer = [NSTimer scheduledTimerWithTimeInterval:1.f
@@ -194,7 +193,6 @@
     if ([_captureSession canAddOutput:_videoFileOutput])
         [_captureSession addOutput:_videoFileOutput];
     
-    /*
     // Set Connection
     AVCaptureConnection *videoConnection = nil;
     
@@ -204,7 +202,6 @@
                 videoConnection = connection;
         }
     }
-    */
     
     // Create StillImageOutput
     AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];

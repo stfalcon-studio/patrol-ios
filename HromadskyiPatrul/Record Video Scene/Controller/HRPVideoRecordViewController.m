@@ -236,7 +236,7 @@
     }
     
     [_cameraManager setVideoPreviewLayerOrientation:size];
-    
+
     // Restart Timer only in Stream Video mode
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
         _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
