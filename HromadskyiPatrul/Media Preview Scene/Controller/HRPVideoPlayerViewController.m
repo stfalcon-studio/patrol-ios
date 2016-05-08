@@ -12,7 +12,7 @@
 
 @interface HRPVideoPlayerViewController ()
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *statusViewTopConstraint;
+//@property (strong, nonatomic) IBOutlet NSLayoutConstraint *statusViewTopConstraint;
 
 @end
 
@@ -23,6 +23,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+//    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
+//        _statusViewTopConstraint.constant = -20.f;
+//    
+//    else
+//        _statusViewTopConstraint.constant = 0.f;
+
     self.navigationItem.title = NSLocalizedString(@"Preview a Video", nil);
     
     self.player = [AVPlayer playerWithURL:_videoURL];
@@ -66,11 +72,11 @@
 
 #pragma mark - UIViewControllerRotation -
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id <UIViewControllerTransitionCoordinator>)coordinator {
-    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
-        self.statusViewTopConstraint.constant = -20.f;
-    
-    else
-        self.statusViewTopConstraint.constant = 0.f;
+//    if ([[UIApplication sharedApplication] statusBarOrientation] == UIInterfaceOrientationPortrait)
+//        _statusViewTopConstraint.constant = -20.f;
+//    
+//    else
+//        _statusViewTopConstraint.constant = 0.f;
 }
 
 @end

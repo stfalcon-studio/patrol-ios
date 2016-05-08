@@ -237,6 +237,15 @@
     
     [_cameraManager setVideoPreviewLayerOrientation:size];
 
+    if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream) {
+        [_cameraManager stopVideoRecording];
+        [_cameraManager removeMediaSnippets];
+        
+        // Stop Timer
+        [_cameraManager.timer invalidate];
+        _cameraManager.timer = nil;
+    }
+    
     // Restart Timer only in Stream Video mode
     if (_cameraManager.videoSessionMode == NSTimerVideoSessionModeStream && !_cameraManager.isVideoSaving) {
         _cameraManager.videoSessionMode = NSTimerVideoSessionModeStream;
