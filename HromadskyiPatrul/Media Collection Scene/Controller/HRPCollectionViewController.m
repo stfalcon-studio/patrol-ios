@@ -289,9 +289,20 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 #pragma mark - Methods -
 - (void)removeViolationFromCollection:(NSIndexPath *)indexPath {
     [_violationsCollectionView performBatchUpdates:^{
+        HRPViolation *violation = [_violationManager.violations objectAtIndex:indexPath.row];
+        
         [_violationManager.violations removeObjectAtIndex:indexPath.row];
         [_violationManager.images removeObjectAtIndex:indexPath.row];
         [_violationsCollectionView deleteItemsAtIndexPaths:@[indexPath]];
+        
+        // Remove files from Album
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            PHAsset *assetViolationPhoto = [PHAsset fetchAssetsWithALAssetURLs:@[[NSURL URLWithString:violation.assetsPhotoURL]] options:nil].firstObject;
+            PHAsset *assetViolationVideo = [PHAsset fetchAssetsWithALAssetURLs:@[[NSURL URLWithString:violation.assetsVideoURL]] options:nil].firstObject;
+            
+            [PHAssetChangeRequest deleteAssets:@[assetViolationPhoto, assetViolationVideo]];
+        }
+                                          completionHandler:nil];
     }
                                         completion:^(BOOL finished) {
                                             [_violationManager saveViolationsToFile:_violationManager.violations];
