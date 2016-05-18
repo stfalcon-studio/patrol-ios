@@ -38,6 +38,11 @@
     
     [self.playerView setMovieToPlayer:self.player];
     [self.player play];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(volumeChanged:)
+                                                 name:@"AVSystemController_SystemVolumeDidChangeNotification"
+                                               object:nil];
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -50,6 +55,17 @@
     self.player = nil;
     self.playerView = nil;
 }
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+#pragma mark - Nofifications -
+- (void)volumeChanged:(NSNotification *)notification {
+    self.player.volume = [notification.userInfo[@"AVSystemController_AudioVolumeNotificationParameter"] floatValue];
+}
+
 
 #pragma mark - Methods -
 - (void)setAudioVolume {
