@@ -541,6 +541,17 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             
             // Check Video file size
             [_violationManager checkVideoFileSize];
+            
+            // Check Video duration (<= 60 sec)
+            AVURLAsset *videoFileAsset = [AVURLAsset URLAssetWithURL:[info valueForKey:UIImagePickerControllerReferenceURL] options:nil];
+            CMTime duration = videoFileAsset.duration;
+            
+            if (CMTimeCompare(duration, CMTimeMake(60, 1)) == 1) {
+                [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
+                                  andMessage:NSLocalizedString(@"Alert error video duration", nil)];
+
+                isContinueOn = NO;
+            }
         }
     }
     

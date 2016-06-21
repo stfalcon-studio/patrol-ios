@@ -194,14 +194,14 @@
         [_captureSession addOutput:_videoFileOutput];
     
     // Set Connection
-    AVCaptureConnection *videoConnection = nil;
-    
-    for (AVCaptureConnection *connection in _videoFileOutput.connections) {
-        for (AVCaptureInputPort *port in connection.inputPorts) {
-            if ([port.mediaType isEqual:AVMediaTypeVideo])
-                videoConnection = connection;
-        }
-    }
+//    AVCaptureConnection *videoConnection = nil;
+//    
+//    for (AVCaptureConnection *connection in _videoFileOutput.connections) {
+//        for (AVCaptureInputPort *port in connection.inputPorts) {
+//            if ([port.mediaType isEqual:AVMediaTypeVideo])
+//                videoConnection = connection;
+//        }
+//    }
     
     // Create StillImageOutput
     AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];

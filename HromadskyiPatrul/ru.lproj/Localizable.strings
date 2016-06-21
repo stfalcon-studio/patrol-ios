@@ -51,6 +51,7 @@
 "Alert Location error message"                  =   "Это нарушение не имеет координат.";
 "Alert GPS error message"                       =   "Чтобы воспользоваться функцией съемки видео, включите датчик GPS";
 "Alert error video add"                         =   "Это видео уже существует!";
+"Alert error video duration"                    =   "Продолжительность этого видео больше 1 минуты";
 
 "Open a Photo"                                  =   "Просмотреть фото";
 "Open a Video"                                  =   "Просмотреть видео";

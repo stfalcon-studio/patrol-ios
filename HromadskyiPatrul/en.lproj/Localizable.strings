@@ -51,6 +51,7 @@
 "Alert Location error message"                  =   "This violation has no coordinates.";
 "Alert GPS error message"                       =   "Please turn on GPS sensor to shoot video";
 "Alert error video add"                         =   "This video already exists!";
+"Alert error video duration"                    =   "This video is longer than 1 minute";
 
 "Open a Photo"                                  =   "Open a Photo";
 "Open a Video"                                  =   "Open a Video";
