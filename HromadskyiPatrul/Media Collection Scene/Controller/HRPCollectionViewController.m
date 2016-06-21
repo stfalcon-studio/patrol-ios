@@ -44,11 +44,14 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 @implementation HRPCollectionViewController {
     UIView *_statusView;
     BOOL _isCameraRun;
+    UIDeviceOrientation _currentOrientation;
 }
 
 #pragma mark - Constructors -
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    _currentOrientation = [[UIDevice currentDevice] orientation];
     
     // Create Manager & Violations data source
     _violationManager = [HRPViolationManager sharedManager];
@@ -111,6 +114,8 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     [[HRPCameraManager sharedManager] stopVideoSession];
     [[HRPCameraManager sharedManager].videoPreviewLayer removeFromSuperlayer];
+    
+    [UIViewController attemptRotationToDeviceOrientation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -137,6 +142,10 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     flowLayout.itemSize = _violationManager.cellSize;
     
     [flowLayout invalidateLayout]; //force the elements to get laid out again with the new size
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
 }
 
 
@@ -285,6 +294,12 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
 
 
 #pragma mark - Methods -
+- (void)checkDeviceOrientation {
+    if (_currentOrientation != [[UIDevice currentDevice] orientation]) {
+        self.view.frame = CGRectMake(0.f, 0.f, UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]) ? CGRectGetHeight(self.view.frame) : CGRectGetWidth(self.view.frame), UIDeviceOrientationIsLandscape([[UIDevice currentDevice] orientation]) ? CGRectGetWidth(self.view.frame) : CGRectGetHeight(self.view.frame));
+    }
+}
+
 - (void)removeViolationFromCollection:(NSIndexPath *)indexPath {
     [_violationsCollectionView performBatchUpdates:^{
         HRPViolation *violation = [_violationManager.violations objectAtIndex:indexPath.row];
@@ -510,6 +525,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     [[UIApplication sharedApplication] setStatusBarHidden:(size.width < size.height) ? NO : YES];
     
     [_violationManager modifyCellSize:size];
+    _currentOrientation = [[UIDevice currentDevice] orientation];
 }
 
 

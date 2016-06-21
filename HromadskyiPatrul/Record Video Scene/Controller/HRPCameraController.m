@@ -16,7 +16,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:YES];
+    
+    [HRPCameraController attemptRotationToDeviceOrientation];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -33,6 +39,10 @@
     if ([_locationsService isEnabled]) {
         _locationsService.manager.delegate = self;
     }
+}
+
+- (BOOL)shouldAutorotate {
+    return YES;
 }
 
 
