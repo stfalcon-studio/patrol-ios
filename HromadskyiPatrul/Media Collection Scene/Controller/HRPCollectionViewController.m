@@ -199,7 +199,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
         if (!self.isStartAsRecorder) {
             [self.navigationController popViewControllerAnimated:YES];
             [(HRPVideoRecordViewController *)[self.navigationController.viewControllers lastObject] startVideoRecord];
-            NSLog(@"2. CollectionVC poped");
+            // NSLog(@"2. CollectionVC poped");
         }
         
         else {
@@ -214,7 +214,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                 HRPBaseViewController *nextVC = [self.storyboard instantiateViewControllerWithIdentifier:@"VideoRecordVC"];
                 
                 [self.navigationController pushViewController:nextVC animated:YES];
-                NSLog(@"2. RecordVC pushed");
+                // NSLog(@"2. RecordVC pushed");
             }
         }
     }];
@@ -236,8 +236,6 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             _imagePickerController = cameraVC;
             
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-
-//            [_violationManager saveViolationsToFile:_violationManager.violations];
 
             if (![_imagePickerController isBeingPresented])
                 [self.navigationController presentViewController:_imagePickerController
@@ -357,12 +355,21 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                                                         style:UIAlertActionStyleDefault
                                                                       handler:^(UIAlertAction *action) {
                                                                           if (violation.state != HRPViolationStateDone) {
-                                                                              [cell showActivityLoader];
-                                                                              [_violationManager uploadViolation:violation
-                                                                                                      inAutoMode:NO
-                                                                                                       onSuccess:^(BOOL isSuccess) {
-                                                                                                           [cell hideActivityLoader];
-                                                                                                       }];
+                                                                              // Check Video duration (<= 60 sec)
+                                                                              AVURLAsset *videoFileAsset = [AVURLAsset URLAssetWithURL:[NSURL URLWithString:violation.assetsVideoURL] options:nil];
+                                                                              CMTime duration = videoFileAsset.duration;
+                                                                              
+                                                                              if (CMTimeCompare(duration, CMTimeMake(62, 1)) == 1) {
+                                                                                  [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
+                                                                                                    andMessage:NSLocalizedString(@"Alert error video duration", nil)];
+                                                                              } else {
+                                                                                  [cell showActivityLoader];
+                                                                                  [_violationManager uploadViolation:violation
+                                                                                                          inAutoMode:NO
+                                                                                                           onSuccess:^(BOOL isSuccess) {
+                                                                                                               [cell hideActivityLoader];
+                                                                                                           }];
+                                                                              }
                                                                           }
                                                                       }];
         
@@ -546,7 +553,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             AVURLAsset *videoFileAsset = [AVURLAsset URLAssetWithURL:[info valueForKey:UIImagePickerControllerReferenceURL] options:nil];
             CMTime duration = videoFileAsset.duration;
             
-            if (CMTimeCompare(duration, CMTimeMake(60, 1)) == 1) {
+            if (CMTimeCompare(duration, CMTimeMake(62, 1)) == 1) {
                 [self showAlertViewWithTitle:NSLocalizedString(@"Alert info title", nil)
                                   andMessage:NSLocalizedString(@"Alert error video duration", nil)];
 
