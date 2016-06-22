@@ -241,7 +241,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             cameraVC.allowsEditing = YES;
             cameraVC.delegate = self;
             
-            cameraVC.modalPresentationStyle = UIModalPresentationCurrentContext;
+            cameraVC.modalPresentationStyle = UIModalPresentationFormSheet;
             _imagePickerController = cameraVC;
             
             [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];

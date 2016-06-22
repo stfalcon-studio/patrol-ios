@@ -12,7 +12,10 @@
 
 @end
 
-@implementation HRPCameraController
+@implementation HRPCameraController {
+    UIDeviceOrientation _startOrientation;
+    CGRect _frame;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,16 +25,44 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:YES];
     
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:YES];
+    
     [HRPCameraController attemptRotationToDeviceOrientation];
+    _startOrientation = [[UIDevice currentDevice] orientation];
+    _frame = self.view.bounds;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 
 #pragma mark - Methods -
+- (void)checkDeviceOrientation:(BOOL)isStateChange {
+    CGAffineTransform rotate = CGAffineTransformMakeRotation(0);
+
+    if (isStateChange) {
+        if (_startOrientation == [[UIDevice currentDevice] orientation]) {
+            self.view.frame = _frame;
+            rotate = CGAffineTransformMakeRotation(UIDeviceOrientationIsLandscape(_startOrientation) ? M_PI_2 : -M_PI_2);
+
+        } else {
+            self.view.frame = CGRectMake(0.f, 0.f, CGRectGetHeight(_frame), CGRectGetWidth(_frame));
+            rotate = CGAffineTransformMakeRotation(UIDeviceOrientationIsLandscape(_startOrientation) ? -M_PI_2 : M_PI_2);
+        }
+    } else {
+        if (UIDeviceOrientationIsLandscape(_startOrientation)) {
+            rotate = CGAffineTransformMakeRotation(M_PI_2);
+        }
+    }
+
+    CGAffineTransform transform = rotate;
+    self.cameraViewTransform = transform;
+}
+
 - (void)startUpdateLocations {
     // HSPLocations
     _locationsService = [[HRPLocations alloc] init];
@@ -41,9 +72,15 @@
     }
 }
 
-- (BOOL)shouldAutorotate {
-    return YES;
-}
+//- (BOOL)shouldAutorotate {
+//    //[self checkDeviceOrientation:(_startOrientation != [[UIDevice currentDevice] orientation])];
+//    
+//    return YES;
+//}
+
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskLandscape | UIInterfaceOrientationMaskPortrait;
+//}
 
 
 #pragma mark - CLLocationManagerDelegate -
