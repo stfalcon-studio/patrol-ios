@@ -190,7 +190,43 @@
     if (!violation.isUploading && violation.type == HRPViolationTypeVideo) {
         if ([self canViolationUploadAuto:isAutoMode] && _uploadingCount < 2) {
             _uploadingCount++;
-
+            
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+            
+            if (violation.latitude == 0 || violation.longitude == 0) {
+                [self showAlertViewWithMessage:NSLocalizedString(@"Alert Location error message", nil)];
+                [self handlerUploadViolation:violation onSuccess:NO];
+            }
+            
+            else {
+                violation.isUploading = YES;
+                _isUploading = YES;
+                
+                NSDictionary *parameters = @{
+                                                @"video" : [NSURL URLWithString:violation.assetsVideoURL],
+                                                @"latitude" : @(violation.latitude),
+                                                @"longitude" : @(violation.longitude),
+                                                @"date" : [formatter stringFromDate:violation.date]
+                                             };
+                
+                // API
+                [self uploadVideoWithParameters:parameters
+                                      onSuccess:^(NSDictionary *successResult) {
+                                          [self handlerUploadViolation:violation onSuccess:YES];
+                                          
+                                          success(YES);
+                                      }
+                                      orFailure:^(NSError *error) {
+                                          [self showAlertViewWithMessage:error.localizedDescription];
+                                          [self handlerUploadViolation:violation onSuccess:NO];
+                                          
+                                          success(NO);
+                                      }];
+            }
+            
+            
+            /*
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
                 ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
                 
@@ -199,16 +235,18 @@
                              NSError *error = nil;
                              ALAssetRepresentation *representation = asset.defaultRepresentation;
                              Byte *buffer = (Byte *)malloc((NSUInteger)representation.size);
-                             
+                          
                              NSUInteger buffered = [representation getBytes:buffer
                                                                  fromOffset:0.0
                                                                      length:(NSUInteger)representation.size
                                                                       error:&error];
                              
                              // Get the data
-                             NSData *data = (!error) ? [NSData dataWithBytesNoCopy:buffer
+                             __block NSData *data = (!error) ? [NSData dataWithBytesNoCopy:buffer
                                                                             length:buffered
                                                                       freeWhenDone:YES] : nil;
+                             
+                             buffer = nil;
                              
                              if (data) {
                                  dispatch_sync(dispatch_get_main_queue(), ^(void) {
@@ -225,11 +263,13 @@
                                          _isUploading = YES;
                                          
                                          NSDictionary *parameters = @{
-                                                                        @"video" : data,
+                                                                        @"video" : [NSURL URLWithString:violation.assetsVideoURL], //data,
                                                                         @"latitude" : @(violation.latitude),
                                                                         @"longitude" : @(violation.longitude),
                                                                         @"date" : [formatter stringFromDate:violation.date]
                                                                       };
+                                         
+                                         data = nil;
                                          
                                          // API
                                          [self uploadVideoWithParameters:parameters
@@ -252,6 +292,7 @@
                             DebugLog(@"Get video error: %@", error.localizedDescription);
                         }];
             });
+             */
         }
         
         else {
@@ -271,19 +312,33 @@
                         orFailure:(void(^)(NSError *error))failure {
     AFHTTPRequestSerializer *serializer = [AFHTTPRequestSerializer serializer];
     NSError *error = nil;
-//    NSDate *start = [NSDate date];
     NSString *stringURL = [NSString stringWithFormat:@"http://patrol.stfalcon.com/api/%@/violation-video/create", [_userApp objectForKey:@"userAppID"]];
-    
+
     NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
                                                                     URLString:stringURL
                                                                    parameters:parameters
                                                     constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-                                                        [formData appendPartWithFileData:parameters[@"video"]
-                                                                                    name:@"video"
-                                                                                fileName:@"video.mov"
-                                                                                mimeType:@"video/quicktime"];
+                                                        NSError *error1 = nil;
+
+                                                        [formData appendPartWithFileURL:parameters[@"video"]
+                                                                                   name:@"video"
+                                                                               fileName:@"video.mov"
+                                                                               mimeType:@"video/quicktime"
+                                                                                  error:&error1];
                                                     }
                                                                         error:&error];
+
+    
+//    NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
+//                                                                    URLString:stringURL
+//                                                                   parameters:parameters
+//                                                    constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+//                                                        [formData appendPartWithFileData:parameters[@"video"]
+//                                                                                    name:@"video"
+//                                                                                fileName:@"video.mov"
+//                                                                                mimeType:@"video/quicktime"];
+//                                                    }
+//                                                                        error:&error];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];

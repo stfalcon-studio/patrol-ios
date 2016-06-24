@@ -6,7 +6,7 @@ target 'HromadskyiPatrul' do
     pod 'NSString-Email', '~> 0.0.3'
     pod 'AFNetworking', '~> 2.5'
     pod 'Fabric'
-    pod 'Crashlytics', '~> 3.7'
+    pod 'Crashlytics'
     pod 'MBProgressHUD', '~> 0.9'
 
 end
