@@ -30,7 +30,7 @@
 
 #pragma mark - Methods -
 - (void)customizeCellStyle {
-    if (_violation.isUploading) {
+    if (_violation.isUploading || _violation.isTaking) {
         [self showActivityLoader];
     }
     

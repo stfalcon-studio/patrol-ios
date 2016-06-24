@@ -35,5 +35,6 @@ typedef NS_ENUM (NSInteger, HRPViolationType) {
 @property (assign, nonatomic) CGFloat longitude;
 @property (assign, nonatomic) CGFloat duration;
 @property (assign, nonatomic) BOOL isUploading;
+@property (assign, nonatomic) BOOL isTaking;
 
 @end

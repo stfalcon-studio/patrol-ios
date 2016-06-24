@@ -585,26 +585,30 @@
 }
 
 - (void)saveVideoRecordToFile {
-    HRPViolation *violation = [[HRPViolation alloc] init];
-    ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
-    
-    (_violations.count == 0) ? [_violations addObject:violation] : [_violations insertObject:violation atIndex:0];
-    (_images.count == 0) ? [_images addObject:@"777"] : [_images insertObject:@"777" atIndex:0];
-    
-    [assetsLibrary writeImageToSavedPhotosAlbum:_videoImageOriginal.CGImage
-                                    orientation:(ALAssetOrientation)_videoImageOriginal.imageOrientation
-                                completionBlock:^(NSURL *assetURL, NSError *error) {
-                                    violation.assetsVideoURL = [_videoAssetURL absoluteString];
-                                    violation.assetsPhotoURL = [assetURL absoluteString];
-                                    violation.date = [NSDate date];
-                                    violation.latitude = _latitude;
-                                    violation.longitude = _longitude;
-                                    violation.type = HRPViolationTypeVideo;
-                                    violation.state = HRPViolationStateUpload;
-                                    
-                                    [_violations replaceObjectAtIndex:0 withObject:violation];
-                                    [self saveViolationsToFile];
-                                }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+        HRPViolation *violation = [[HRPViolation alloc] init];
+        ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+        
+        (_violations.count == 0) ? [_violations addObject:violation] : [_violations insertObject:violation atIndex:0];
+        (_images.count == 0) ? [_images addObject:@"777"] : [_images insertObject:@"777" atIndex:0];
+        
+        [assetsLibrary writeImageToSavedPhotosAlbum:_videoImageOriginal.CGImage
+                                        orientation:(ALAssetOrientation)_videoImageOriginal.imageOrientation
+                                    completionBlock:^(NSURL *assetURL, NSError *error) {
+                                        violation.assetsVideoURL = [_videoAssetURL absoluteString];
+                                        violation.assetsPhotoURL = [assetURL absoluteString];
+                                        violation.date = [NSDate date];
+                                        violation.latitude = _latitude;
+                                        violation.longitude = _longitude;
+                                        violation.type = HRPViolationTypeVideo;
+                                        violation.state = HRPViolationStateUpload;
+                                        
+                                        dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                                            [_violations replaceObjectAtIndex:0 withObject:violation];
+                                            [self saveViolationsToFile];
+                                        });
+                                    }];
+    });
 }
 
 - (void)saveViolationsToFile {

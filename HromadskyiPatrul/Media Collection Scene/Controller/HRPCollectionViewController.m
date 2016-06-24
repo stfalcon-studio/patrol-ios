@@ -580,6 +580,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     
     if (isContinueOn) {
         HRPViolation *violation = [[HRPViolation alloc] init];
+        violation.isTaking = YES;
         
         // Prepare data source
         [_violationsCollectionView performBatchUpdates:^{
@@ -607,12 +608,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
             violation.longitude = _imagePickerController.longitude;
         }
 
-//        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera)
         [self writeViolation:violation atAssetURL:[info objectForKey:UIImagePickerControllerMediaURL]];
-        
-//        else if (picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
-//            [self readMetaDataFromVideoFile:[NSURL URLWithString:videoURL] forViolation:violation];
-//        
         _imagePickerController = nil;
     }
 }
@@ -651,8 +647,9 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                             [self showAlertViewWithTitle:NSLocalizedString(@"Alert error API title", nil)
                                                               andMessage:NSLocalizedString(@"Alert error saving video message", nil)];
                                         
-                                        else
+                                        else {
                                             [self readMetaDataFromVideoFile:assetVideoURL forViolation:violation];
+                                        }
                                     });
                                 }];
 }
@@ -663,7 +660,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
     image.imageAvatar = [UIImage imageWithCGImage:[UIImage imageNamed:@"icon-no-image"].CGImage];
     
     HRPViolationCell *cell = (HRPViolationCell *)[_violationsCollectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]];
-    [cell showActivityLoader];
+//    [cell showActivityLoader];
     
     NSError *err = NULL;
     AVURLAsset *videoAsset = [[AVURLAsset alloc] initWithURL:assetVideoURL options:nil];
@@ -693,6 +690,7 @@ typedef void (^ALAssetsLibraryAccessFailureBlock)(NSError *error);
                                               completion:^(BOOL finished) {
                                                   violation.type = HRPViolationTypeVideo;
                                                   violation.date = [NSDate date];
+                                                  violation.isTaking = NO;
                                                   
                                                   [_violationManager.violations replaceObjectAtIndex:0 withObject:violation];
                                                   [_violationManager.images replaceObjectAtIndex:0 withObject:image.imageAvatar];
