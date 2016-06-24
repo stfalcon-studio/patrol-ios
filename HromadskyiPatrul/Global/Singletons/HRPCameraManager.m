@@ -379,7 +379,6 @@
 
 - (void)removeAllFolderMediaTempFiles {
     NSArray *allFolderFiles = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:_mediaFolderPath error:nil];
-    _videoImageOriginal = nil;
     
     for (NSString *fileName in allFolderFiles) {
         if ([fileName containsString:@"snippet_"] ||
@@ -606,6 +605,7 @@
                                         dispatch_sync(dispatch_get_main_queue(), ^(void) {
                                             [_violations replaceObjectAtIndex:0 withObject:violation];
                                             [self saveViolationsToFile];
+                                            _videoImageOriginal = nil;
                                         });
                                     }];
     });
