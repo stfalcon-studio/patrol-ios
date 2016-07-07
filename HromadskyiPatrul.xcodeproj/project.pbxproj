@@ -42,7 +42,6 @@
 		B10721451C6B33F10054443A /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1EE06C31B8F621C00CD3A03 /* CoreLocation.framework */; };
 		B10721461C6B33F10054443A /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
 		B107214C1C6B33F10054443A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
-		B107214F1C6B33F10054443A /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B10721511C6B33F10054443A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B10721521C6B33F10054443A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
 		B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
@@ -82,7 +81,6 @@
 		B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
 		B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
 		B1AC89A21B879A07009D12D6 /* HromadskyiPatrulTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */; };
-		B1AC89AE1B879A29009D12D6 /* Builds in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89AD1B879A29009D12D6 /* Builds */; };
 		B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B1AFA96A1B8E25AB00FBE416 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1AFA9691B8E25AB00FBE416 /* AssetsLibrary.framework */; };
 		B1C07F051C21DD98002868F9 /* HRPVideoRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = B1C07F041C21DD98002868F9 /* HRPVideoRecordView.m */; };
@@ -175,7 +173,6 @@
 		B1AC899B1B879A07009D12D6 /* HromadskyiPatrulTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HromadskyiPatrulTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1AC89A01B879A07009D12D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B1AC89A11B879A07009D12D6 /* HromadskyiPatrulTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HromadskyiPatrulTests.m; sourceTree = "<group>"; };
-		B1AC89AD1B879A29009D12D6 /* Builds */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Builds; sourceTree = "<group>"; };
 		B1AC89B21B879C8B009D12D6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B41B879C91009D12D6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1AC89B51B879CE3009D12D6 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -354,18 +351,10 @@
 		B19C10421C1C4B6C007BB9FE /* Media Preview Scene */ = {
 			isa = PBXGroup;
 			children = (
-				B19C10441C1C4B7C007BB9FE /* Model */,
 				B1E751311C340DD80034FCC6 /* View */,
 				B19C10451C1C4B82007BB9FE /* Controller */,
 			);
 			path = "Media Preview Scene";
-			sourceTree = "<group>";
-		};
-		B19C10441C1C4B7C007BB9FE /* Model */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		B19C10451C1C4B82007BB9FE /* Controller */ = {
@@ -448,7 +437,6 @@
 			isa = PBXGroup;
 			children = (
 				B1088AE61D2D57F0002852DC /* LICENSE.txt */,
-				B1AC89AD1B879A29009D12D6 /* Builds */,
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
 				B1AC89801B879A06009D12D6 /* Products */,
@@ -714,7 +702,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B107214C1C6B33F10054443A /* Images.xcassets in Resources */,
-				B107214F1C6B33F10054443A /* Builds in Resources */,
 				B10721511C6B33F10054443A /* Localizable.strings in Resources */,
 				B10721521C6B33F10054443A /* Main.storyboard in Resources */,
 				B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */,
@@ -727,7 +714,6 @@
 			files = (
 				B1088AE71D2D57F0002852DC /* LICENSE.txt in Resources */,
 				B12805231C25781A0058BAC8 /* Images.xcassets in Resources */,
-				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,
 				B1AC89911B879A07009D12D6 /* Main.storyboard in Resources */,
 				B1AC89961B879A07009D12D6 /* LaunchScreen.xib in Resources */,
