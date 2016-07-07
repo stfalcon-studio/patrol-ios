@@ -46,6 +46,7 @@
 		B10721511C6B33F10054443A /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89B31B879C8B009D12D6 /* Localizable.strings */; };
 		B10721521C6B33F10054443A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B1AC898F1B879A07009D12D6 /* Main.storyboard */; };
 		B10721531C6B33F10054443A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1AC89941B879A07009D12D6 /* LaunchScreen.xib */; };
+		B1088AE71D2D57F0002852DC /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = B1088AE61D2D57F0002852DC /* LICENSE.txt */; };
 		B11341311C301114000693B9 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B1669E1C1BD657C500C4156D /* MediaPlayer.framework */; };
 		B12804FC1C25432D0058BAC8 /* HRPLoginViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = B12804FB1C25432D0058BAC8 /* HRPLoginViewModel.m */; };
 		B12805231C25781A0058BAC8 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B12805221C25781A0058BAC8 /* Images.xcassets */; };
@@ -109,6 +110,7 @@
 		6CDB1756BF9665FEF6FF3184 /* Pods-HromadskyiPatrulTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrulTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrulTests/Pods-HromadskyiPatrulTests.debug.xcconfig"; sourceTree = "<group>"; };
 		84C64129C340FCE21C51E73A /* Pods-HromadskyiPatrul.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HromadskyiPatrul.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HromadskyiPatrul/Pods-HromadskyiPatrul.debug.xcconfig"; sourceTree = "<group>"; };
 		B107215C1C6B33F10054443A /* HromadskyiPatrul-Dev.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HromadskyiPatrul-Dev.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1088AE61D2D57F0002852DC /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		B11B92861B9A115C00F03266 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		B11B92881B9A118600F03266 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		B11B928A1B9A118E00F03266 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -445,6 +447,7 @@
 		B1AC89761B879A06009D12D6 = {
 			isa = PBXGroup;
 			children = (
+				B1088AE61D2D57F0002852DC /* LICENSE.txt */,
 				B1AC89AD1B879A29009D12D6 /* Builds */,
 				B1AC89811B879A06009D12D6 /* HromadskyiPatrul */,
 				B1AC899E1B879A07009D12D6 /* HromadskyiPatrulTests */,
@@ -722,6 +725,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B1088AE71D2D57F0002852DC /* LICENSE.txt in Resources */,
 				B12805231C25781A0058BAC8 /* Images.xcassets in Resources */,
 				B1AC89AE1B879A29009D12D6 /* Builds in Resources */,
 				B1AC89B11B879C8B009D12D6 /* Localizable.strings in Resources */,

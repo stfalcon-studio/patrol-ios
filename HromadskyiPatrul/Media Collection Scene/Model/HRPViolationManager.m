@@ -1,3 +1,17 @@
+/*
+ Copyright (c) 2015 - 2016. Stepan Tanasiychuk
+ This file is part of Gromadskyi Patrul is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by the Free Software Found ation, version 3 of the License, or any later version.
+ If you would like to use any part of this project for commercial purposes, please contact us
+ for negotiating licensing terms and getting permission for commercial use. Our email address: info@stfalcon.com
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ GNU General Public License for more details.
+ You should have received a copy of the GNU General Public License along with this program.
+ If not, see http://www.gnu.org/licenses/.
+ */
+// https://github.com/stfalcon-studio/patrol-android/blob/master/app/build.gradle
+//
 //
 //  HRPViolationManager.m
 //  HromadskyiPatrul
@@ -191,20 +205,21 @@
         if ([self canViolationUploadAuto:isAutoMode] && _uploadingCount < 2) {
             _uploadingCount++;
             
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+//            [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+//            
+//            if (violation.latitude == 0 || violation.longitude == 0) {
+//                [self showAlertViewWithMessage:NSLocalizedString(@"Alert Location error message", nil)];
+//                [self handlerUploadViolation:violation onSuccess:NO];
+//            }
+//            
+//            else {
+//                violation.isUploading = YES;
+//                _isUploading = YES;
             
-            if (violation.latitude == 0 || violation.longitude == 0) {
-                [self showAlertViewWithMessage:NSLocalizedString(@"Alert Location error message", nil)];
-                [self handlerUploadViolation:violation onSuccess:NO];
-            }
-            
-            else {
-                violation.isUploading = YES;
-                _isUploading = YES;
-                
+                /*
                 NSDictionary *parameters = @{
-                                                @"video" : [NSURL URLWithString:violation.assetsVideoURL],
+                                                @"video" : violation.assetsVideoURL,
                                                 @"latitude" : @(violation.latitude),
                                                 @"longitude" : @(violation.longitude),
                                                 @"date" : [formatter stringFromDate:violation.date]
@@ -226,8 +241,10 @@
             }
             
             
-            /*
+            
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^(void) {
+                 */
+                
                 ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
                 
                 [library assetForURL:[NSURL URLWithString:violation.assetsVideoURL]
@@ -249,7 +266,7 @@
                              buffer = nil;
                              
                              if (data) {
-                                 dispatch_sync(dispatch_get_main_queue(), ^(void) {
+//                                 dispatch_sync(dispatch_get_main_queue(), ^(void) {
                                      NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                                      [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
                                      
@@ -263,7 +280,7 @@
                                          _isUploading = YES;
                                          
                                          NSDictionary *parameters = @{
-                                                                        @"video" : [NSURL URLWithString:violation.assetsVideoURL], //data,
+                                                                        @"video" : data,
                                                                         @"latitude" : @(violation.latitude),
                                                                         @"longitude" : @(violation.longitude),
                                                                         @"date" : [formatter stringFromDate:violation.date]
@@ -285,14 +302,14 @@
                                                                    success(NO);
                                                                }];
                                      }
-                                 });
+//                                 });
                              }
                          }
                         failureBlock:^(NSError *error) {
                             DebugLog(@"Get video error: %@", error.localizedDescription);
                         }];
-            });
-             */
+//            });
+             
         }
         
         else {
@@ -314,31 +331,31 @@
     NSError *error = nil;
     NSString *stringURL = [NSString stringWithFormat:@"http://patrol.stfalcon.com/api/%@/violation-video/create", [_userApp objectForKey:@"userAppID"]];
 
-    NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
-                                                                    URLString:stringURL
-                                                                   parameters:parameters
-                                                    constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-                                                        NSError *error1 = nil;
-
-                                                        [formData appendPartWithFileURL:parameters[@"video"]
-                                                                                   name:@"video"
-                                                                               fileName:@"video.mov"
-                                                                               mimeType:@"video/quicktime"
-                                                                                  error:&error1];
-                                                    }
-                                                                        error:&error];
-
-    
 //    NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
 //                                                                    URLString:stringURL
 //                                                                   parameters:parameters
 //                                                    constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
-//                                                        [formData appendPartWithFileData:parameters[@"video"]
-//                                                                                    name:@"video"
-//                                                                                fileName:@"video.mov"
-//                                                                                mimeType:@"video/quicktime"];
+//                                                        NSError *error1 = nil;
+//
+//                                                        [formData appendPartWithFileURL:fileURL
+//                                                                                   name:@"video"
+//                                                                               fileName:@"video.mov"
+//                                                                               mimeType:@"video/quicktime"
+//                                                                                  error:&error1];
 //                                                    }
 //                                                                        error:&error];
+
+    
+    NSMutableURLRequest *request = [serializer multipartFormRequestWithMethod:@"POST"
+                                                                    URLString:stringURL
+                                                                   parameters:parameters
+                                                    constructingBodyWithBlock:^(id<AFMultipartFormData>  _Nonnull formData) {
+                                                        [formData appendPartWithFileData:parameters[@"video"]
+                                                                                    name:@"video"
+                                                                                fileName:@"video.mov"
+                                                                                mimeType:@"video/quicktime"];
+                                                    }
+                                                                        error:&error];
     
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer = [AFHTTPResponseSerializer serializer];
