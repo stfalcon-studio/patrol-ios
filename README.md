@@ -1,6 +1,6 @@
 # Patrol for iOS
 
-[![Get it on App store](https://www.google.com.ua/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwizrOCPv6HVAhXJa5oKHVUZCIMQjRwIBw&url=https%3A%2F%2Fwww.seeklogo.net%2Ftechnology-logos%2Favailable-on-the-app-store-5138.html&psig=AFQjCNHsxoRnVyibXwEMntwnsMzF9c_Cxg&ust=1500970977293987)](https://itunes.apple.com/ua/app/gromads-kij-patrul/id1035090014)
+[![Get it on App store](https://www.seeklogo.net/wp-content/uploads/2012/12/available-on-the-app-store-badge-logo-vector.png)](https://itunes.apple.com/ua/app/gromads-kij-patrul/id1035090014)
 
 ### Project description
 An application for video registration of traffic rules violations. You can use this like video registrator. App`s can automaticaly send violations to our server.
