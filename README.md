@@ -1,6 +1,6 @@
 # Patrol for iOS
 
-[![Get it on App store](http://xn--80awkfjh8d.com/app_store.png =150x)](https://itunes.apple.com/ua/app/gromads-kij-patrul/id1035090014)
+[![Get it on App store](http://xn--80awkfjh8d.com/app_store.png=150x)](https://itunes.apple.com/ua/app/gromads-kij-patrul/id1035090014)
 
 ### Project description
 An application for video registration of traffic rules violations. You can use this like video registrator. App`s can automaticaly send violations to our server.
