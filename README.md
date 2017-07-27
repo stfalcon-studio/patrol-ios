@@ -8,8 +8,11 @@ If you notice violation of traffic rules – fix it and send us. Video camera st
 Our service is a social initiative. If idea proves to be good, we will provide it to our New Police with pleasure."
 
 <p align="center">
-<img src="images/screen1.jpeg"><img src="images/screen2.jpeg">
-<img src="images/screen3.jpeg"><img src="images/screen4.jpeg">
+<img src="images/screen1.jpeg" height="400"><img src="images/screen2.jpeg" height="400">
+</p>
+
+<p align="center">
+<img src="images/screen3.jpeg" height="400"><img src="images/screen4.jpeg" height="400">
 </p>
 
 [![Get it on App store](images/download.png)](https://itunes.apple.com/ua/app/gromads-kij-patrul/id1035090014)
